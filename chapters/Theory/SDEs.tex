@@ -1,0 +1,135 @@
+\chapter{Theory}
+In this chapter, we will.....
+
+\section{Stochastic Differential Equations}
+A general stochastic differential equation (SDE) is a $d$-dimensional system of the form
+\begin{equation}\label{integral}
+    X_{t}^{(i)}=X_{0}^{(i)}+ \int_{0}^{t}b^{(i)}(s,X_{s})ds+\sum_{j=1}^{m}\int_{0}^{t}\sigma^{(i,j)}(s,X_{s})dB_{s}^{(i)},\quad t\geq 0,
+\end{equation}
+where $b^{(i)}:[0,\infty)\times \R^{d}\to \R$, $\sigma^{(i,j)}:[0,\infty)\times\R^{d}\to\R$ for $i=1,\dots,d$ and $j=1,\dots,m$ are two families of Borelian functions, and $B$ is an $m$-dimensional Brownian motion. Equation \eqref{integral} is a SDE expressed in its integral form; Equivalently, it could also have been written as
+\begin{equation}
+    dX_{t}^{(i)}= b^{(i)}(t,X_{t})dt +\sigma^{(i,j)}(t,X_{t})dB_{t}^{(i)}.
+\end{equation}
+Recall that a solution of a stochastic differential equation is a triplet of the form \newline$\left((\Omega,\mathcal{F},(\mathcal{F}_{t})_{t\geq 0},\mathbb{P}),B,X\right)$ consisting of a filtered probability space satisfying the usual conditions, a $\R^{m}$-valued Brownian motion $B$ adapted to $(\mathcal{F}_{t})_{t\geq 0}$, and the $(\mathcal{F}_{t})_{t\geq 0}$-adapted $\R^{d}$-valued continuous solution process $X$.
+
+A solution to a SDE, say $\left((\Omega,\mathcal{F},(\mathcal{F}_{t})_{t\geq 0},\mathbb{P}),B,X\right)$, is said to be a strong solution if $X$ is $(\mathcal{F}_{t}^{B})_{t\geq 0}$-adapted, where 
+\begin{equation}
+    \mathcal{F}_{t}^{B}\coloneqq \sigma\left(\left\{B_{s}^{-1}(A)\mid A\in\mathcal{F}, s\in [0,t] \right\}\right),\quad t\geq 0.
+\end{equation}
+A solution, which is not strong, is said to be weak. 
+
+Analogous to the theory of ordinary differential equations, we have that if the family of functions $\sigma=(\sigma^{(i,j)})_{1\leq i\leq d, 1\leq j\leq m}$ and $b=(b^{(i)})_{1\leq i\leq d}$ satisfy a certain Lipschitz-condition, then existence and uniqueness is guaranteed. More precisely, there is a constant $K>0$ such that
+\begin{equation}\label{lipschitz}
+    \lVert \sigma(t,x)-\sigma(t,y)\rVert+ \lVert b(t,x)-b(t,y)\rVert \leq K\lVert x-y\rVert
+\end{equation}
+holds for all $x,y\in\R$ and $t\geq 0$. The existence and uniqueness result is stated in the following.
+\begin{thm}\label{existanduniqthm} Let $\sigma=(\sigma^{(i,j)})_{1\leq i\leq d, 1\leq j\leq m}$ and $b=(b^{(i)})_{1\leq i\leq d}$ satisfy the condition \eqref{lipschitz}. Then strong uniqueness holds for the SDE defined by $\sigma$ and $b$. Furthermore, for every probability space $(\Omega,\mathcal{F},(\mathcal{F}_{t})_{t\geq 0},\mathbb{P})$ supporting an $(\mathcal{F}_{t})_{t\geq 0}$-Brownian motion $B$ and every $x\in \R^d$, there exists a unique solution $(B,X^{x})$ such that $X_{0}=x$. Finally, there is a $a>0$ such that
+\begin{equation}
+    \sup_{t\geq 0}\left\{e^{-at}\sqrt{\mathbb{E}\left[\sup_{0\leq s\leq t}(X_{s}^{x}-X_{t}^{y})^{2}\right]}\right\}\leq C(a,K)\lVert x-y\rVert, \quad \forall x,y\in\R^{d}.
+\end{equation}
+\end{thm}
+The proof of Theorem \ref{existanduniqthm} is omitted.
+\subsection{The Black \& Scholes Model}
+Let $\mathfrak{M}=\{(\Omega,\mathcal{F},(\mathcal{F}_{t})_{0\leq t\leq T},\mathbb{P}), (A_{t},S_{t})_{0\leq t\leq T}\}$ with $T>0$ be our finite-horizon financial market consisting of a risky asset $S_{t}$ and a risk-free bond $A_{t}$ playing the role as a numéraire. The price dynamics specified by the Black \& Scholes Model are given by the pair of SDEs:
+\begin{align}
+    dS_{t}&=\mu S_{t}dt+\sigma S_{t}dB_{t},\\
+    dA_{t}&=rA_{t}dt,
+\end{align}
+where $r>0$ is the risk-free rate, $(\mu,\sigma)\in\R\times (0,\infty)$ are constants, $A_{0}=1$, and $B_t$ is a Brownian motion. Obviously, the solution to (2.7) is given by $A_{t}=e^{rt}$ for $t\in [0,T]$.
+
+Recall the (simple) Itô's lemma
+\begin{equation}\label{itoslemma}
+    f(t,B_{t})= f(0,B_{0})+\int_{0}^{t}\frac{\partial f}{\partial s}ds + \int_{0}^{t}\frac{\partial f}{\partial x}dB_{s}+\frac{1}{2}\int_{0}^{t}\frac{\partial^{2}f}{\partial x^{2}}d\langle B\rangle_{s},
+\end{equation}
+where $f\in C^{1,2}(\R^{2},\R)$ is once and twice continuously differentiable in the first and second variable, respectively. We now define the function
+\begin{equation}
+    f(t,B_{t})\coloneqq S_{0}\exp\left\{\left(\mu-\frac{\sigma^2}{2}\right)t+\sigma B_{t}\right\},\quad S_{0}>0.
+\end{equation}
+We can now easily calculate the partial derivatives as $\partial_{t}f=(\mu-\sigma^{2}/2)f$, $\partial_{x}f=\sigma f$, and $\partial^{2}_{x}f=\sigma^{2}f$. Furthermore, we have $f(0,B_{0})=S_{0}$. Inserting this into Itô's lemma, we obtain
+\begin{align}
+    f(t,B_{t})&=S_{0} + \left(\mu-\frac{\sigma^{2}}{2}\right)\int_{0}^{t}f(s,B_{s})ds+\sigma\int_{0}^{t}f(s,B_{s})dB_{s}+\frac{\sigma^{2}}{2}\int_{0}^{t}f(s,B_{s})ds\\
+    &= S_{0}+\mu\int_{0}^{t}f(s,B_{s})ds+\sigma\int_{0}^{t}f(s,B_{s})dB_{s},
+\end{align}
+where we have also used that $\langle B\rangle_{t}=t$. The above can be written equivalently as
+\begin{equation}
+    df=\mu fdt+ \sigma fdB_{t}.
+\end{equation}
+Hence, the process $S_{t}\coloneqq f(t,B_{t})=S_{0}\exp\left\{(\mu-\sigma^{2}/2)t+\sigma B_{t}\right\}$ solves the SDE (2.6). Such a process is called a geometric Brownian motion.
+
+Consider a trading strategy in this market with continuous rebalancing, and which is self-financing, i.e. there are no exogenous incoming or outgoing cash flows. If we hold $\delta_{t}$ units of the risky asset (stock) $S_t$ for each point in time $t$, then the portfolio value changes as
+\begin{equation}
+    dV_{t}=\delta_{t}dS_{t}+(V_{t}-\delta_{t}S_{t})rdt,\quad 0\leq t\leq T.
+\end{equation}
+Now, consider a European option with maturity time $T$ and pay-off $\Phi(S_{T})$. We want to create a self-financing portfolio, which replicates the pay-off of the option
+\begin{equation}
+    V_{t}=F(t,S_{t})
+\end{equation}
+for some function $F$. By the no-arbitrage principle, our function $F$, which equals the replicating portfolio $V_t$, must be the price function of our option. If we apply Itô's lemma \eqref{itoslemma} to $V_{t}=F(t,S_{t})$ with $B_{t}=S_{t}$ we obtain
+\begin{equation}\label{hejhej}
+    dV_{t}=\delta_{t}dS_{t}+(V_{t}-\delta_{t}S_{t})rdt=\frac{\partial F}{\partial t}dt+\frac{\partial F}{\partial S_{t}}dS_{t}+\frac{1}{2}\frac{\partial^{2}F}{\partial S_{t}^{2}}d\langle S\rangle_{t}.
+\end{equation}
+The quadratic variation of a geometric Brownian motion is $\langle S\rangle_{t}=\sigma^{2}S_{t}^{2}t$. If we equate terms in \eqref{hejhej}, we get that \eqref{hejhej} holds if
+\begin{equation}
+    \delta_{t}=\frac{\partial F}{\partial S_{t}},\hspace{10 pt} r\left(F(t,S_{t})-\frac{\partial F}{\partial S_{t}}S_{t}\right)=\frac{\partial F}{\partial t}+\frac{1}{2}\sigma^{2}S_{t}^{2}\frac{\partial^{2}F}{\partial S_{t}^{2}}.
+\end{equation}
+Whence, we have derived the Black \& Scholes partial differential equation with boundary condition
+\begin{equation}\label{blackscholespde}
+    -rF(t,S_{t})+\frac{\partial F}{\partial t}+rS_{t}\frac{\partial F}{\partial S_{t}}+\frac{1}{2}\sigma^{2}S_{t}^{2}\frac{\partial^{2}F}{\partial S_{t}^{2}},\quad F(T,S_{t})=\Phi(S_{T}).
+\end{equation}
+The portfolio $V_{t}=\delta_{t}S_{t}+(V_{t}-\delta_{t}S_{t})r$ with $\delta_{t}=\partial_{S_{t}}F(t,S_{t})$ thus replicates the pay-off of the option. The quantity $\delta_{t}$ is called the delta of the option and measures the sensitivity of the option price to changes in the underlying stock price. Hence, the price function of the option $F$ must satisfy \eqref{blackscholespde}. 
+
+For a European call option with strike price $K>0$ and pay-off $\Phi(S_{T})=(S_{T}-K)^{+}$, we obtain
+\begin{align}
+    F(t,S_{t})&=S_{t}N(d_{1})-e^{-r(T-t)}KN(d_{2}),\quad 0\leq t\leq T,\\
+    d_{1}&\coloneqq \frac{\ln\left(\frac{S_{t}}{K}\right)+\left(r+\frac{\sigma^{2}}{2}\right)(T-t)}{\sigma\sqrt{T-t}},\\
+    d_{2}&\coloneqq d_{1}-\sigma\sqrt{T-t},
+\end{align}
+and where $N(\cdot)$ is the standard normal cdf. For a general simple derivative $\xi=\Phi(S_{T})$, we have the following result.
+\begin{thm}[\textit{Price Function}]
+    Let $\xi$ be a simple derivative, i.e. $\xi=\Phi(S_{T})$ for some measurable function $\Phi$. Then the function
+    \begin{equation}
+        F(t,x)\coloneqq e^{-r(T-t)}\mathbb{E}_{\mathbb{Q}}\left[\Phi(X(x,t,T))\right],
+    \end{equation}
+    where 
+    \begin{equation}
+        X(x,t,T)\coloneqq xe^{(r-\sigma^{2}/2)(T-t)+\sigma\sqrt{T-t}Z},\quad Z\sim N(0,1),
+    \end{equation}
+satifies almost surely that
+\begin{equation}
+    F(t,S_{t})=\mathbb{E}_{\mathbb{Q}}\left(\frac{A_{t}}{A_{T}}\xi \mid \mathcal{F}_{t}\right).
+\end{equation}
+\end{thm}
+Before we prove Theorem 2.2, we present a lemma on conditional expectations.
+\begin{lem}\label{lem23}
+    Let $X,Y$ be two $d$-dimensional random vectors and $\mathcal{G}$ a sub-$\sigma$-algebra of $\mathcal{F}$. Suppose that $Y$ is $\mathcal{G}$-measurable, and $X$ is independent of $Y$. Then for any measurable function $f:\R^{d}\times \R^{d}\to\R$ satisfying that $\mathbb{E}(|f(X,Y)|)<\infty$, we have that almost surely
+    \begin{equation}
+\mathbb{E}(f(X,Y)\mid \mathcal{G})=g(Y),
+    \end{equation}
+    where $g(x)\coloneqq \mathbb{E}(f(X,x))$.
+\end{lem}
+\begin{proof}
+    Using Girsanov's Theorem, one can show that in the Black \& Scholes model
+    \begin{equation}
+        S_{T}=S_{t}e^{(r-\sigma^{2}/2)(T-t)+\sigma(B_{T}^{\mathbb{Q}}-B_{t}^{\mathbb{Q}})}.
+    \end{equation}
+    Thus, we have
+    \begin{equation}
+        \mathbb{E}_{\mathbb{Q}}\left(\frac{A_{t}}{A_{T}}\xi \mid \mathcal{F}_{t}\right)=e^{-r(T-t)}\mathbb{E}_{\mathbb{Q}}\left[\Phi\left(S_{t}e^{(r-\sigma^{2}/2)(T-t)+\sigma(B_{T}^{\mathbb{Q}}-B_{t}^{\mathbb{Q}})}\right)\mid \mathcal{F}_{t}\right].
+    \end{equation}
+    Since $B_{T}^{\mathbb{Q}}-B_{t}^{\mathbb{Q}}$ is independent of $\mathcal{F}_t$, we can use Lemma \ref{lem23} to the case when $X=e^{(r-\sigma^{2}/2)(T-t)+\sigma(B_{T}^{\mathbb{Q}}-B_{t}^{\mathbb{Q}})}$, $Y=S_{t}$, $\mathcal{G}=\mathcal{F}_{t}$, and $f(x,y)=\Phi(xy)$ to obtain that
+    \begin{equation}
+        \mathbb{E}_{\mathbb{Q}}\left(\frac{A_{t}}{A_{T}}\xi \mid \mathcal{F}_{t}\right)=e^{-r(T-t)}g(S_{t}),
+    \end{equation}
+    where
+    \begin{equation}
+        g(x)=\mathbb{E}_{\mathbb{Q}}\left[\Phi\left(xe^{(r-\sigma^{2}/2)(T-t)+\sigma(B_{T}^{\mathbb{Q}}-B_{t}^{\mathbb{Q}})}\right)\right]=\mathbb{E}_{\mathbb{Q}}[\Phi(X(x,t,T))].
+    \end{equation}
+\end{proof}
+\subsection{Implied Volatility}
+If we return to the price function (2.18). Then we could reparameterize $F$, and consider it as a function of $(\tau, y, \sigma)$, where $\tau=T-t$ is time to maturity, $y=S_{t}/K$ is the so-called moneyness, and $\sigma$ is the volatility. These quantities are all observable except for $\sigma$. However, the mapping $\sigma\mapsto F(t,x,\sigma)$ is strictly increasing on $(0,\infty)$, and consequently also invertible. Hence, there is a one-to-one correspondence between the price of an option and the volatility of the underlying stock. 
+\begin{defn}[\textit{Implied Volatility}]
+    Let $F$ be the Black \& Scholes price function of a European call option. If $\Pi_{t}$ denotes the market price of a European call option with time to maturity $\tau=T-t$ and moneyness $y=S_{t}/K$, then the implied volatility of such a contract is defined as the unique number $\sigma_{BS}(\tau, y)>0$, which satisfies
+    \begin{equation}
+        \Pi_{t}=F\left(T-\tau, \hspace{1 pt}yK,\hspace{1 pt}\sigma_{BS}(\tau,y)\right).
+    \end{equation}
+\end{defn}

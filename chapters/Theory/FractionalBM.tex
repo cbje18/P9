@@ -1,0 +1,273 @@
+\section{Fractional Brownian Motion}
+In this section, we assume that every random variable $X_{t}$ is defined on some appropriate probability space $(\Omega, \mathcal{F},\mathbb{P})$. Furthermore, we assume that the index set $I$ is either equal to $\R$, $[0,\infty)$ or $[0,T]$ for some $T>0$. 
+\begin{defn}[\textit{Gaussian Process}]
+    A stochastic process $X=(X_{t})_{t\in I}$ is said to be Gaussian if for all $d\geq 1$ and all $t_{1},\dots,t_{d}\in I$, $(X_{t_{1}},\dots,X_{t_{d}})$ is a Gaussian random vector. The mean function $m: I\to \R$ of $X$ is given by $m(t)=\mathbb{E}[X_{t}]$, and the covariance function $\gamma: I^{2}\to\R$ of $X$ is given by $\gamma(s,t)=\textrm{Cov}(X_{s},X_{t})$. If $m\equiv 0$, $X $ is said to be centered.
+\end{defn}
+
+\begin{defn}[\textit{Positive Semidefinite Function}]
+    A symmetric function $\gamma: I^{2}\to \R$ is said to be positive semidefinite if
+    \begin{equation}\label{posdef}
+        \sum_{i=1}^{d}\sum_{j=1}^{d}a_{i}a_{j}\gamma(t_{i},t_{j})\geq 0
+    \end{equation}
+    for all $d\geq 1$, $t_{1},\dots,t_{d}\in I$, and $a_{1},\dots,a_{d}\in\R$.
+\end{defn}
+In fact, the condition \eqref{posdef} is equivalent to the matrix $\Gamma=\big\{\gamma (t_{i},t_{j})\big\}_{i,j=1}^{d}$ being a positive semidefinite matrix for all $d\geq 1$ and $t_{1},\dots,t_{d}\in I$.
+
+\begin{thm}[\textit{Kolmogorov}]\label{kolmogorov}
+    Let $\gamma: I^{2}\to\R$ be a symmetric function. Then there exists a centered Gaussian process $X=(X_{t})_{t\in I}$ having $\gamma$ for covariance function, if and only if $\gamma$ is positive semidefinite.
+\end{thm}
+\begin{lem}[\textit{Kolmogorov-Centsov}]
+    Let $I=[0,T]\subset [0,\infty)$ be a compact interval for $T>0$, and let $X=(X_{t})_{t\in I}$ be a centered Gaussian process. Suppose there exists $C,\eta>0$ such that for all $s,t\in I$
+    \begin{equation}
+        \mathbb{E}\left[(X_{t}-X_{s})^{2}\right]\leq C|t-s|^{\eta}.
+    \end{equation}
+    Then, for all $\alpha\in (0,\eta/2)$, there exists a continuous modification $Y$ of $X$ with $\alpha$-Hölder continuous path. In particular, $X$ admits a continuous modification.
+\end{lem}
+The $\alpha$-Hölder continuity of the paths of $Y$ means there exists $C_{\alpha}\geq 0$ such that
+\begin{equation}
+    |Y_{t}(\omega)-Y_{s}(\omega)|\leq C_{\alpha}|t-s|^{\alpha},\quad \forall s,t\in I,\hspace{2 pt}\forall\omega\in\Omega\setminus N,
+\end{equation}
+where $N$ is a $\mathbb{P}$-zero set.
+\begin{thm}
+  Let $H>0$ be a real parameter. Then there exists a continuous centered Gaussian process $B^{H}=(B_{t}^{H})_{t\geq 0}$ with covariance function
+  \begin{equation}
+      \gamma_{H}(s,t)=\frac{1}{2}(s^{2H}+t^{2H}-|t-s|^{2H}), \quad s,t\geq 0,
+  \end{equation}
+  if and only if $H\leq 1$. In this case, the paths of $B^{H}$ are $\alpha$-Hölder continuous on each compact set $I\subset [0,\infty)$ for any $\alpha\in (0,H)$.
+\end{thm}
+\begin{proof}
+    According to the Kolmogorov Theorem \ref{kolmogorov}, to show the existence of $B^{H}$, we have to show that $\gamma_{H}$ is positive semidefinite if and only $H\leq 1$.
+    Assume first that $H>1$, and take $t_{1}=1$, $t_{2}=2$, $a_{1}=-2$, and $a_{2}=1$. Then consider
+    \begin{align}
+        a_{1}^{2}\gamma_{H}(t_{1},t_{1})+2a_{1}a_{2}\gamma_{H}(t_{1},t_{2})+a_{2}^{2}\gamma_{H}(t_{2},t_{2})=4-2^{2H}<0.
+    \end{align}
+    Thus, $\gamma_{H}$ is not positive semidefinite when $H>1$. If $H=1$, then $\gamma_{1}(s,t)=st$ is indeed positive semidefinite such that for all $d\geq 1$, $t_{1},\dots,t_{d}\geq 0$, and $a_{1},\dots,a_{d}\in \R$
+    \begin{equation}
+        \sum_{i=1}^{d}\sum_{j=1}^{d}a_{i}a_{j}\gamma_{1}(t_{i},t_{j})= \left(\sum_{i=1}^{d}t_{i}a_{i}\right)^{2}\geq 0.
+    \end{equation}
+    Suppose $H\in (0,1)$
+\end{proof}
+\begin{defn}[\textit{Fractional Brownian Motion}]
+    Let $H\in (0,1]$. A fractional Brownian motion (fBM) of Hurst index $H$ is a continuous centerede Gaussian process $B^{H}=(B_{t}^{H})_{t\geq 0}$ with covariance function
+    \begin{equation}
+        \mathbb{E}[B_{t}^{H}B_{s}^{H}]=\frac{1}{2}\left(t^{2H}+s^{2H}-|t-s|^{2H}\right).
+    \end{equation}
+\end{defn}
+Proposition \ref{prop211} and \ref{prop212} exhibit some properties of the fractional Brownian motion.
+\begin{prop}\label{prop211}
+    Let $B^{H}$ be a fractional Brownian motion of Hurst index $H\in (0,1]$.
+    \begin{enumerate}
+        \item If $H=1/2$, then $B^{H}$ is just a standard Brownian motion.
+        \item If $H=1$, then $B^{H}_{t}=tB_{1}^{H}$ almost surely for all $t\geq 0$.
+    \end{enumerate}
+\end{prop}
+\begin{proof}
+    For $H=1/2$, we immediately see that
+    \begin{align}
+        \mathbb{E}[B_{t}^{1/2}B_{s}^{1/2}]&=\frac{1}{2}\left(t+s-|t-s|\right)\\
+        &= \frac{1}{2}\left(t+s-2 \min\{s,t\}-s-t\right)\\
+        &= s\land t,
+    \end{align}
+    so $B^{1/2}$ is a standard Brownian motion.
+
+    Let $H=1$. Then for all $t\geq 0$, we have
+    \begin{align}
+        \mathbb{E}\left[(B^{1}_{t}-tB_{1}^{1})^{2}\right]&= \mathbb{E}\left[(B_{t}^{1})^{2}\right]-2t\mathbb{E}\left[B_{t}^{1}B_{1}^{1}\right]+t^{2}\mathbb{E}\left[(B_{1}^{1})^{2}\right]\\
+        &= t^{2}-t\left(t^{2}+1-(1-t)^{2}\right)+t^{2}\\
+        &= 0,
+    \end{align}
+    so $B_{t}^{1}=tB_{1}^{1}$ almost surely.
+\end{proof}
+In particular, Proposition \ref{prop211} shows that it suffices to only consider fractional Brownian motions with Hurst index $H\in (0,1)$.
+ \begin{prop}\label{prop212}
+     Let $B^{H}$ be a fractional Brownian motion of Hurst index $H\in (0,1)$. Then we have
+     \begin{enumerate}
+         \item (Self-similarity) For all $a>0$, $\left(a^{-H}B^{H}_{at}\right)_{t\geq 0}\mylaw(B_{t}^{H})_{t\geq 0}$.
+         \item (Stationarity of Increments) For all $h>0$, $\left(B_{t+h}^{H}-B_{h}^{H}\right)_{t\geq 0}\mylaw (B_{t}^{H})_{t\geq 0}$.
+         \item (Time Inversion) $\left(t^{2H}B^{H}_{1/t}\right)_{t>0}\mylaw (B_{t}^{H})_{t>0}$.
+     \end{enumerate}
+     Conversely, any continuous Gaussian process $B^{H}=(B_{t}^{H})_{t\geq 0}$ with $B_{0}^{H}=0$, $\textrm{Var}[B_{1}^{H}]=1$, and such that 1. and 2. above hold, is a fractional Brownian motion of Hurst index $H$.
+ \end{prop}
+ \begin{proof}
+ To prove self-similarity, we see that
+     \begin{align}
+         \mathbb{E}\left[a^{-H}B_{at}^{H}a^{-H}B_{as}^{H}\right]&=a^{-2H}\mathbb{E}[B_{at}^{H}B_{as}^{H}]\\
+         &=\frac{a^{-2H}}{2}\left((at)^{2H}+(as)^{2H}-|at-as|^{2H}\right)\\
+         &= \frac{1}{2}(t^{2H}+s^{2H}-|t-s|^{2H}).
+     \end{align}
+     The proof of 2. and 3. are completely analogous, and are therefore omitted. Conversely, let $B^{H}=(B_{t}^{H})_{t\geq 0}$ be a continuous Gaussian process with $B^{H}_{0}=0$ and $\textrm{Var}[B_{1}^{H}]=1$, which additionally satisfies 1. and 2. Using 2. with $t=h>0$, we get $\mathbb{E}[B_{2t}^{H}]=2\mathbb{E}[B_{t}^{H}]$, and using 1. we infer that $\mathbb{E}[B_{2t}^{H}]=2^{H}\mathbb{E}[B_{t}^{H}]$. Combining these two equalities gives $\mathbb{E}[B_{t}^{H}]=0$ for all $t>0$, and thus $B^{H}$ is centered. Let $s,t\geq 0$. Then we infer that
+     \begin{align}
+         \E[B_{s}^{H}B_{t}^{H}]&=\frac{1}{2}\left(\E\left[(B_{t}^{H})^{2}\right]+\E\left[(B_{s}^{H})^{2}\right]-\E\left[(B_{t}^{H}-B_{s}^{H})^{2}\right]\right)\\
+         &= \frac{1}{2}\left(\E\left[(B_{t}^{H})^{2}\right]+\E\left[(B_{s}^{H})^{2}\right]-\E[(B_{|t-s|}^{H})^{2}]\right)\\
+         &= \frac{1}{2}\E[(B_{1}^{H})^{2}]\left(t^{2H}+s^{2H}-|t-s|^{2H}\right)\\
+         &= \frac{1}{2}\left(t^{2H}+s^{2H}-|t-s|^{2H}\right),
+     \end{align}
+     which concludes the proof.
+ \end{proof}
+\begin{defn}[\textit{Fractional Gaussian Noise}]
+    Let $B^{H}= (B_{t}^{H})_{t\geq 0}$ be a fractional Gaussian process of Hurst index $H\in (0,1)$. Then the increments defined as
+    \begin{equation}
+        \Delta B_{t}^{H}\coloneqq B_{t+h}^{H}-B_{t}^{H}, \quad h>0,
+    \end{equation}
+    are called fractional Gaussian noise.
+\end{defn}
+We have the following proposition.
+\begin{prop}
+    Let $B^{H}=(B_{t}^{H})_{t\geq 0}$ be a fractional Brownian motion of Hurst index $H\in (0,1)$. Then disjoint increments of $B^H$ are negatively correlated for $H\in (0,1/2)$, positively correlated for $H\in (1/2,1)$, and uncorrelated for $H=1/2$.
+\end{prop}
+\begin{proof}
+Let $\Delta B_{t}^{H}=B_{t+h}^{H}-B_{t}^{H}$ and $\Delta B_{s}^{H}=B_{s+h}^{H}-B_{s}^{H}$ be increments of a fractional Brownian motion $B^{H}$ such that $s+h< t$ and $t-s=nh$, $n\in \N$ so as to ensure $[s,s+h]\cap [t,t+h]=\emptyset$. Then the covariance of the increments is given as
+\begin{align*}
+    \E\left[\Delta B_{t}^{H}\Delta B_{s}^{H}\right]&=\E[B_{t+h}^{H}B_{s+h}^{H}]-\E[B_{t+h}^{H}B_{s}^{H}]-\E[B_{t}^{H}B_{s+h}^{H}]+\E[B_{t}^{H}B_{s}^{H}]\\
+    &= \frac{1}{2}\left((t+h)^{2H}+(s+h)^{2H}-|nh|^{2H}\right)-\frac{1}{2}\left((t+h)^{2H}+s^{2H}-|h(n+1)|^{2H}\right)\\
+    & -\frac{1}{2}\left(t^{2H}+(s+h)^{2H}-|h(n-1)|^{2H}\right)+ \frac{1}{2}\left(t^{2H}+s^{2H}-|nh|^{2H}\right)\\
+    &=  \frac{1}{2}h^{2H}\left((n+1)^{2H}+(n-1)^{2H}-2n^{2H}\right).
+\end{align*}
+Thus, for a fixed $h$, the covariance of the increments only depends on $n\in \N$. Define the function $f:[1,\infty)\to \R$ by
+\begin{equation}
+f(x)\coloneqq (x+1)^{2H}+(x-1)^{2H}-2x^{2H}.
+\end{equation}
+Then, it is easy to see that $f(x)>0$, $\forall x\in [1,\infty)$ if $H>1/2$, and $f(x)<0$, $\forall x\in [1,\infty)$ if $H<1/2$. In the case of $H=1/2$, the increments are independent, and by virtue of the Brownian motion being a Gaussian process, they are consequently also uncorrelated.
+    %Suppose that $0\leq s_{1}<t_{1}<s_{2}<t_{2}$ such that $[s_{1},t_
+    %{1}]\cap [s_{2},t_{2}]=\emptyset$. Then the covariance of the increments is given as
+    %\begin{align*}
+        %\E\left[(B_{t_{1}}^{H}-B_{s_{1}}^{H})(B_{t_{2}}^{H}-B_{s_{2}}^{H})\right] &= \E[B_{t_{1}}^{H}B_{t_{2}}^{H}]-\E[B_{t_{2}}^{H}B_{s_{1}}^{H}]-\E[B_{t_{1}}^{H}B_{s_{2}}^{H}] + \E[B_{s_{1}}^{H}B_{s_{2}}^{H}]\\
+        %&= \frac{1}{2}\left(|t_{2}-s_{1}|^{2H}-|t_{2}-t_{1}|^{2H}-\left(|s_{2}-s_{1}|^{2H}-|s_{2}-t_{2}|^{2H}\right)\right).
+    %\end{align*}
+    %Now, define the function $f(x)=|x|^{2H}$ and put $a_{1}\coloneqq t_{2}-s_{1}$, $a_{2}\coloneqq t_{2}-t_{1}$, $b_{1}\coloneqq s_{2}-s_{1}$, and $b_{2}\coloneqq s_{2}-t_{2}$. Note that $b_{2}<a_{2}<b_{1}<a_{1}$. This allows the covariance of the increments to be expressed as 
+    %\begin{equation}
+        %\E\left[(B_{t_{1}}^{H}-B_{s_{1}}^{H})(B_{t_{2}}^{H}-B_{s_{2}}^{H})\right]=\frac{1}{2}\left(f(a_{1})-f(a_{2})-\left(f(b_{1})-f(b_{2})\right)\right).
+    %\end{equation}
+\end{proof}
+It is well-known that a discrete stationary stochatic process $(X_{n})_{n\in \N}$ is said to exhibit long memory if its autocovariance function $\rho(n)\coloneqq \textrm{Cov}(X_{k},X_{k+n})$ satisfies $\rho(n)\sim cn^{-\alpha}$, i.e.
+\begin{equation}
+    \lim_{n\to \infty}\frac{\rho(n)}{cn^{-\alpha}}=1,
+\end{equation}
+for some constant $c$ and $\alpha \in (0,1)$. In this case, we have that $\sum_{n=1}^{\infty}\rho(n)=\infty$. Consequently, we obtain that the increments $X_{k}\coloneqq B^{H}_{k}-B^{H}_{k-1}$ and $X_{k+n}\coloneqq B^{H}_{k+n}-B^{H}_{k+n-1}$ of a fBM $B^H$ exhibit long memory for $H>1/2$, since 
+\begin{equation}\label{asymp}
+    \rho_{H}(n)\coloneqq \frac{1}{2}\left((n+1)^{2H}+(n-1)^{2H}-2n^{2H}\right) \sim H(2H-1)n^{2H-2},
+\end{equation}
+as $n\to \infty$. Thus, we obtain that $\sum_{n=1}^{\infty}\rho_{H}(n)=\infty$ for $H>1/2$, and $\sum_{n=1}^{\infty}|\rho_{H}(n)|<\infty$ for $H<1/2$.
+\section{Semimartingale Property}
+In this section, we will study the asymptotic properties of the $p$-variations of a fBM. Additionally, we will show that a fBM is not a semimartingale except for when $H=1/2$. Firstly, we introduce the class of Hermite polynomials and a useful lemma.
+\begin{defn}[\textit{Hermite Polynomials}]
+    The Hermite polynomials are defined as the family $(H_{k})_{k\in \N}\subset \R[x]$ of polynomials satisfying
+    \begin{equation}
+        H_{k}(x)=(\delta^{k}1)(x), \quad k\in\N,
+    \end{equation}
+    where $1$ is the function constantly equal to $1$, and $(\delta\varphi)(x)\coloneqq x\varphi(x)-\varphi'(x)$ for $\varphi\in C^{1}$.
+\end{defn}
+\begin{lem}\label{l2lemma}
+    Let $(h_{k})_{k\in \N}$ be the family of Hermite polynomials. Then $(\frac{1}{\sqrt{k!}}H_{k})_{k\in\N}$ is an orthonormal basis of $L^{2}\left(\R,\mathcal{B}(\R),\nu\right)$, where $\nu$ is the standard Gaussian measure
+    \begin{equation}
+        \nu(A)\coloneqq \frac{1}{\sqrt{2\pi}}\int_{A}e^{-x^{2}/2}dx,\quad A\in\mathcal{B}(\R).
+    \end{equation}
+\end{lem}
+We present the following theorem, which may be viewed as a law of large numbers for fractional Brownian motions.
+\begin{thm}\label{llnthm}
+    Let $G\sim\mathcal{N}(0,1)$ and let $f:\R\to\R$ be a measurable function such that $\E[f^{2}(G)]<\infty$. Let $B^H$ be a fractional Brownian motion of Hurst index $H\in (0,1)$. Then, as $n\to\infty$
+    \begin{equation}\label{lln}
+        \frac{1}{n}\sum_{i=1}^{n}f(B^{H}_{i}-B^{H}_{i-1})\overset{L^{2}}{\to} \E[f(G)]
+    \end{equation}
+\end{thm}
+Note that using the self-similariy property, we can rewrite \eqref{lln} as
+\begin{equation}
+     \frac{1}{n}\sum_{i=1}^{n}f\left(n^{H}(B^{H}_{i/n}-B^{H}_{(i-1)/n})\right)\overset{L^{2}}{\to} \E[f(G)] \hspace{6 pt}\mathrm{as}\hspace{5 pt}n\to\infty.
+\end{equation}
+\begin{proof}
+    If $H=1/2$, then the result follows from the classical law of large numbers, since the increments then $B^{1/2}_{i}-B^{1/2}_{i-1}\overset{\textrm{i.i.d}}{\sim} \mathcal{N}(0,1)$. Assume now that $H\neq 1/2$. Since $\E[f^{2}(G)]<\infty$, we have that $f\in L^{2}\left(\R,\mathcal{B}(\R),\nu\right)$, and as a consequence of Lemma \ref{l2lemma}
+    \begin{equation}\label{infsum}
+        f(x)=\sum_{k=0}^{\infty}\frac{c_{k}}{\sqrt{k!}}H_{k}(x), \quad x\in \R,
+    \end{equation}
+    where $H_{0}(x)\equiv 1$. By the orthogonality of the Hermite polynomials, we have $\sum_{k=0}^{\infty}c_{k}^{2}=\E[f^{2}(G)]<\infty$. Choosing $x=G$ and taking the expectation in $\eqref{infsum}$, we obtain that $c_{0}=\E[f(G)]$. Hence
+    \begin{align}
+        \frac{1}{n}\sum_{i=1}^{n}f(B_{i}^{H}-B_{i-1}^{H}) - \E[f(G)]&=\frac{1}{n}\sum_{i=1}^{n}\left(f(B_{i}^{H}-B_{i-1}^{H}) - \E[f(G)]\right)\\
+        &= \frac{1}{n}\sum_{k=0}^{\infty}\frac{c_{k}}{\sqrt{k!}}\sum_{i=1}^{n}H_{k}(B_{i}^{H}-B_{i-1}^{H}).
+    \end{align}
+In the following, we will use the fact that if $(U,V)$ is a Gaussian vector with $U,V\sim\mathcal{N}(0,1)$, then for all $k,l\in\N$
+\begin{equation}\label{fintresultat}
+    \E[H_{k}(U)H_{l}(V)]=\begin{cases}
+        k!\E[UV]^{k} & \mathrm{if}\hspace{2.5 pt} k=l,\\
+        0, & \mathrm{otherwise}.
+    \end{cases}
+\end{equation}
+Using \eqref{fintresultat}, we deduce
+\begin{align}
+    &\E\left[\left(\frac{1}{n}\sum_{i=1}^{n}f(B_{i}^{H}-B_{i-1}^{H}) - \E[f(G)]\right)^{2}\right]\\
+    &= \frac{1}{n^2}\sum_{k=1}^{\infty}\frac{c_{k}^{2}}{k!}\sum_{i'=1}^{n}\sum_{i =1}^{n}\E[H_{k}(B^{H}_{i}-B_{i-1}^{H})H_{k}(B^{H}_{i'}-B^{H}_{i'-1})]\\
+    &= \frac{1}{n^2}\sum_{k=1}^{\infty}c_{k}^{2}\sum_{i'=1}^{n}\sum_{i =1}^{n}\E[(B^{H}_{i}-B_{i-1}^{H})(B^{H}_{i'}-B^{H}_{i'-1})]^{k}\\
+    &= \frac{1}{n^2}\sum_{k=1}^{\infty}c_{l}^{2}\sum_{i'=1}^{n}\sum_{i =1}^{n}\rho_{H}(i-i')^{k},
+\end{align}
+where $\rho_{H}$ is the autocovariance function of fractional Gaussian noise
+\begin{equation}
+    \rho_{H}(x)=\rho_{H}(|x|)=\frac{1}{2}\left(|x+1|^{2H}+|x-1|^{2H}-2|x|^{2H}\right), \quad x\in \Z. 
+\end{equation}
+Utilizing the fact that $\rho_{H}(x)=\E[B_{1}^{H}(B_{|x|+1}^{H}-B_{|x|}^{H})]$, and that the covariance is an inner product, we get by Cauchy-Schwarz
+\begin{align}
+     |\rho_{H}(x)|\leq \sqrt{\E[(B_{1}^{H})^{2}]}\sqrt{\E[(B_{|x|+1}^{H}-B_{|x|}^{H})^{2}]}=1.
+\end{align}
+We are now ready to study the $L^2$-convergence of $n^{-1}\sum_{i=1}^{n}f(B_{i}^{H}-B_{i-1}^{H})-\E[f(G)]$
+\begin{align}
+    \E\left[\left(\frac{1}{n}\sum_{i=1}^{n}f(B_{i}^{H}-B_{i-1}^{H})-\E[f(G)]\right)^{2}\right] &\leq \frac{1}{n^{2}}\sum_{k=1}^{\infty}c_{k}^{2}\sum_{i'=1}^{n}\sum_{i =1}^{n}|\rho_{H}(i-i')|\\
+    &= \mathrm{Var}[f(G)]\frac{1}{n^2}\sum_{i'=1}^{n}\sum_{i =1}^{n}|\rho_{H}(i-i')|\\
+    &= \mathrm{Var}[f(G)]\frac{1}{n^2}\sum_{i'=1}^{n}\sum_{i=1-i'}^{n-i'}|\rho_{H}(i)|\\
+    &\leq 2\mathrm{Var}[f(G)]\frac{1}{n}\sum_{i=0}^{n-1}|\rho_{H}(i)|.
+\end{align}
+We already know from \eqref{asymp} that $\rho_{H}(i)\sim H(2H-1)i^{2H-2}$ as $i\to \infty$. We know that if $H<1/2$, then $\sum_{i=1}^{\infty}|\rho_{H}(i)|<\infty$, and the result \eqref{lln} holds. If $H>1/2$, then $\sum_{i=1}^{n-1}|\rho_{H}(i)|\sim H(2H-1)\sum_{i=1}^{n-1}i^{2H-2}\sim Hn^{2H-1}$ as $n\to \infty$, and the result \eqref{lln} holds as well because $H<1$.
+\end{proof}
+As a consequence, we have the following corollary.
+\begin{cor}\label{pvariations}
+    Let $B^H$ be a fractional Brownian motion of Hurst index $H\in (0,1)$, and let $p\in [1,\infty)$. Then, in $L^{2}(\Omega,\mathcal{F},\mathbb{P})$ and as $n\to\infty$, we have
+    \begin{equation}
+        \sum_{i=1}^{n}\left|B_{i/n}^{H}-B_{(i-1)/n}^{H}\right|^{p}\to \begin{cases}
+            0, & \mathrm{if} \hspace{3 pt}p>\frac{1}{H},\\
+            \E[|G|^{p}], & \mathrm{if}\hspace{3 pt}p=\frac{1}{H},\hspace{3 pt} \mathrm{with}\hspace{3 pt} G\sim \mathcal{N}(0,1),\\
+            \infty, & \mathrm{if}\hspace{3 pt}p<\frac{1}{H}.
+        \end{cases}
+    \end{equation}
+\end{cor}
+\begin{proof}
+    If we apply Theorem \ref{llnthm} with $f(x)=|x|^p$, we get
+    \begin{align}
+         \sum_{i=1}^{n}\left|B_{i/n}^{H}-B_{(i-1)/n}^{H}\right|^{p}&= \sum_{i=1}^{n}\left|n^{-H}(B_{i}^{H}-B_{i-1}^{H})\right|^{p}\\
+         &= \frac{1}{n^{Hp}}\sum_{i=1}^{n}\left|B_{i}^{H}-B_{i-1}^{H}\right|^{p}\\
+         &= \frac{1}{n^{H(p-1/H)}}\left(\frac{1}{n}\sum_{i=1}^{n}\left|B_{i}^{H}-B_{i-1}^{H}\right|^{p}\right)\\
+         &= \frac{1}{n^{H(p-1/H)}}\E[f(G)].
+    \end{align}
+If $p=1/H$, then the above is simply equal to \eqref{lln}. If $p<1/H$, then $n^{-H(p-1/H)}\to \infty$ as $n\to \infty$, and conversely $n^{-H(p-1/H)}\to 0$ as $n\to \infty$ if $p>1/H$.
+\end{proof}
+We are now ready to prove that a fBM is not a semimartingale, except when $H=1/2$. Consequently, integration with respect to a fBM becomes a non-trivial problem, when $H\neq 1/2$.
+\begin{thm}
+    Let $B^H$ be a fractional Brownian motion of Hurst index $H\in (0,\frac{1}{2})\cup (\frac{1}{2},1)$. Then $B^H$ is not a semimartingale.
+\end{thm}
+\begin{proof}
+    By selfsimilarity, it is sufficient to consider the time interval $[0,1]$ for the proof. Firstly, recall that the following two properties hold for a semimartingale $S$ on $[0,1]$
+    \begin{enumerate}
+        \item $\sum_{k=1}^{n}\left(S_{k/n}-S_{(k-1)/n}\right)^{2}\overset{\mathbb{P}}{\to} \langle S\rangle_{1}<\infty$ as $n\to\infty$.
+        \item Moreover, if $\langle S\rangle_{1}=0$, then $S$ is of bounded variation, i.e. it holds almost surely that
+        \begin{equation}
+            \sup_{n\geq 1}\sum_{k=1}^{n}|S_{k/n}-S_{(k-1)/n}|<\infty. 
+        \end{equation}
+    \end{enumerate}
+    Now, if $H<1/2$, then $\sum_{k=1}^{n}(B_{k/n}^{H}-B_{(k-1)/n}^{H})^{2}\to \infty$ by Corollary \ref{pvariations}. Hence, $B^H$ is not a semimartingale. Conversely, if $H>1/2$, then Corollary \ref{pvariations} yields $\sum_{k=1}^{n}(B_{k/n}^{H}-B_{(k-1)/n}^{H})^{2}\to 0$. Let $p\in (1,1/H)$, then Corollary \ref{pvariations} again yields $\sum_{k=1}^{n}(B_{k/n}^{H}-B_{(k-1)/n}^{H})^{p}\to \infty$. Additionally, by the uniform continuity of the paths $[0,1]\ni t\mapsto B_{t}^{H}(\omega)$, we obtain almost surely
+    \begin{equation}
+        \sup_{1\leq k\leq n}|B_{k/n}^{H}-B_{(k-1)/n}^{H}|^{p-1}<\varepsilon, \quad \forall \varepsilon>0.
+    \end{equation}
+    Combining the above, we ge the inequality
+    \begin{equation}
+        \sum_{k=1}^{n}\left|B_{k/n}^{H}-B_{(k-1)/n}^{H}\right|^{p}\leq \sup_{1\leq k\leq n}|B_{k/n}^{H}-B_{(k-1)/n}^{H}|^{p-1}\sum_{k=1}^{n}\left|B_{k/n}^{H}-B_{(k-1)/n}^{H}\right|
+    \end{equation}
+    from which we deduce that $\sum_{k=1}^{n}|B_{k/n}^{H}-B_{(k-1)/n}^{H}|\to \infty$. Consequently, $B^H$ is also not a semimartingale, when $H>1/2$.
+\end{proof}
+\section{Integration with Respect to Fractional Brownian Motion}
+\section{Simulation of Fractional Brownian Motion}
+
+\newpage
+\textbf{Spørgsmål til vejledermøde:}
+\begin{enumerate}
+    \item Hvorfor forskellige resultater ved de to simulationsprocedure?
+    \item Skal jeg have beviset for eksistensen af fBM med? 
+    \item Forstå selve formuleringen i projektforslaget -
+    \item Volatility surface: "Overall shape does not change; At least to a first degree".
+    \item Kunne man ikke også kigge på at forecaste volatilitet med den nævnte OU-model? Og sammenligne med en anden model fx. GARCH eller lignende? 
+\end{enumerate}
