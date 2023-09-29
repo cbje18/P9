@@ -159,6 +159,24 @@ simfBM_Circulant <- function(m = 1, T, H, n){
 }
 
 
-
-
+#Function for simulating price and volatility paths from Heston Model
+Heston_sim <- function(n_sims, T, kappa, theta, r, sigma, rho, v0, S0){
+  dt <- T/n_sims
+  t_grid <- seq(0,T,dt)
+  
+  S <- rep(0, n_sims + 1); S[1] <- S0
+  V <- rep(0, n_sims + 1); V[1] <- v0
+  
+  cov_matrix <-matrix(data <- c(1,rho,rho,1), nrow=2,ncol=2,byrow=TRUE)
+  B <- mvrnorm(n = n_sims, mu = c(0,0), Sigma = cov_matrix)
+  B <- t(B)
+  
+  for(i in 1:n_sims){
+    V_pos <- max(V[i],0)
+    V[i+1] <- V[i] + kappa*(theta - V_pos)*dt + sigma*sqrt(V_pos)*sqrt(dt)*B[1,i]
+    
+    S[i+1] <- S[i]*exp( (r - 0.5*V[i])*dt + sqrt(V[i])*sqrt(dt)*B[2,i])
+  }
+  return(list(S,V))
+}
 
