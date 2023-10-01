@@ -2,6 +2,9 @@
 rm(list = ls())
 graphics.off()
 
+#Packages
+require(MASS)
+
 
 #Function for simulating a Brownian motion
 #inputs are dimension m, time T, number of points n
