@@ -85,7 +85,7 @@ simfBM_cholesky <- function(m=1, T, H, n){
 
 
 #Simulating fBM using Circulant Embedding without FFT
-simfBM_Circulant <- function(m = 1, T, H, n){
+simfBM_circulant <- function(m = 1, T, H, n){
   t_grid <- seq(0, T, T/n)
   
   #Define autocovariance function for fractional Gaussian noise and the matrix C
@@ -163,7 +163,7 @@ simfBM_Circulant <- function(m = 1, T, H, n){
 
 
 #Function for simulating price and volatility paths from Heston Model
-Heston_sim <- function(n_sims, T, kappa, theta, r, sigma, rho, v0, S0){
+heston_sim <- function(n_sims, T, kappa, theta, r, sigma, rho, v0, S0){
   dt <- T/n_sims
   t_grid <- seq(0,T,dt)
   
