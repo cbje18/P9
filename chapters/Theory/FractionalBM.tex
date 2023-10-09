@@ -1,4 +1,6 @@
 \section{Fractional Brownian Motion}
+This section is based on \cite{fBMbook}.
+
 In this section, we assume that every random variable $X_{t}$ is defined on some appropriate probability space $(\Omega, \mathcal{F},\mathbb{P})$. Furthermore, we assume that the index set $I$ is either equal to $\R$, $[0,\infty)$ or $[0,T]$ for some $T>0$. 
 \begin{defn}[\textit{Gaussian Process}]
     A stochastic process $X=(X_{t})_{t\in I}$ is said to be Gaussian if for all $d\geq 1$ and all $t_{1},\dots,t_{d}\in I$, $(X_{t_{1}},\dots,X_{t_{d}})$ is a Gaussian random vector. The mean function $m: I\to \R$ of $X$ is given by $m(t)=\mathbb{E}[X_{t}]$, and the covariance function $\gamma: I^{2}\to\R$ of $X$ is given by $\gamma(s,t)=\textrm{Cov}(X_{s},X_{t})$. If $m\equiv 0$, $X $ is said to be centered.
@@ -31,7 +33,7 @@ where $N$ is a $\mathbb{P}$-zero set.
 \begin{thm}
   Let $H>0$ be a real parameter. Then there exists a continuous centered Gaussian process $B^{H}=(B_{t}^{H})_{t\geq 0}$ with covariance function
   \begin{equation}
-      \gamma_{H}(s,t)=\frac{1}{2}(s^{2H}+t^{2H}-|t-s|^{2H}), \quad s,t\geq 0,
+      \gamma_{H}(t,s)=\frac{1}{2}(t^{2H}+s^{2H}-|t-s|^{2H}), \quad s,t\geq 0,
   \end{equation}
   if and only if $H\leq 1$. In this case, the paths of $B^{H}$ are $\alpha$-Hölder continuous on each compact set $I\subset [0,\infty)$ for any $\alpha\in (0,H)$.
 \end{thm}
@@ -50,7 +52,7 @@ where $N$ is a $\mathbb{P}$-zero set.
 \begin{defn}[\textit{Fractional Brownian Motion}]
     Let $H\in (0,1]$. A fractional Brownian motion (fBM) of Hurst index $H$ is a continuous centerede Gaussian process $B^{H}=(B_{t}^{H})_{t\geq 0}$ with covariance function
     \begin{equation}
-        \mathbb{E}[B_{t}^{H}B_{s}^{H}]=\frac{1}{2}\left(t^{2H}+s^{2H}-|t-s|^{2H}\right).
+        \gamma_{H}(t,s)=\mathbb{E}[B_{t}^{H}B_{s}^{H}]=\frac{1}{2}\left(t^{2H}+s^{2H}-|t-s|^{2H}\right).
     \end{equation}
 \end{defn}
 Proposition \ref{prop211} and \ref{prop212} exhibit some properties of the fractional Brownian motion.
@@ -112,7 +114,7 @@ In particular, Proposition \ref{prop211} shows that it suffices to only consider
     are called fractional Gaussian noise.
 \end{defn}
 We have the following proposition.
-\begin{prop}
+\begin{prop}\label{corr}
     Let $B^{H}=(B_{t}^{H})_{t\geq 0}$ be a fractional Brownian motion of Hurst index $H\in (0,1)$. Then disjoint increments of $B^H$ are negatively correlated for $H\in (0,1/2)$, positively correlated for $H\in (1/2,1)$, and uncorrelated for $H=1/2$.
 \end{prop}
 \begin{proof}
@@ -260,8 +262,129 @@ We are now ready to prove that a fBM is not a semimartingale, except when $H=1/2
     from which we deduce that $\sum_{k=1}^{n}|B_{k/n}^{H}-B_{(k-1)/n}^{H}|\to \infty$. Consequently, $B^H$ is also not a semimartingale, when $H>1/2$.
 \end{proof}
 \section{Integration with Respect to Fractional Brownian Motion}
-\section{Simulation of Fractional Brownian Motion}
+\section{Simulation of a Fractional Brownian Motion}
+As was established in Proposition \ref{corr}, the increments of a fractional Brownian motion are correlated, whenever $H\neq 1/2$. Thus, the usual simulation procedure for standard Brownian motions, which consists of taking cumulative sums of i.i.d. standard normal variables, is no longer applicable. 
 
+Suppose we wish to simulate the path of a fBM $B^{H}$ on the interval $[0,T]$ for some $T>0$. Since it is only possible to sample at a finite number of points, we will adopt the notation $Y_{t_{0}},Y_{t_{1}},\dots,Y_{t_{N}}$ for a simulated sample of $B^H$ at the points $0=t_{0}<t_{1}<\dots<t_{N}=T$. Then $(Y_{t_{0}},Y_{t_{1}},\dots,Y_{t_{N}})$ forms a centered Gaussian vector with a certain covariance matrix. Therefore, it can be simulated as a linear transform of a standard Gaussian vector, i.e. a vector of i.i.d. standard normal variables. This basic idea will be utilized in both simulation procedures presented, which are the Cholesky decomposition method and the circulant embedding method. 
+
+Note that due to the self-similarity property, it is suffcient to simulate $(Y_{0},Y_{1},\dots, Y_{N})$ and then multiply these values by $(T/N)^H$. Furthermore, both methods presented are exact simulation techniques in the sense that if $(B_{t_{0}}^{H},B_{t_{1}}^{H},\dots, B_{t_{N}}^{H})$ is a sample from a fBM $B^H$, then 
+\begin{equation}
+    (Y_{t_{0}},Y_{t_{1}},\dots,Y_{t_{N}}) \overset{d}{=}(B_{t_{0}}^{H},B_{t_{1}}^{H},\dots, B_{t_{N}}^{H})
+\end{equation}
+as opposed to techniques that simulate with error.
+%As shown in Proposition \ref{corr}, the increments of a fBM $B^{H}=(B_{t}^{H})_{t\geq 0}$ are correlated, whenever $H\neq 1/2$. This complicates the simulation of fBM's substantially, since it is no longer possible to simulate by taking cumulative sums of appropriately scaled i.i.d. standard normal variables as when simulating standard Brownian motions. In this section, two simulation methods for the fBM will be introduced, namely the Cholesky method and the circulant embedding method.
+
+%Since it is only possible to sample at a finite number of points, we will adopt the notation $Y_{t_{0}},Y_{t_{1}},\dots,Y_{t_{N}}$ for a simulated sample of $B^{H}$ at the points $0=t_{0}<t_{1}<\dots <t_{N}=T$, where $T>0$. Furthermore, both methods presented are exact simulation techniques in the sense that if $(B_{t_{0}}^{H},B_{t_{1}}^{H},\dots, B_{t_{N}}^{H})$ is a sample from a fBM $B^H$, then
+%\begin{equation}
+    %(Y_{t_{0}},Y_{t_{1}},\dots,Y_{t_{N}}) \overset{d}{=}(B_{t_{0}}^{H},B_{t_{1}}^{H},\dots, B_{t_{N}}^{H})
+%\end{equation}
+%as opposed to simulation techniques that sample with error.
+\subsection{The Cholesky Decomposition Method}
+%Let $0=t_{0}<t_{1}<\dots <t_{N}=T$ be an equidistant partition of the interval $[0,T]$. 
+As was established in Proposition \ref{corr}, the increments of a fBM $X_{1}=B_{1}^{H},X_{2}=B_{2}^{H}-B_{1}^{H}, \dots, X_{N}=B_{N}^{H}-B_{N-1}^{H}$ are stationary with autocovariance function
+\begin{equation}
+    \gamma(k)=\frac{1}{2}\left((k+1)^{2H}+|k-1|^{2H}-2k^{2H}\right), \quad k\in\N_{0}.
+\end{equation}
+Hence, $X=(X_{1}, X_{2},\dots,X_{N})$ forms a stationary centered Gaussian vector with covariance matrix
+\begin{equation}
+    \Gamma_{N}=\begin{pmatrix}
+        1 & \gamma(1) & \gamma(2) & \dots & \gamma(N-2) & \gamma(N-1)\\
+        \gamma(1) & 1 & \gamma(1) & \dots & \gamma(N-3) &  \gamma(N-2)\\
+        \gamma(2) & \gamma(1) & 1 & \dots & \gamma(N-4) & \gamma(N-3)\\
+        \vdots & \vdots & \vdots & \ddots & \vdots & \vdots\\
+        \gamma(N-2) & \gamma(N-3) & \gamma(N-4) & \dots & 1 & \gamma(1)\\
+        \gamma(N-1) & \gamma(N-2) & \gamma(N-3) & \dots & \gamma(1) & 1
+    \end{pmatrix}.
+\end{equation}
+Therefore, we can write $X=LZ$, where $Z=(Z_{1},Z_{2},\dots, Z_{N})$ with $Z_{1},Z_{2},\dots, Z_{N}\overset{\textrm{i.i.d.}}{\sim} \mathcal{N}(0,1)$, and the matrix $L$ is lower triangular with $LL^{\top}=\Gamma_{N}$. The covariance matrix is symmetric and positive definite by definition, and thus it admits such a Cholesky decomposition. The elements of $L$ can be found by 
+\begin{equation}
+    \sum_{k=1}^{j}l_{ik}l_{jk}=\gamma(i-j), \quad i,j=1,\dots, N.
+\end{equation}
+One calculates the elements of $L$ recursively by first computing the non-zero elements of the first row of $L$, and then working downwards. Obviously, for $i=1$, we obtain the first row as $l_{11}^{2}=\gamma(0)=1$ and $l_{1k}=0$ for $k=2,\dots,N$. For $i=2$, we obtain the two equations
+\begin{align*}
+    l_{21}l_{11}=\gamma(1), \hspace{15 pt} l_{21}^{2}+l_{22}^{2}=1,
+\end{align*}
+which gives $l_{21}=\gamma(1)$ and $l_{22}=\sqrt{1-\gamma^{2}(1)}$. For $n\geq 2$, the non-zero elements of the $(n+1)$th row are given by
+\begin{align*}
+    l_{n+1,1}&=\gamma(n),\\
+    l_{n+1,j}&=l_{jj}^{-1}\left(\gamma(n+1-j)-\sum_{k=1}^{j-1}l_{n+1,k}l_{jk}\right),\quad j=2,\dots,n,\\
+    l_{n+1,n+1}&= \sqrt{1-\sum_{k=1}^{n}l_{n+1,k}^{2}}.
+\end{align*}
+Thus, we can compute $X=LZ$, and then obtain the samples by taking cumulative sums such that $B_{0}^{H}=0, B_{k}^{H}=B_{k-1}^{H}+X_{k}$ for $k=1,\dots,N$. Finally, we can rescale by $(T/N)^H$ to obtain a simulation on the interval $[0,T]$.
+
+The advantage of the Cholesky method is that it is easy to implement. However, it is computationally slow with a complexity of order $\mathcal{O}(N^{3})$, and even if the Cholesky decomposition is computed beforehand, the matrix-vector product $LZ$ still takes $\mathcal{O}(n^2)$ operations to compute.
+\subsection{The Circulant Embedding Method}
+For this method, we assume that the sample size $N$ is a power of $2$, i.e. $N=2^{g}$ for some $g\in \N$. The covariance matrix $\Gamma_N$ is then a square matrix of size $N\times N$, which we embed in a so-called circulant covariance matrix of size $2N\times 2N$. More precisely, we define $C$ by
+\begin{equation}\label{circmatrix}
+\scalebox{0.77}{
+    \begin{pmatrix}
+1 & \gamma(1) & \dots & \gamma(N-1) & \gamma(N) & \gamma(N-1) & \gamma(N) & \dots & \gamma(2) & \gamma(1)\\
+\gamma(1) & 1 & \dots & \gamma(N-2) & \gamma(N-1) & \gamma(N) & \gamma(N-1) & \dots & \gamma(3) & \gamma(2)\\
+\vdots & \vdots & \ddots & \vdots & \vdots & \vdots & \vdots & \ddots & \vdots & \vdots\\
+\gamma(N-1) & \gamma(N-2) & \dots & 1 & \gamma(1) & \gamma(2) & \gamma(3) & \dots & \gamma(N-1) & \gamma(N)\\
+\gamma(N) & \gamma(N-1) & \dots & \gamma(1) & 1 & \gamma(1) & \gamma(2) & \dots & \gamma(N-2) & \gamma(N-1)\\
+\vdots & \vdots & \ddots & \vdots & \vdots & \vdots & \vdots & \ddots & \vdots & \vdots\\
+\gamma(1) & \gamma(2) & \dots & \gamma(N) & \gamma(N-1) & \gamma(N-2) & \gamma(N-3) & \dots & \gamma(1) & 1
+    \end{pmatrix},
+    }
+\end{equation}
+where $\Gamma_{N}$ is the $N\times N$ submatrix in the upper-left corner. Note that a circulant matrix is completely determined by the entries of its first row, since the subsequent rows are just cyclic permutations of the first row with each row just being the previous row shifted one place to the right.
+The eigenvalues and eigenvectors of a circulant matrix satisfy certain properties, which the algorithm utilizies.
+\begin{thm}\label{circ_thm}
+    Let $C$ be a circulant matrix of the form \ref{circmatrix}. Then $C$ admits the decomposition $C=Q\Lambda Q^{*}$, where $Q$ is the unitary matrix given by
+    \begin{equation}
+        Q_{jk}=\frac{1}{\sqrt{2N}}\exp\left\{-2\pi i\frac{jk}{2N}\right\}, \quad j,k=0,\dots,2N-1,
+    \end{equation}
+    $Q^{*}$ is the conjugate transpose of $Q$, and $\Lambda$ is given by
+    \begin{equation}\label{eigenvalues}
+        \Lambda=\textrm{diag}(\lambda_{0},\lambda_{1},\dots,\lambda_{2N-1}),\quad \lambda_{k}=\sum_{j=0}^{2N-1}C_{1,j+1}\exp\left\{-2\pi i\frac{jk}{2N}\right\},
+    \end{equation}
+    for $k=0,\dots,2N-1$.
+\end{thm}
+The formal proof of Theorem \ref{circ_thm} is omitted, but one can relatively easy show that the eigenvectors of a circulant matrix $C$ are the Fourier modes
+\begin{equation}
+    q_{k}=\frac{1}{\sqrt{2N}}\left(1,e^{-2\pi i m/2N},\dots,e^{-2\pi i(m-1)/2N}\right),\quad k=0,1,\dots,2N-1.
+\end{equation}
+The corresponding eigenvalues are then given by
+\begin{equation}
+    \lambda_{k}=\sum_{j=0}^{2N-1}C_{1,j+1}e^{-2\pi ijk/2N}, \quad k=0,1,\dots,2N-1,
+\end{equation}
+which is just the discrete Fourier transform of the sequence $(C_{11},C_{12},\dots,C_{1,2N})$, i.e. the first row of $C$. With this in mind, the decomposition $C=Q\Lambda Q^{*}$ is merely the complex diagonalization of $C$.
+Note that the eigenvalues \eqref{eigenvalues} are real and positive, since $C$ is a positive definite matrix. 
+
+If we define $S\coloneqq Q \Lambda^{1/2}Q^{*}$, where $\Lambda^{1/2}\coloneqq \textrm{diag}(\sqrt{\lambda_{0}},\sqrt{\lambda_{1}},\dots,\sqrt{\lambda_{2N-1}})$, then the $S$ matrix satisfies $SS^{*}=SS^{\top}=C$. Note, however, that $S$ is not the same as the matrix $L$ found using the Cholesky decomposition, since $S$ is not lower triangular. Finally, to obtain the desired sample, we compute $SZ=Q\Lambda^{1/2}Q^{*}Z$, where $Z=(Z_{1},Z_{2},\dots,Z_{N})$ with $Z_{1},Z_{2},\dots,Z_{N}\overset{\textrm{i.i.d.}}{\sim}\mathcal{N}(0,1)$.
+
+The way the circulant embedding method is implemented in practice, is by using the Fast Fourier Transform (FFT) to compute the eigenvalues. Thus, in practice, the method is as follows
+\begin{enumerate}
+    \item Use the FFT to compute the eigenvalues \eqref{eigenvalues}. When $N$ is a power of $2$, the number of operations needed for this is $\mathcal{O}(2N\log(2N))$, which is a significant improvement compared to the straightforward calculation in \eqref{eigenvalues}, which has complexity $\mathcal{O}((2N)^2)$.
+    \item Compute $W=Q^{*}Z$. This is done by the following simulation scheme
+    \begin{itemize}
+        \item Generate two independent standard normal variables $W_0$ and $W_N$;
+        \item For $1\leq j<N$ generate two independent standard normal variables $Z^{(1)}_{j}$ and $Z^{(2)}_{j}$ and let
+        \begin{align*}
+            W_{j}&=\frac{1}{\sqrt{2}}\left(Z^{(1)}_{j}+iZ^{(2)}_{j}\right),\\
+            W_{2N-j}&=\frac{1}{\sqrt{2}}\left(Z^{(1)}_{j}-iZ^{(2)}_{j}\right).
+        \end{align*}
+        Then the resulting vector $W$ has the same distribution as $Q^{*}Z$.
+    \end{itemize}
+    \item Compute $V=Q\Lambda^{1/2}W$
+    \begin{equation}
+        V_{k}=\frac{1}{\sqrt{2N}}\sum_{j=0}^{2N-1}\sqrt{\lambda_{j}}W_{j}\exp\left\{-2\pi i\frac{jk}{2N}\right\},\quad k=0,\dots,2N-1.
+    \end{equation}
+    This computation can again be done efficiently using the FFT, since the sequence $(V_{0},V_{1},\dots,V_{2N-1})$ is the discrete Fourier transform of 
+    \begin{equation}
+        w_{k}\coloneqq\begin{cases}
+\sqrt{\frac{\lambda_{k}}{2N}}V_{k}^{(1)}, & k=0;\\
+\sqrt{\frac{\lambda_{k}}{4N}}\left(V_{k}^{(1)}+iV_{k}^{(2)}\right), & k=1,\dots,N-1;\\
+\sqrt{\frac{\lambda_{k}}{2N}}V_{k}^{(1)}, & k=N;\\
+\sqrt{\frac{\lambda_{k}}{4N}}\left(V_{2N-k}^{(1)}+iV_{2N-k}^{(2)}\right), & k=N+1,\dots,2N-1.
+        \end{cases}
+    \end{equation}
+The first $N$ elements of $V$ are the desired samples of fractional Gaussian noise.
+\item Take cumulative sums $B_{0}^{H}=0, B_{k}^{H}=B_{k-1}^{H}+V_{k}$, $k=1,\dots,N$, to obtain the final sample. Rescale by $(T/N)^{H}$ if necessary. 
+\end{enumerate}
+The main advantage of this method is speed. Namely, to obtain a sample of size $N$. the number of computations needed is of order $\mathcal{O}(N\log(N))$.
+%The matrix $L$ can be computed more efficiently, if we utilize the fact that $\Gamma_N$ is Toeplitz matrix. 
 \newpage
 \textbf{Spørgsmål til vejledermøde:}
 \begin{enumerate}
@@ -270,4 +393,6 @@ We are now ready to prove that a fBM is not a semimartingale, except when $H=1/2
     \item Forstå selve formuleringen i projektforslaget -
     \item Volatility surface: "Overall shape does not change; At least to a first degree".
     \item Kunne man ikke også kigge på at forecaste volatilitet med den nævnte OU-model? Og sammenligne med en anden model fx. GARCH eller lignende? 
+    \item Er "equal in law" og "equal in distribution" det samme?
+    \item "Nem måde" at web-scrape den seneste aktiekurs på fra yahoo?
 \end{enumerate}
