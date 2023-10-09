@@ -65,20 +65,22 @@ getIV <- function(x, St, r){
 #Function simulating a fractional BM using the Cholesky method
 simfBM_cholesky <- function(m=1, T, H, n){
   t_grid <- seq(0, T, T/n)
-  cov_function <- function(t,s){
-    return(0.5*(abs(t)^(2*H) + abs(s)^(2*H) - abs(t-s)^(2*H)))
+  gamma <- function(k){
+    return(0.5*((k+1)^(2*H) + abs(k-1)^(2*H) - 2*k^(2*H)))
   }
-  C <- matrix(0, nrow = length(t_grid), ncol = length(t_grid))
-  for(i in 1:length(t_grid)){
-    for(j in 1:length(t_grid)){
-      C[i,j] <- cov_function(t_grid[i], t_grid[j])
+  C <- matrix(0, nrow = n, ncol = n)
+  for(i in 1:n){
+    for(j in 1:n){
+      C[i,j] <- gamma(abs(i-j))
     }
   }
-  C <- C[-1,-1]
   L <- t(chol(C))
   W <- rnorm(n, mean = 0, sd = 1)
-  simulations <- L%*%W
-  simulations <- c(0, simulations)
+  noise <- L%*%W
+  noise <- c(0, noise)
+  
+  simulations <- cumsum(noise)
+  simulations <- ((T/n)^(H))*simulations
   
   return(simulations)
 }
@@ -89,7 +91,7 @@ simfBM_circulant <- function(m = 1, T, H, n){
   t_grid <- seq(0, T, T/n)
   
   #Define autocovariance function for fractional Gaussian noise and the matrix C
-  cov_noise <- function(h){
+  gamma <- function(h){
     return(0.5*(abs(h-1)^(2*H) - 2*abs(h)^(2*H) + abs(h+1)^(2*H)))
   }
   
@@ -97,11 +99,11 @@ simfBM_circulant <- function(m = 1, T, H, n){
   
   #Manually compute the first row of C
   for(i in 1:n){
-    C[1,i] <- cov_noise(i-1)
+    C[1,i] <- gamma(i-1)
   }
   
   for(i in 1:(n-1)){
-    C[1,i+n+1] <- cov_noise(n-i)
+    C[1,i+n+1] <- gamma(n-i)
   }
   
   #Function for creating circulant matrix
@@ -161,6 +163,46 @@ simfBM_circulant <- function(m = 1, T, H, n){
   return(simulations)
 }
 
+#Function simulating fBM using circulant embedding with FFT
+simfBM_fft <- function(m = 1, T, H, N){
+  
+  #Define autocovariance function for fractional Gaussian noise
+  gamma <- function(k){
+    return(0.5*((k+1)^(2*H) + abs(k-1)^(2*H) - 2*k^(2*H)))
+  }
+  
+  # Get eigenvalues
+  g = c()
+  for(k in 0:(N-1)){g <- c(g, gamma(k))}
+  r = c(g, 0, rev(g)[1:(N-1)])
+  j = seq(0, ((2*N)-1))
+  K = (2*N)-1
+  i = complex(real=0, imaginary=1)
+  lk = rev(fft(r*exp(2*pi*i*K*j*(1/(2*N)))))
+  
+  # Generate random variables
+  Vj <- cbind(seq(0,0,length.out=2*N), seq(0,0,length.out=2*N))
+  Vj[1,1] <- rnorm(1)
+  Vj[N+1, 1] <- rnorm(1)
+  Vj1 <- rnorm(N-1)
+  Vj2 <- rnorm(N-1)
+  Vj[2:N,1] <- Vj1
+  Vj[2:N,2] <- Vj2
+  Vj[(N+2):(2*N),1] <- rev(Vj1)
+  Vj[(N+2):(2*N),2] <- rev(Vj2)
+  
+  # Compute Z (fractional Gaussian Noise)
+  wk = seq(0,0,length.out=2*N)
+  wk[1] <- sqrt(lk[1]/(2*N))*Vj[1,1]
+  wk[2:N] <- sqrt(lk[2:N]/(4*N))*(Vj[2:N,1] + i*Vj[2:N,2])
+  wk[N+1] <- sqrt(lk[N+1]/(2*N))*Vj[N+1,1]
+  wk[(N+2):(2*N)] <- sqrt(lk[(N+2):(2*N)]/(4*N))*(Vj[(N+2):(2*N),1] - i*Vj[(N+2):(2*N),2])
+  Z = fft(wk)
+  fGn = Z[1:N]
+  fBm = cumsum(fGn)*(N^(-H))
+  fBM = Re((T^H)*fBm)
+  return(fBM)
+}
 
 #Function for simulating price and volatility paths from Heston Model
 heston_sim <- function(n_sims, T, kappa, theta, r, sigma, rho, v0, S0){
