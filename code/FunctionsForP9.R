@@ -201,6 +201,7 @@ simfBM_fft <- function(m = 1, T, H, N){
   fGn = Z[1:N]
   fBm = cumsum(fGn)*(N^(-H))
   fBM = Re((T^H)*fBm)
+  fBM = c(0,fBM)
   return(fBM)
 }
 
