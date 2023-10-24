@@ -15,13 +15,14 @@
 \def \projectdegree      {Mathematics-Economics}  % or Mathematics-Economics/Technology
 \def \projectperiod      {Autumn Semester 2023}
 \def \projectnumber      {P9}
-\def \projectgroup       {X}
+\def \projectgroup       {1.204f}
 \def \projectauthors     {
   Christian Bang Jensen \\
   % ...
 }
 \def \projectsupervisors {
   Orimar Sauri\\
+  Toke Zinn\\
   % ...
 }
 
@@ -30,6 +31,13 @@
 % which defines a package that can be loaded here with \usepackage.
 \usepackage{aaumath}
 \usepackage{soul}
+\usepackage{booktabs}
+\usepackage{float}
+
+
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
 % All contents of the document go between the \begin and \end commands for the
 % 'document' environment.
 \begin{document}
@@ -56,6 +64,7 @@
 \include{chapters/Theory/FractionalBM}
 \include{chapters/Theory/ExtraTheory}
 
+\include{chapters/Application/RoughModel}
 
 % Input files should be partitioned such that each file corresponds to one
 % chapter. The \include command forces a page break and inserts the contents of
