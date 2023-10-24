@@ -1,5 +1,6 @@
-\section{Fractional Brownian Motion}
-This section is based on \cite{fBMbook}.
+\chapter{Fractional Brownian Motion}
+%\section{Fractional Brownian Motion}
+This chapter/section is based on \cite{fBMbook}.
 
 In this section, we assume that every random variable $X_{t}$ is defined on some appropriate probability space $(\Omega, \mathcal{F},\mathbb{P})$. Furthermore, we assume that the index set $I$ is either equal to $\R$, $[0,\infty)$ or $[0,T]$ for some $T>0$. 
 \begin{defn}[\textit{Gaussian Process}]
@@ -30,7 +31,7 @@ The $\alpha$-Hölder continuity of the paths of $Y$ means there exists $C_{\alph
     |Y_{t}(\omega)-Y_{s}(\omega)|\leq C_{\alpha}|t-s|^{\alpha},\quad \forall s,t\in I,\hspace{2 pt}\forall\omega\in\Omega\setminus N,
 \end{equation}
 where $N$ is a $\mathbb{P}$-zero set.
-\begin{thm}
+\begin{thm}\label{existencethm}
   Let $H>0$ be a real parameter. Then there exists a continuous centered Gaussian process $B^{H}=(B_{t}^{H})_{t\geq 0}$ with covariance function
   \begin{equation}
       \gamma_{H}(t,s)=\frac{1}{2}(t^{2H}+s^{2H}-|t-s|^{2H}), \quad s,t\geq 0,
@@ -50,7 +51,7 @@ where $N$ is a $\mathbb{P}$-zero set.
     Suppose $H\in (0,1)$
 \end{proof}
 \begin{defn}[\textit{Fractional Brownian Motion}]
-    Let $H\in (0,1]$. A fractional Brownian motion (fBM) of Hurst index $H$ is a continuous centerede Gaussian process $B^{H}=(B_{t}^{H})_{t\geq 0}$ with covariance function
+    Let $H\in (0,1]$. A fractional Brownian motion (fBM) of Hurst index $H$ is a continuous centered Gaussian process $B^{H}=(B_{t}^{H})_{t\geq 0}$ such that $B_{0}^{H}=0$ almost surely and with covariance function
     \begin{equation}
         \gamma_{H}(t,s)=\mathbb{E}[B_{t}^{H}B_{s}^{H}]=\frac{1}{2}\left(t^{2H}+s^{2H}-|t-s|^{2H}\right).
     \end{equation}
@@ -261,11 +262,69 @@ We are now ready to prove that a fBM is not a semimartingale, except when $H=1/2
     \end{equation}
     from which we deduce that $\sum_{k=1}^{n}|B_{k/n}^{H}-B_{(k-1)/n}^{H}|\to \infty$. Consequently, $B^H$ is also not a semimartingale, when $H>1/2$.
 \end{proof}
-\section{Integration with Respect to Fractional Brownian Motion}
+\section{Integration wrt. Fractional Brownian Motion}
+In the previous section, it was shown that a fBM $B^H$ is not a semimartingale whenever $H\neq 1/2$. Consequently, the usual Itô calculus is not applicable, and alternative methods must be utilized to define and solve SDE's of the form
+\begin{equation}
+    X_{t}=X_{0}+\int_{0}^{t}b(s,X_{s})ds + \int_{0}^{t}\sigma(s,X_{s})dB_{s}^{H},\quad t\geq 0. 
+\end{equation}
+There are a variety of ways to define stochastic integration with a fractional Brownian motion as integrator, and hence there is not one unified framework for this type of stochastic calculus. Due to the non-Markovian nature of the fBM, the most natural way to define the stochastic integral is to do it pathwise for a.e. $\omega\in \Omega$. For $H>1/2$, the regularity of the paths is sufficient to define the solution pathwise using the Young integral. Our main interest is when $H<1/2$, and in this case, one possible definition is the forward integral.
+\begin{defn}[\textit{Forward Integral}]\label{defn:forward}
+    Let $X=(X_{t})_{t\in [0,T]}$ and $Y=(Y_{t})_{t\in [0,T]}$ be two continuous stochastic processes. Provided that the limit exists in probability, we define the forward integral of $Y$ with respect to $X$ as
+    \begin{equation}
+        \int_{0}^{T}Y_{s}d^{-}X_{s}=\lim_{n\to\infty}\sum_{k=0}^{n-1}Y_{kT/n}(X_{(k+1)T/n}-X_{kT/n}).
+    \end{equation}
+\end{defn}
+Definition \ref{defn:forward} is essentially just a pathwise Riemann-Stieltjes integral. For Riemann-Stieltjes integrals, it is well-known that if $f$ is a bounded function on $[0,T]$, and $g$ is monotonically increasing on $[0,T]$ with Riemann-integrable derivative $g'$, then it holds that
+\begin{equation}
+    \int_{0}^{T}f(x)dg(x)=\int_{0}^{T}f(x)g'(x)dx.
+\end{equation}
+This intuition leads to an equivalent definition for the forward integral as
+\begin{equation}\label{defn:forward2}
+    \int_{0}^{T}Y_{s}d^{-}X_{s}\coloneqq \lim_{\varepsilon\to 0}\int_{0}^{T}Y_{s}\frac{X_{s+\varepsilon}-X_{s}}{\varepsilon}ds,
+\end{equation}
+where $X=(X_{t})_{t\in [0,T]}$ and $Y=(Y_{t})_{t\in [0,T]}$ are two continuous stochastic processes, and thus they are also Riemann-integrable. However, $X$ is not differentiable in general. Note that the left-hand side is the forward integral, and the right-hand side is just a regular Riemann-integral.  
+
+One might ask whether this definition is suitable for our needs. For instance, take $Y=X=B^{H}$ and fix $T=1$. Then, we obtain that
+\begin{align}
+    (B_{1}^{H})^{2}&=\sum_{k=0}^{n-1}\left((B_{(k+1)/n}^{H})^{2}-(B_{k/n}^{H})^{2}\right)\\
+    &=2\sum_{k=0}^{n-1}B_{k/n}^{H}(B_{(k+1)/n}^{H}-B_{k/n}^{H})+\sum_{k=0}^{n-1}(B_{(k+1)/n}^{H}-B_{k/n}^{H})^{2}.
+\end{align}
+If we assume that $\int_{0}^{1}B_{s}^{H}d^{-}B_{s}^{H}$ exists, then as $n\to\infty$ we infer that
+\begin{equation}
+    \sum_{k=0}^{n-1}(B_{(k+1)/n}^{H}-B_{k/n}^{H})^{2}\overset{\mathbb{P}}{\to} (B_{1}^{H})^{2}-2\int_{0}^{1}B_{s}^{H}d^{-}B_{s}^{H}.
+\end{equation}
+This is clearly in contradiction with Corollary \ref{pvariations}, which states that the quadratic variation of $B^{H}$ does not exists for $H<1/2$. Thus, we conclude that $\int_{0}^{T}B^{H}_{s}d^{-}B^{H}_{s}$ does not exist for $H<1/2$, which is unsatisfactory for a reasonable theory of integration with respect to $B^H$. However, it will suffice for our purposes as exemplified by the following theorem.
+\begin{thm}\label{thm:integration}
+    Let $\psi_{t}=\psi_{t}(\omega):[0,T]\times \Omega\to \R$ be a progressively measurable and forward integrable process, which is cádlág. Then the forward integral of $\psi$ with respect to the fBM $B^{H}$ coincides with
+    \begin{equation}
+        \int_{0}^{T}\psi_{s}d^{-}B^{H}_{s}=\lim_{|\mathcal{P}|\to 0}\sum_{j=0}^{N-1}\psi_{t_{j}}\Delta B^{H}_{t_{j}},
+    \end{equation}
+    whenever the left-hand limit exists in probability, and $\mathcal{P}=\{0=t_{0}<t_{1}<\dots <t_{N}=T\}$ is a partition of $[0,T]$ with mesh size
+    \begin{equation}
+        |\mathcal{P}|=\sup_{j}|t_{j+1}-t_{j}|,
+    \end{equation}
+    and $\Delta B^{H}_{t_{j}}=B_{t_{j+1}}^{H}-B_{t_{j}}^{H}$.
+\end{thm}
+\begin{proof}
+    Let $\psi$ be a cádlág forward integrable process and let
+    \begin{equation}
+        \psi^{(\mathcal{P})}_{t}\coloneqq \sum_{j=0}^{N-1}\psi_{t_{j}}\mathbbm{1}_{(t_{j},t_{j+1}]}(t)
+    \end{equation}
+    be a cádlág step function with respect to the partition $\mathcal{P}=\{0=t_{0}<t_{1}<\dots <t_{N}=T\}$. Then $\psi^{(\mathcal{P})}$ almost surely to $\psi$ as $|\mathcal{P}|\to 0$. According to \eqref{defn:forward2}, the forward integral of $\psi^{(\mathcal{P})}$ is then given by
+    \begin{align}
+        \int_{0}^{T}\psi^{(\mathcal{P})}_{t}d^{-}B^{H}_{t}&=\lim_{\varepsilon\to 0}\int_{0}^{T}\psi^{(\mathcal{P})}_{s}\frac{B^{H}_{s+\varepsilon}-B_{s}^{H}}{\varepsilon}ds\\
+        &= \lim_{\varepsilon\to 0}\sum_{j=0}^{N-1}\psi_{t_{j}}\int_{t_{j}}^{t_{j+1}}\frac{1}{\varepsilon}\int_{s}^{s+\varepsilon}dB_{u}^{H}\hspace{2 pt}ds\\
+        &= \lim_{\varepsilon\to 0}\sum_{j=0}^{N-1}\psi_{t_{j}}\int_{t_{j}}^{t_{j+1}}\frac{1}{\varepsilon}\int_{u-\varepsilon}^{u}ds\hspace{2 pt}dB_{u}^{H}\\
+        &= \sum_{j=0}^{N-1}\psi_{t_{j}}\Delta B_{t_{j}}^{H}.
+    \end{align}
+We have the pointwise limit $\psi^{(\mathcal{P})}_{t}\to\psi_{t}$ as $|\mathcal{P}|\to 0$, and step functions are trivially bounded, since $|\psi^{(\mathcal{P})}_{t}|\leq M$ for $M\coloneqq \max\left\{|\psi^{(\mathcal{P})}_{t_{0}}|, |\psi^{(\mathcal{P})}_{t_{1}}|,\dots,|\psi^{(\mathcal{P})}_{t_{N}}|\right\}$. Thus, by applying the dominated convergence theorem, we obtain the result.
+\end{proof}
+Theorem \ref{thm:integration} states that forward integrals with respect to fBMs can simply be evaluated as the limit of Riemann-sums, when the integrand is sufficiently well-behaved. This means that for this class of integrands, we can just evaluate the stochastic integral pathwise via Riemann-sums. This pathwise Riemann-Stieltjes approach will be utilized, when we later on have to evaulate stochastic integrals of this type. 
+%If we let $\mathcal{C}^{\alpha}\left([0,T]\right)$ denote the set of real-valued Hölder continuous functions of order $\alpha\in (0,1)$ on $[0,T]$, $T>0$
 \section{Simulation of a Fractional Brownian Motion}
 As was established in Proposition \ref{corr}, the increments of a fractional Brownian motion are correlated, whenever $H\neq 1/2$. Thus, the usual simulation procedure for standard Brownian motions, which consists of taking cumulative sums of i.i.d. standard normal variables, is no longer applicable. 
 
-Suppose we wish to simulate the path of a fBM $B^{H}$ on the interval $[0,T]$ for some $T>0$. Since it is only possible to sample at a finite number of points, we will adopt the notation $Y_{t_{0}},Y_{t_{1}},\dots,Y_{t_{N}}$ for a simulated sample of $B^H$ at the points $0=t_{0}<t_{1}<\dots<t_{N}=T$. Then $(Y_{t_{0}},Y_{t_{1}},\dots,Y_{t_{N}})$ forms a centered Gaussian vector with a certain covariance matrix. Therefore, it can be simulated as a linear transform of a standard Gaussian vector, i.e. a vector of i.i.d. standard normal variables. This basic idea will be utilized in both simulation procedures presented, which are the Cholesky decomposition method and the circulant embedding method. 
+Suppose we wish to simulate the path of a fBM $B^{H}$ on the interval $[0,T]$ for some $T>0$. Since it is only possible to sample at a finite number of points, we will adopt the notation $Y_{t_{0}},Y_{t_{1}},\dots,Y_{t_{N}}$ for a simulated sample of $B^H$ at the points $0=t_{0}<t_{1}<\dots<t_{N}=T$. Then $(Y_{t_{0}},Y_{t_{1}},\dots,Y_{t_{N}})$ forms a centered Gaussian vector with a certain covariance matrix. Therefore, it can be simulated as a linear transformation of a standard Gaussian vector, i.e. a vector of i.i.d. standard normal variables. This basic idea will be utilized in both simulation procedures presented, which are the Cholesky decomposition method and the circulant embedding method. 
 
 Note that due to the self-similarity property, it is suffcient to simulate $(Y_{0},Y_{1},\dots, Y_{N})$ and then multiply these values by $(T/N)^H$. Furthermore, both methods presented are exact simulation techniques in the sense that if $(B_{t_{0}}^{H},B_{t_{1}}^{H},\dots, B_{t_{N}}^{H})$ is a sample from a fBM $B^H$, then 
 \begin{equation}
@@ -312,7 +371,7 @@ which gives $l_{21}=\gamma(1)$ and $l_{22}=\sqrt{1-\gamma^{2}(1)}$. For $n\geq 2
 \end{align*}
 Thus, we can compute $X=LZ$, and then obtain the samples by taking cumulative sums such that $B_{0}^{H}=0, B_{k}^{H}=B_{k-1}^{H}+X_{k}$ for $k=1,\dots,N$. Finally, we can rescale by $(T/N)^H$ to obtain a simulation on the interval $[0,T]$.
 
-The advantage of the Cholesky method is that it is easy to implement. However, it is computationally slow with a complexity of order $\mathcal{O}(N^{3})$, and even if the Cholesky decomposition is computed beforehand, the matrix-vector product $LZ$ still takes $\mathcal{O}(n^2)$ operations to compute.
+The advantage of the Cholesky method is that it is easy to implement. However, it is computationally slow with a complexity of order $\mathcal{O}(N^{3})$, and even if the Cholesky decomposition is computed beforehand, the matrix-vector product $LZ$ still takes $\mathcal{O}(N^2)$ operations to compute.
 \subsection{The Circulant Embedding Method}
 For this method, we assume that the sample size $N$ is a power of $2$, i.e. $N=2^{g}$ for some $g\in \N$. The covariance matrix $\Gamma_N$ is then a square matrix of size $N\times N$, which we embed in a so-called circulant covariance matrix of size $2N\times 2N$. More precisely, we define $C$ by
 \begin{equation}\label{circmatrix}
@@ -374,19 +433,54 @@ The way the circulant embedding method is implemented in practice, is by using t
     This computation can again be done efficiently using the FFT, since the sequence $(V_{0},V_{1},\dots,V_{2N-1})$ is the discrete Fourier transform of 
     \begin{equation}
         w_{k}\coloneqq\begin{cases}
-\sqrt{\frac{\lambda_{k}}{2N}}V_{k}^{(1)}, & k=0;\\
-\sqrt{\frac{\lambda_{k}}{4N}}\left(V_{k}^{(1)}+iV_{k}^{(2)}\right), & k=1,\dots,N-1;\\
-\sqrt{\frac{\lambda_{k}}{2N}}V_{k}^{(1)}, & k=N;\\
-\sqrt{\frac{\lambda_{k}}{4N}}\left(V_{2N-k}^{(1)}+iV_{2N-k}^{(2)}\right), & k=N+1,\dots,2N-1.
+\sqrt{\frac{\lambda_{k}}{2N}}Z_{k}^{(1)}, & k=0;\\
+\sqrt{\frac{\lambda_{k}}{4N}}\left(Z_{k}^{(1)}+iZ_{k}^{(2)}\right), & k=1,\dots,N-1;\\
+\sqrt{\frac{\lambda_{k}}{2N}}Z_{k}^{(1)}, & k=N;\\
+\sqrt{\frac{\lambda_{k}}{4N}}\left(Z_{2N-k}^{(1)}+iZ_{2N-k}^{(2)}\right), & k=N+1,\dots,2N-1.
         \end{cases}
     \end{equation}
 The first $N$ elements of $V$ are the desired samples of fractional Gaussian noise.
 \item Take cumulative sums $B_{0}^{H}=0, B_{k}^{H}=B_{k-1}^{H}+V_{k}$, $k=1,\dots,N$, to obtain the final sample. Rescale by $(T/N)^{H}$ if necessary. 
 \end{enumerate}
-The main advantage of this method is speed. Namely, to obtain a sample of size $N$. the number of computations needed is of order $\mathcal{O}(N\log(N))$.
+The main advantage of this method is speed. Namely, to obtain a sample of size $N$, the number of computations needed is of order $\mathcal{O}(N\log(N))$. Even though the eigenvalues \eqref{eigenvalues} and the resulting vector $V$ are real in theory, one might still need to take the real part of these due to the nature of floating point arithmetic.
+
+Table \ref{Tab:Tcr} exhibits some statistics about the running time of the two methods. We first simulated $100$ paths of a fBM with Hurst index $0.3$ with $100$ points in each path, and then repeated with $100$ paths with $1000$ points in each. The reported running times are for simulating one such path, e.g. the Choleksy method took on average $3526.4$ milliseconds to simulate one path with $1000$ points.
+\begin{table}[H]
+\centering
+\begin{tabular}{llllll}\toprule
+
+        & Min    & Mean   & Median & Max    & Points  \\ \hline
+Cholesky  & 13.3 & 15.1 & 14.4 & 23.6 & 100 \\
+Circulant & 0.2    & 0.26    & 0.26    & 0.56 & 100 \\ \midrule
+Cholesky  & 1864.5 & 3526.4 & 4182.2 & 7130.8 & 1000 \\
+Circulant & 2.5    & 7.4    & 6.1    & 115.4  & 1000 \\
+\bottomrule
+\end{tabular}
+\caption{Running times in milliseconds for simulating 100 paths with 100/1000 points.}
+\label{Tab:Tcr}
+\end{table}
+
+Clearly, the circulant embedding method is far superior in speed to the Cholesky method, which especially becomes clear when having to simulate paths with $1000$ points. Already for paths with $1000$ points, the Cholesky method becomes too computationally expensive, especially for pratical uses such as Monte Carlo pricing.
+
+
+
+\begin{figure}[htp]
+
+\centering
+\includegraphics[scale=0.58]{fig/img/fBM paths/fBM1,H0.2.pdf}\hfill
+\includegraphics[scale=0.59]{fig/img/fBM paths/fBM2,H0.5.pdf}\hfill
+\includegraphics[scale=0.6]{fig/img/fBM paths/fBM3,H0.8.pdf}
+
+\caption{Paths of fBMs of Hurst indices $0.2$ (top left), $0.5$ (top right), and $0.8$ (bottom).}
+\label{fig:figure3}
+
+\end{figure}
+Figure \ref{fig:figure3} shows simulated fBM paths with $10,000$ points each. As was shown in Theorem \ref{existencethm}, the path of a fBM is almost surely Hölder continuous of order $\alpha\in(0,H)$ on compact intervals, and hence the Hurst index $H$ controls the roughness of the paths. In accordance with Figure \ref{fig:figure3}, the paths become less rough and more well-behaved as $H$ increases. However, for our purposes of modelling stochastic volatility, only the rough paths with $H<1/2$ will be of interest.
+%Even though in theory, the eigenvalues \eqref{eigenvalues} are real, and the resulting vector $V$ is real by construction, one might still need to take the real part of these when implementing the method due to the nature of floating point arithmetic.
 %The matrix $L$ can be computed more efficiently, if we utilize the fact that $\Gamma_N$ is Toeplitz matrix. 
+
 \newpage
-\textbf{Spørgsmål til vejledermøde:}
+\textbf{Spørgsmål til vejledermøder:}
 \begin{enumerate}
     \item Hvorfor forskellige resultater ved de to simulationsprocedure?
     \item Skal jeg have beviset for eksistensen af fBM med? 
@@ -395,4 +489,11 @@ The main advantage of this method is speed. Namely, to obtain a sample of size $
     \item Kunne man ikke også kigge på at forecaste volatilitet med den nævnte OU-model? Og sammenligne med en anden model fx. GARCH eller lignende? 
     \item Er "equal in law" og "equal in distribution" det samme?
     \item "Nem måde" at web-scrape den seneste aktiekurs på fra yahoo?
+    \item Læse beviset for Proposition 2.14, da det er lidt hjemmebrygget
+    \item Kompleksiteten i circulant metoden
+\end{enumerate}
+\textbf{Ting jeg skal huske}
+\begin{enumerate}
+    \item Samme notation for autokovarians-funktionen for Gaussisk hvid støj - Lige nu er der både $\rho$ og $\gamma$.
+    \item Samme notation for "equal in law" og "equal in distribution".
 \end{enumerate}

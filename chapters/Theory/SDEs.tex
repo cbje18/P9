@@ -1,14 +1,14 @@
-\chapter{Theory}
+\chapter{Preliminary Theory}
 In this chapter, we will.....
 
-\section{Stochastic Differential Equations}
+\section{Stochastic Differential Equations}\label{section:SDE}
 A general stochastic differential equation (SDE) is a $d$-dimensional system of the form
 \begin{equation}\label{integral}
-    X_{t}^{(i)}=X_{0}^{(i)}+ \int_{0}^{t}b^{(i)}(s,X_{s})ds+\sum_{j=1}^{m}\int_{0}^{t}\sigma^{(i,j)}(s,X_{s})dB_{s}^{(i)},\quad t\geq 0,
+    X_{t}^{(i)}=X_{0}^{(i)}+ \int_{0}^{t}b^{(i)}(s,X_{s})ds+\sum_{j=1}^{m}\int_{0}^{t}\sigma^{(i,j)}(s,X_{s})dB_{s}^{(j)},\quad t\geq 0,
 \end{equation}
-where $b^{(i)}:[0,\infty)\times \R^{d}\to \R$, $\sigma^{(i,j)}:[0,\infty)\times\R^{d}\to\R$ for $i=1,\dots,d$ and $j=1,\dots,m$ are two families of Borelian functions, and $B$ is an $m$-dimensional Brownian motion. Equation \eqref{integral} is a SDE expressed in its integral form; Equivalently, it could also have been written as
+where $b^{(i)}:[0,\infty)\times \R^{d}\to \R$, $\sigma^{(i,j)}:[0,\infty)\times\R^{d}\to\R$ for $i=1,\dots,d$ and $j=1,\dots,m$ are two families of Borelian functions, and $B$ is a $m$-dimensional Brownian motion. Equation \eqref{integral} is a SDE expressed in its integral form. Equivalently, it could also have been written as
 \begin{equation}
-    dX_{t}^{(i)}= b^{(i)}(t,X_{t})dt +\sigma^{(i,j)}(t,X_{t})dB_{t}^{(i)}.
+    dX_{t}^{(i)}= b^{(i)}(t,X_{t})dt +\sigma^{(i,j)}(t,X_{t})dB_{t}^{(j)}, \quad t\geq 0.
 \end{equation}
 Recall that a solution of a stochastic differential equation is a triplet of the form \newline$\left((\Omega,\mathcal{F},(\mathcal{F}_{t})_{t\geq 0},\mathbb{P}),B,X\right)$ consisting of a filtered probability space satisfying the usual conditions, a $\R^{m}$-valued Brownian motion $B$ adapted to $(\mathcal{F}_{t})_{t\geq 0}$, and the $(\mathcal{F}_{t})_{t\geq 0}$-adapted $\R^{d}$-valued continuous solution process $X$.
 
@@ -18,7 +18,7 @@ A solution to a SDE, say $\left((\Omega,\mathcal{F},(\mathcal{F}_{t})_{t\geq 0},
 \end{equation}
 A solution, which is not strong, is said to be weak. 
 
-Analogous to the theory of ordinary differential equations, we have that if the family of functions $\sigma=(\sigma^{(i,j)})_{1\leq i\leq d, 1\leq j\leq m}$ and $b=(b^{(i)})_{1\leq i\leq d}$ satisfy a certain Lipschitz-condition, then existence and uniqueness is guaranteed. More precisely, there is a constant $K>0$ such that
+Analogous to the theory for ordinary differential equations, we have that if the family of functions $\sigma=(\sigma^{(i,j)})_{1\leq i\leq d, 1\leq j\leq m}$ and $b=(b^{(i)})_{1\leq i\leq d}$ satisfy a Lipschitz-condition in the spatial variable, then existence and uniqueness is guaranteed. More precisely, there is a constant $K>0$ such that
 \begin{equation}\label{lipschitz}
     \lVert \sigma(t,x)-\sigma(t,y)\rVert+ \lVert b(t,x)-b(t,y)\rVert \leq K\lVert x-y\rVert
 \end{equation}
@@ -29,6 +29,73 @@ holds for all $x,y\in\R$ and $t\geq 0$. The existence and uniqueness result is s
 \end{equation}
 \end{thm}
 The proof of Theorem \ref{existanduniqthm} is omitted.
+\subsection{Simulation of SDEs}
+In general, finding the solution of a given SDE is a non-trivial task. Consequently, we may turn to numerical simulations of the solution process $X$ of the SDE
+\begin{equation}
+    X_{t}=x_{0} + \int_{0}^{t}b(s,X_{s})ds + \int_{0}^{t}\sigma(s,X_{s})dB_{s}, \quad t\geq 0,
+\end{equation}
+where $x_{0}\in \R^{d}$, $B$ is a $m$-dimensional Brownian motion, and the families $b$ and $\sigma$ are as in Section \ref{section:SDE}. Since it is only possible to simulate a finite number of points, we will adopt the notation $X_{t_{0}}^{N},X_{t_{1}}^{N},\dots,X_{t_{N}}^{N}$ for a simulation of $X$ at times $0=t_{0}<t_{1}<\dots <t_{N}=T$ with $T>0$ and $N\in \N$. Suppose, we wish to find an approximation of the solution process $X$ that can be represented as
+\begin{equation}\label{simulation}
+    X_{0}^{N}=x_{0},\quad X_{t_{k}}^{N}=\Psi_{k,N}(X_{0},\Delta_{1}^{N}B,\dots,\Delta_{k}^{N}B), \quad k=1,\dots,N,
+\end{equation}
+for some measurable function $\Psi_{k,N}:\R^{d}\times \R^{m\times k}\to \R^{d}$, where 
+\begin{equation}
+    \Delta_{k}^{N}B\coloneqq B_{k\Delta_{N}}-B_{(k-1)\Delta_{N}}, \quad \Delta_{N}\coloneqq T/N, \quad k=1,\dots, N.
+\end{equation}
+For $N$ sufficiently large, $X_{t_{k}}^{N}$ will approximate the solution $X_{t_{k}}$ well. Hence, if we have a simulation scheme of the form \eqref{simulation}, then we just need to simulate the path of a Brownian motion at $0=t_{0}<t_{1}<\dots<t_{N}=T$. In order to simulate a Brownian motion, let $(\zeta_{1},\dots,\zeta_{N})$ be a collection of i.i.d. $m$-dimensional random vectors with $\zeta_{k}\sim \mathcal{N}(0,I_{m})$, where $I_m$ is the $m\times m$ identity matrix. If we utilize the independence of the increments of $B$, we get
+\begin{equation}
+    B_{t_{k}}-B_{t_{k-1}}\overset{d}{=} \sqrt{t_{k}-t_{k-1}}\zeta_{k},\quad k=1,\dots,N.
+\end{equation}
+Finally, we obtain that
+\begin{align}
+    (B_{t_{1}},B_{t_{2}},\dots,B_{t_{N}})&= (B_{t_{1}}-B_{t_{0}}, \sum_{k=1}^{2}(B_{t_{k}}-B_{t_{k-1}}),\dots, \sum_{k=1}^{N}(B_{t_{k}}-B_{t_{k-1}}))\\
+    &\overset{d}{=}(\sqrt{t_{1}-t_{0}}\zeta_{1},\sum_{k=1}^{2}\sqrt{t_{k}-t_{k-1}}\zeta_{k},\dots,\sum_{k=1}^{N}\sqrt{t_{k}-t_{k-1}}\zeta_{k}).
+\end{align}
+We summarize in the following algorithm.
+\begin{algorithm}[H] 
+\SetAlgoLined
+    \textbf{Input:} $m\in\N, 0=t_{0}<t_{1}<\dots <t_{N}=T$.\newline
+    \textbf{Output:} Simulated points $(B_{t_{k}})_{k=0}^{N}$.\\
+    $B_{0}\gets 0$; \Comment{Initialization}\\
+    \For{$k=1 \textbf{\textrm{ to }} N$}
+    {$\zeta_{k} \gets \mathcal{N}(0,I_{m})$;\\
+    $B_{t_{k}}\gets B_{t_{k-1}} + \sqrt{t_{k}-t_{k-1}}\zeta_{k}$;}
+\caption{Simulation of a Brownian motion.}
+\label{alg:euler}
+\end{algorithm}
+To simulate the solution process $X_{t}$, we will present the Euler-Maruyama scheme. Fix $T>0$ and take $N\in \N$, and define an equidistant partition of $[0,T]$ by $t_{k}=k\Delta_{N}$ for $k=0,1,\dots,N$ with $\Delta_{N}=T/N$. It holds that
+\begin{equation}\label{eulerscheme}
+    X_{t_{k}}=X_{t_{k-1}} + \int_{t_{k-1}}^{t_{k}}b(s,X_{s})ds + \int_{t_{k-1}}^{t_{k}}\sigma(s,X_{s})dB_{s}, \quad k=1,\dots,N.
+\end{equation}
+We can make $\Delta_{N}$ as small as we want by choosing $N$ sufficiently large. Consequently, the integrals in \eqref{eulerscheme} can be approximated in the following manner
+\begin{equation}
+    X_{t_{k}}=X_{t_{k-1}} + b(t_{k-1},X_{t_{k-1}})(t_{k}-t_{k-1}) + \sigma(t_{k-1},X_{t_{k-1}})\Delta_{k}^{N}B + R_{k},
+\end{equation}
+where
+\begin{equation}
+    R_{k}\coloneqq \int_{t_{k-1}}^{t_{k}}\left(b(s,X_{s}) - b(t_{k-1},X_{k-1})\right)ds  + \int_{t_{k-1}}^{t_{k}}\left(\sigma(s,X_{s}) - \sigma(t_{k-1},X_{k-1})\right)dB_{s}
+\end{equation}
+is the residual term for $k=1,\dots, N$. If we neglect this residual term, we obtain the Euler-Maruyama approximation
+\begin{equation}\label{eulerrec}
+    X_{t_{k}}^{N}=X_{t_{k-1}}^{N} + b(t_{k-1},X_{t_{k-1}}^{N})\Delta_{N} + \sigma(t_{k-1},X_{t_{k-1}}^{N})\Delta_{k}^{N}B,\quad X_{0}^{N}=x_{0}.
+\end{equation}
+If we iterate the relation \eqref{eulerrec}, we obtain a relation of the form
+\begin{equation}
+    X_{t_{k}}^{N}=\Psi_{k,N}(X_{0},\Delta_{1}^{N}B,\dots,\Delta_{k}^{N}B), \quad k=1,\dots,N.
+\end{equation}
+Hence, as previously discussed, we just need to simulate the path of a Brownian motion for this simulation scheme. We summarize the methodology in the following algorithm.
+\begin{algorithm}[H] 
+\SetAlgoLined
+    \textbf{Input:} $N\in\mathbb{N}$, $T>0$, $b:[0,T]\times \mathbb{R}^{d}\to\mathbb{R}^{d}$, $\sigma:[0,T]\times\mathbb{R}^{d}\to\mathbb{R}^{d\times m}$, $x_{0}\in\mathbb{R}^{d}$.\newline
+    \textbf{Output:} Approximation $(X_{t_k}^{N})_{k=0,\dots,N}.$\newline
+    $t_{k}\gets k\Delta_{N}$, $k=0,1,\dots,N$ with $\Delta_{N}=T/N$; \Comment{Define the grid.}\newline
+    $B=(B_{t_k})_{k=0,\dots,N_{n}}$;\Comment{Simulate a Brownian Motion.}\newline
+    $X_0^{N}\gets x_0$;\Comment{Initialization.}\newline
+    \For{$k=1 \textbf{\textrm{ to }} N$}
+        {$X_{t_k}^{N}\gets X_{t_{k-1}}^{N} + b(t_{k-1},X_{t_{k-1}}^{N})\Delta_{N} + \sigma(t_{k-1},X_{t_{k-1}}^{N})\Delta_{k}^{N}B$;}
+\caption{Euler-Maruyama Scheme}
+\label{alg:euler}
+\end{algorithm}
 \subsection{The Black \& Scholes Model}
 Let $\mathfrak{M}=\{(\Omega,\mathcal{F},(\mathcal{F}_{t})_{0\leq t\leq T},\mathbb{P}), (A_{t},S_{t})_{0\leq t\leq T}\}$ with $T>0$ be our finite-horizon financial market consisting of a risky asset $S_{t}$ and a risk-free bond $A_{t}$ playing the role as a numéraire. The price dynamics specified by the Black \& Scholes Model are given by the pair of SDEs:
 \begin{align}
