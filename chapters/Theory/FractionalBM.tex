@@ -294,7 +294,7 @@ If we assume that $\int_{0}^{1}B_{s}^{H}d^{-}B_{s}^{H}$ exists, then as $n\to\in
     \sum_{k=0}^{n-1}(B_{(k+1)/n}^{H}-B_{k/n}^{H})^{2}\overset{\mathbb{P}}{\to} (B_{1}^{H})^{2}-2\int_{0}^{1}B_{s}^{H}d^{-}B_{s}^{H}.
 \end{equation}
 This is clearly in contradiction with Corollary \ref{pvariations}, which states that the quadratic variation of $B^{H}$ does not exists for $H<1/2$. Thus, we conclude that $\int_{0}^{T}B^{H}_{s}d^{-}B^{H}_{s}$ does not exist for $H<1/2$, which is unsatisfactory for a reasonable theory of integration with respect to $B^H$. However, it will suffice for our purposes as exemplified by the following theorem.
-\begin{thm}\label{thm:integration}
+\begin{prop}\label{thm:integration}
     Let $\psi_{t}=\psi_{t}(\omega):[0,T]\times \Omega\to \R$ be a progressively measurable and forward integrable process, which is cádlág. Then the forward integral of $\psi$ with respect to the fBM $B^{H}$ coincides with
     \begin{equation}
         \int_{0}^{T}\psi_{s}d^{-}B^{H}_{s}=\lim_{|\mathcal{P}|\to 0}\sum_{j=0}^{N-1}\psi_{t_{j}}\Delta B^{H}_{t_{j}},
@@ -304,7 +304,7 @@ This is clearly in contradiction with Corollary \ref{pvariations}, which states 
         |\mathcal{P}|=\sup_{j}|t_{j+1}-t_{j}|,
     \end{equation}
     and $\Delta B^{H}_{t_{j}}=B_{t_{j+1}}^{H}-B_{t_{j}}^{H}$.
-\end{thm}
+\end{prop}
 \begin{proof}
     Let $\psi$ be a cádlág forward integrable process and let
     \begin{equation}
@@ -322,7 +322,8 @@ We have the pointwise limit $\psi^{(\mathcal{P})}_{t}\to\psi_{t}$ as $|\mathcal{
 Theorem \ref{thm:integration} states that forward integrals with respect to fBMs can simply be evaluated as the limit of Riemann-sums, when the integrand is sufficiently well-behaved. This means that for this class of integrands, we can just evaluate the stochastic integral pathwise via Riemann-sums. This pathwise Riemann-Stieltjes approach will be utilized, when we later on have to evaulate stochastic integrals of this type. 
 %If we let $\mathcal{C}^{\alpha}\left([0,T]\right)$ denote the set of real-valued Hölder continuous functions of order $\alpha\in (0,1)$ on $[0,T]$, $T>0$
 \section{Simulation of a Fractional Brownian Motion}
-As was established in Proposition \ref{corr}, the increments of a fractional Brownian motion are correlated, whenever $H\neq 1/2$. Thus, the usual simulation procedure for standard Brownian motions, which consists of taking cumulative sums of i.i.d. standard normal variables, is no longer applicable. 
+As was established in Proposition \ref{corr}, the increments of a fractional Brownian motion are correlated, whenever $H\neq 1/2$. Thus, the procedure presented in Algorithm \ref{alg:BM} is no longer applicable.
+%Thus, the usual simulation procedure for standard Brownian motions, which consists of taking cumulative sums of i.i.d. standard normal variables, is no longer applicable. 
 
 Suppose we wish to simulate the path of a fBM $B^{H}$ on the interval $[0,T]$ for some $T>0$. Since it is only possible to sample at a finite number of points, we will adopt the notation $Y_{t_{0}},Y_{t_{1}},\dots,Y_{t_{N}}$ for a simulated sample of $B^H$ at the points $0=t_{0}<t_{1}<\dots<t_{N}=T$. Then $(Y_{t_{0}},Y_{t_{1}},\dots,Y_{t_{N}})$ forms a centered Gaussian vector with a certain covariance matrix. Therefore, it can be simulated as a linear transformation of a standard Gaussian vector, i.e. a vector of i.i.d. standard normal variables. This basic idea will be utilized in both simulation procedures presented, which are the Cholesky decomposition method and the circulant embedding method. 
 
@@ -330,7 +331,7 @@ Note that due to the self-similarity property, it is suffcient to simulate $(Y_{
 \begin{equation}
     (Y_{t_{0}},Y_{t_{1}},\dots,Y_{t_{N}}) \overset{d}{=}(B_{t_{0}}^{H},B_{t_{1}}^{H},\dots, B_{t_{N}}^{H})
 \end{equation}
-as opposed to techniques that simulate with error.
+as opposed to techniques that simulate with error like the Euler-Maruyama scheme.
 %As shown in Proposition \ref{corr}, the increments of a fBM $B^{H}=(B_{t}^{H})_{t\geq 0}$ are correlated, whenever $H\neq 1/2$. This complicates the simulation of fBM's substantially, since it is no longer possible to simulate by taking cumulative sums of appropriately scaled i.i.d. standard normal variables as when simulating standard Brownian motions. In this section, two simulation methods for the fBM will be introduced, namely the Cholesky method and the circulant embedding method.
 
 %Since it is only possible to sample at a finite number of points, we will adopt the notation $Y_{t_{0}},Y_{t_{1}},\dots,Y_{t_{N}}$ for a simulated sample of $B^{H}$ at the points $0=t_{0}<t_{1}<\dots <t_{N}=T$, where $T>0$. Furthermore, both methods presented are exact simulation techniques in the sense that if $(B_{t_{0}}^{H},B_{t_{1}}^{H},\dots, B_{t_{N}}^{H})$ is a sample from a fBM $B^H$, then
@@ -491,6 +492,7 @@ Figure \ref{fig:figure3} shows simulated fBM paths with $10,000$ points each. As
     \item "Nem måde" at web-scrape den seneste aktiekurs på fra yahoo?
     \item Læse beviset for Proposition 2.14, da det er lidt hjemmebrygget
     \item Kompleksiteten i circulant metoden
+    \item Summationsindeks i beviset for Proposition 3.17.
 \end{enumerate}
 \textbf{Ting jeg skal huske}
 \begin{enumerate}
