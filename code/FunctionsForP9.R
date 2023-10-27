@@ -2,9 +2,6 @@
 rm(list = ls())
 graphics.off()
 
-#Packages
-require(MASS)
-
 
 #Function for simulating a Brownian motion
 #inputs are dimension m, time T, number of points n
@@ -65,33 +62,31 @@ getIV <- function(x, St, r){
 #Function simulating a fractional BM using the Cholesky method
 simfBM_cholesky <- function(m=1, T, H, n){
   t_grid <- seq(0, T, T/n)
-  gamma <- function(k){
-    return(0.5*((k+1)^(2*H) + abs(k-1)^(2*H) - 2*k^(2*H)))
+  cov_function <- function(t,s){
+    return(0.5*(abs(t)^(2*H) + abs(s)^(2*H) - abs(t-s)^(2*H)))
   }
-  C <- matrix(0, nrow = n, ncol = n)
-  for(i in 1:n){
-    for(j in 1:n){
-      C[i,j] <- gamma(abs(i-j))
+  C <- matrix(0, nrow = length(t_grid), ncol = length(t_grid))
+  for(i in 1:length(t_grid)){
+    for(j in 1:length(t_grid)){
+      C[i,j] <- cov_function(t_grid[i], t_grid[j])
     }
   }
+  C <- C[-1,-1]
   L <- t(chol(C))
   W <- rnorm(n, mean = 0, sd = 1)
-  noise <- L%*%W
-  noise <- c(0, noise)
-  
-  simulations <- cumsum(noise)
-  simulations <- ((T/n)^(H))*simulations
+  simulations <- L%*%W
+  simulations <- c(0, simulations)
   
   return(simulations)
 }
 
 
 #Simulating fBM using Circulant Embedding without FFT
-simfBM_circulant <- function(m = 1, T, H, n){
+simfBM_Circulant <- function(m = 1, T, H, n){
   t_grid <- seq(0, T, T/n)
   
   #Define autocovariance function for fractional Gaussian noise and the matrix C
-  gamma <- function(h){
+  cov_noise <- function(h){
     return(0.5*(abs(h-1)^(2*H) - 2*abs(h)^(2*H) + abs(h+1)^(2*H)))
   }
   
@@ -99,11 +94,11 @@ simfBM_circulant <- function(m = 1, T, H, n){
   
   #Manually compute the first row of C
   for(i in 1:n){
-    C[1,i] <- gamma(i-1)
+    C[1,i] <- cov_noise(i-1)
   }
   
   for(i in 1:(n-1)){
-    C[1,i+n+1] <- gamma(n-i)
+    C[1,i+n+1] <- cov_noise(n-i)
   }
   
   #Function for creating circulant matrix
@@ -165,12 +160,10 @@ simfBM_circulant <- function(m = 1, T, H, n){
 
 #Function simulating fBM using circulant embedding with FFT
 simfBM_fft <- function(m = 1, T, H, N){
-  
+     
   #Define autocovariance function for fractional Gaussian noise
-  gamma <- function(k){
-    return(0.5*((k+1)^(2*H) + abs(k-1)^(2*H) - 2*k^(2*H)))
-  }
-  
+  gamma <- function(k){return(0.5*((k+1)^(2*H) + abs(k-1)^(2*H) - 2*k^(2*H)))}
+       
   # Get eigenvalues
   g = c()
   for(k in 0:(N-1)){g <- c(g, gamma(k))}
@@ -179,7 +172,7 @@ simfBM_fft <- function(m = 1, T, H, N){
   K = (2*N)-1
   i = complex(real=0, imaginary=1)
   lk = rev(fft(r*exp(2*pi*i*K*j*(1/(2*N)))))
-  
+         
   # Generate random variables
   Vj <- cbind(seq(0,0,length.out=2*N), seq(0,0,length.out=2*N))
   Vj[1,1] <- rnorm(1)
@@ -190,7 +183,7 @@ simfBM_fft <- function(m = 1, T, H, N){
   Vj[2:N,2] <- Vj2
   Vj[(N+2):(2*N),1] <- rev(Vj1)
   Vj[(N+2):(2*N),2] <- rev(Vj2)
-  
+           
   # Compute Z (fractional Gaussian Noise)
   wk = seq(0,0,length.out=2*N)
   wk[1] <- sqrt(lk[1]/(2*N))*Vj[1,1]
@@ -205,8 +198,8 @@ simfBM_fft <- function(m = 1, T, H, N){
   return(fBM)
 }
 
-#Function for simulating price and volatility paths from Heston Model
-heston_sim <- function(n_sims, T, kappa, theta, r, sigma, rho, v0, S0){
+#Function to simulate price and volatility paths from Heston Model
+Heston_sim <- function(n_sims, T, kappa, theta, r, sigma, rho, v0, S0){
   dt <- T/n_sims
   t_grid <- seq(0,T,dt)
   
@@ -224,5 +217,46 @@ heston_sim <- function(n_sims, T, kappa, theta, r, sigma, rho, v0, S0){
     S[i+1] <- S[i]*exp( (r - 0.5*V[i])*dt + sqrt(V[i])*sqrt(dt)*B[2,i])
   }
   return(list(S,V))
+}
+
+#Simulate Fractional Ornstein-Uhlenbeck by Euler Scheme
+sim_fOU_euler <- function(T, N, lambda, H, phi, theta, Y0){
+  delta <- T/N
+  t_grid <- seq(0, T, delta)
+  
+  W <- simfBM_fft(m = 1, T = T, H = H, N = N+1)
+  dW <- diff(W, lag = 1)
+  
+  Y <- numeric(N+1)
+  Y[1] <- Y0
+  
+  for(i in 2:(N+1)){
+    Y[i] <- Y[i-1] - lambda*(Y[i-1] - theta)*delta + phi*dW[i]
+  }
+  
+  return(Y)
+}
+
+#Simulate Fractional Ornstein-Uhlenbeck by Riemman-summation
+sim_fOU_riemann <- function(lambda, N, T, phi, H, theta){
+  t_grid <- seq(0, T, T/N)
+  
+  W <- simfBM_fft(m = 1, T = T, H = H, N = N)
+  dW <- diff(W, lag = 1)
+  
+  Y <- numeric(N+1); Y[1] <- 0
+  
+  riemann_sum <- function(t){
+    summands <- rep(0, floor(N*t))
+    for(i in 1:length(summands)){
+      summands[i] <- exp(lambda*i/N)*dW[i]
+    }
+    return(sum(summands))
+  }
+  
+  fBM_integral <- sapply(t_grid, riemann_sum)
+  Y <- theta - theta*exp(-lambda*t_grid) + phi*exp(-lambda*t_grid)*fBM_integral
+  
+  return(Y)
 }
 
