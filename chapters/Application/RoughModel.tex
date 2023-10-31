@@ -25,12 +25,12 @@ for $N\in\N$, $\Delta_{N}=T/N$, and $k=1,\dots,N$. Furthermore
 \end{equation}
 The Heston model will serve as a comparative model for our rough volatility model.
 \subsection{Fractional Ornstein-Uhlenbeck Process}
-The rough volatility model (rVol) that we will consider, models the volatility process via the fractional Ornstein-Uhlenbeck process
+The rough fractional stochastic volatility (RFSV) model that we will consider, models the volatility process via the fractional Ornstein-Uhlenbeck process
 \begin{align}
-    dY_{t}&= -\lambda(Y_{t}-\theta)dt + \varphi dB^{H}_{t}\\
+    dY_{t}&= -\lambda(Y_{t}-\theta)dt + \varphi dB^{H}_{t},\\
     \sigma_{t} &= e^{Y_{t}},
 \end{align}
-where $\theta\in \R$, $\lambda,\varphi >0$, and $B^{H}$ is a fBM of Hurst index $H\in(0,1/2)$. As for the usual Ornstein-Uhlenbeck process, there is an explicit form for the solution
+where $\theta\in \R$, $\lambda,\varphi >0$, and $B^{H}$ is a fBM of Hurst index $H\in(0,1/2)$, which is where the "rough" nomenclature stems from. As for the usual Ornstein-Uhlenbeck process, there is an explicit form for the solution
 \begin{equation}\label{ornstein_sol}
     Y_{t}= \theta + (Y_{0}-\theta)e^{-\lambda t} + \varphi e^{-\lambda t}\int_{0}^{t}e^{\lambda s}dB_{s}^{H}.
 \end{equation}
@@ -54,7 +54,7 @@ The error rates for the two simulation methods in \eqref{fou_exact} and \eqref{f
 \begin{equation}
     dY_{t}=-(Y_{t}-1)dt+\frac{1}{2}dB^{0.2}_{t},\quad Y_{0}=0,
 \end{equation}
-and use \eqref{fou_exact} with $N=100,000$ as our true solution path $Y_{t}$, then we can compare the Euler-approximations below.
+and use \eqref{fou_exact} with $N=100,000$ as our true solution path $Y_{t}$, then we can compare the Euler-approximations. This comparison is seen in Figure \ref{fig:euler-scheme}, where the true solution path is plotted with the Euler-approximations superimposed. It is seen that for $N\geq 1000$, the true solution is approximated well by the Euler scheme.
 \begin{figure}[H]
     \centering
     \includegraphics[scale=0.58]{fig/img/EulerScheme/EulerScheme10.pdf}\hfill
@@ -62,7 +62,7 @@ and use \eqref{fou_exact} with $N=100,000$ as our true solution path $Y_{t}$, th
     \includegraphics[scale=0.58]{fig/img/EulerScheme/EulerScheme1000.pdf}
     \includegraphics[scale=0.58]{fig/img/EulerScheme/EulerScheme10000.pdf}
     \caption{Euler Approximations for Various Step Sizes $\Delta_{N}$. }
-    \label{fig:enter-label}
+    \label{fig:euler-scheme}
 \end{figure}
 
 \section{Volatility is Rough}
@@ -87,13 +87,49 @@ To estimate the smoothness parameter $s_{q}$ for each $q$, we compute $m(q,\Delt
     \caption{Realized Variance (left) and Volatility (right) of the S\&P-500.}
     \label{fig:realized}
 \end{figure}
-We proceed to compute $m(q,\Delta)$ for $q\in \{0.5,1,1.5,2,3\}$ and $\Delta \in \{1,2,\dots,30\}$, and regress $\log(m(q,\Delta))$ against $\log(\Delta)$. As seen in Figure 
+We proceed to compute $m(q,\Delta)$ for $q\in \{0.5,1,1.5,2,3\}$ and $\Delta \in \{1,2,\dots,30\}$, and regress $\log m(q,\Delta)$ against $\log\Delta$. As seen in Figure \ref{fig: Linear_reg}, the points lie very close to the regression line for each value of $q$.
 \begin{figure}[H]
     \centering
-    \includegraphics[scale=0.8]{fig/img/RealizedLib/LinearReg.pdf}
-    \caption{Caption}
-    \label{fig:enter-label}
+    \includegraphics[scale=0.78]{fig/img/RealizedLib/Linear_Reg_rigtig.pdf}
+    \caption{$\log m(q,\Delta)$ as a function of $\log\Delta$, S\&P-500.}
+    \label{fig: Linear_reg}
 \end{figure}
+ If we assume stationarity of the log-volatility process, then the linear relationsship in Figure \ref{fig: Linear_reg} implies the following scaling property in expectation
+ \begin{equation}\label{eq:scaling}
+     \E[|\log(\sigma_{\Delta})-\log(\sigma_{0})|^{q}]=K_{q}\Delta^{\xi_{q}},
+ \end{equation}
+ where $\xi_{q}>0$ is the slope of the regression line associated to $q$. As shown in \cite{volisrough}, the slope $\xi_{q}$ is approximately directly proportional to the smoothness parameter $s_{q}$, i.e. $\xi_{q}\approx qs_{q}$. The increment of a fBM $B^{H}_{\Delta}-B^{H}_{0}=B^{H}_{\Delta}$ is a centered Gaussian with variance $\Delta^{2H}$. Thus, we obtain that its absolute centered moments are given by
+ \begin{equation}
+     \E\left[|B^{H}_{\Delta}|^{q}\right]=K_{q}\Delta^{\xi_{q}},
+ \end{equation}
+ where $K_{q}$ is the $q$'th absolute moment of a standard Gaussian distribution, and $\xi_{q}\approx qH$. Hence, the fractional Brownian motion $B^{H}$ also satisfies the scaling property \eqref{eq:scaling}. 
+ 
+ Having established the scaling property in \eqref{eq:scaling}, we now turn to the distribution of the increments of the log-volatility. It is a well-established stylized fact that the distribution of increments of log-volatility is close to Gaussian, which is also validated in Figure \ref{fig:histograms} for the S\&P-500, where the Gaussian distribution seems to hold for any lag $\Delta$. The fitted normal density $\hat{f}\sim \mathcal{N}(\hat{\mu}, \hat{\sigma})$ with the sample mean and sample standard deviation as parameters is also superimposed in red.
+ \begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.5, width = 7cm]{fig/img/RealizedLib/histograms/histogram1.pdf}
+    \includegraphics[scale=0.5, width = 7cm]{fig/img/RealizedLib/histograms/histogram5.pdf}\hfill
+    \includegraphics[scale=0.5, width = 7cm]{fig/img/RealizedLib/histograms/histogram25.pdf}
+    \includegraphics[scale=0.5, width = 7cm]{fig/img/RealizedLib/histograms/histogram125.pdf}
+    \caption{Histograms for different lags $\Delta$ of increments $\log\sigma_{t+\Delta}-\log\sigma_{t}$, S\&P-500.}
+    \label{fig:histograms}
+\end{figure}
+In conclusion, the preceding discussion would seem to suggest a model of the form
+\begin{equation}\label{eq:simple_model}
+    \log \sigma_{t+\Delta} - \log \sigma_{t} = \varphi(B^{H}_{t+\Delta}-B^{H}_{t}),
+\end{equation}
+where $\varphi >0$ is a positive constant, and $B^{H}$ is a fractional Brownian motion with Hurst index $H$ equal to the measured smoothness $s_{q}$ of the process. The model \eqref{eq:simple_model} can be rewritten as 
+\begin{equation}
+    \sigma_{t}=\sigma \exp\left(\varphi B_{t}^{H}\right),
+\end{equation}
+where $\sigma$ is another positive constant. However, this model is not stationary. Stationarity is imposed by modelling the log-volatility as a fractional Ornstein-Uhlenbeck process. Hence, we arrive at the rough volatility model suggested in the previous section
+\begin{align}
+    dY_{t}&= -\lambda(Y_{t}-\theta)dt + \varphi dB^{H}_{t},\\
+    \sigma_{t} &= e^{Y_{t}},
+\end{align}
+where $\lambda,\varphi>0$, $\theta\in \R$, and $H\in (0,1/2)$.
+\subsection{Estimation of Parameters}
+
 %For our rough stochastic volatility model, the underlying asset $S_{t}$ follows the SDE
 %\begin{equation}
 %    dS_{t}=\mu_{t}S_{t}dt + \sigma_{t}S_{t}dB_{t},
