@@ -52,7 +52,7 @@ Finally, we obtain that
     &\overset{d}{=}(\sqrt{t_{1}-t_{0}}\zeta_{1},\sum_{k=1}^{2}\sqrt{t_{k}-t_{k-1}}\zeta_{k},\dots,\sum_{k=1}^{N}\sqrt{t_{k}-t_{k-1}}\zeta_{k}).
 \end{align}
 We summarize in the following algorithm.
-\begin{algorithm}[H] 
+\begin{algorithm}[H]
 \SetAlgoLined
     \textbf{Input:} $m\in\N, 0=t_{0}<t_{1}<\dots <t_{N}=T$.\newline
     \textbf{Output:} Simulated points $(B_{t_{k}})_{k=0}^{N}$.\\
@@ -61,7 +61,7 @@ We summarize in the following algorithm.
     {$\zeta_{k} \gets \mathcal{N}(0,I_{m})$;\\
     $B_{t_{k}}\gets B_{t_{k-1}} + \sqrt{t_{k}-t_{k-1}}\zeta_{k}$;}
 \caption{Simulation of a Brownian motion.}
-\label{alg:euler}
+\label{alg:BM}
 \end{algorithm}
 To simulate the solution process $X_{t}$, we will present the Euler-Maruyama scheme. Fix $T>0$ and take $N\in \N$, and define an equidistant partition of $[0,T]$ by $t_{k}=k\Delta_{N}$ for $k=0,1,\dots,N$ with $\Delta_{N}=T/N$. It holds that
 \begin{equation}\label{eulerscheme}
