@@ -1,6 +1,8 @@
 \chapter{Preliminary Theory}
 In this chapter, we will.....
 
+\section{Arbitrage Theory}
+
 \section{Stochastic Differential Equations}\label{section:SDE}
 A general stochastic differential equation (SDE) is a $d$-dimensional system of the form
 \begin{equation}\label{integral}
@@ -96,7 +98,8 @@ Hence, as previously discussed, we just need to simulate the path of a Brownian 
 \caption{Euler-Maruyama Scheme}
 \label{alg:euler}
 \end{algorithm}
-\subsection{The Black \& Scholes Model}
+
+\subsection{The Black \& Scholes Model}\label{sec:BSM}
 Let $\mathfrak{M}=\{(\Omega,\mathcal{F},(\mathcal{F}_{t})_{0\leq t\leq T},\mathbb{P}), (A_{t},S_{t})_{0\leq t\leq T}\}$ with $T>0$ be our finite-horizon financial market consisting of a risky asset $S_{t}$ and a risk-free bond $A_{t}$ playing the role as a numéraire. The price dynamics specified by the Black \& Scholes Model are given by the pair of SDEs:
 \begin{align}
     dS_{t}&=\mu S_{t}dt+\sigma S_{t}dB_{t},\\
@@ -147,7 +150,7 @@ The portfolio $V_{t}=\delta_{t}S_{t}+(V_{t}-\delta_{t}S_{t})r$ with $\delta_{t}=
 
 For a European call option with strike price $K>0$ and pay-off $\Phi(S_{T})=(S_{T}-K)^{+}$, we obtain
 \begin{align}
-    F(t,S_{t})&=S_{t}N(d_{1})-e^{-r(T-t)}KN(d_{2}),\quad 0\leq t\leq T,\\
+    F(t,S_{t})&=S_{t}N(d_{1})-e^{-r(T-t)}KN(d_{2}),\quad 0\leq t\leq T,\label{BSFormula}\\
     d_{1}&\coloneqq \frac{\ln\left(\frac{S_{t}}{K}\right)+\left(r+\frac{\sigma^{2}}{2}\right)(T-t)}{\sigma\sqrt{T-t}},\\
     d_{2}&\coloneqq d_{1}-\sigma\sqrt{T-t},
 \end{align}

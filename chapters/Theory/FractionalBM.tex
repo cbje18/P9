@@ -1,6 +1,6 @@
 \chapter{Fractional Brownian Motion}
 %\section{Fractional Brownian Motion}
-This chapter/section is based on \cite{fBMbook}.
+This chapter is based on \cite{fBMbook} unless specified otherwise.
 
 In this section, we assume that every random variable $X_{t}$ is defined on some appropriate probability space $(\Omega, \mathcal{F},\mathbb{P})$. Furthermore, we assume that the index set $I$ is either equal to $\R$, $[0,\infty)$ or $[0,T]$ for some $T>0$. 
 \begin{defn}[\textit{Gaussian Process}]
@@ -38,18 +38,19 @@ where $N$ is a $\mathbb{P}$-zero set.
   \end{equation}
   if and only if $H\leq 1$. In this case, the paths of $B^{H}$ are $\alpha$-Hölder continuous on each compact set $I\subset [0,\infty)$ for any $\alpha\in (0,H)$.
 \end{thm}
-\begin{proof}
-    According to the Kolmogorov Theorem \ref{kolmogorov}, to show the existence of $B^{H}$, we have to show that $\gamma_{H}$ is positive semidefinite if and only $H\leq 1$.
-    Assume first that $H>1$, and take $t_{1}=1$, $t_{2}=2$, $a_{1}=-2$, and $a_{2}=1$. Then consider
-    \begin{align}
-        a_{1}^{2}\gamma_{H}(t_{1},t_{1})+2a_{1}a_{2}\gamma_{H}(t_{1},t_{2})+a_{2}^{2}\gamma_{H}(t_{2},t_{2})=4-2^{2H}<0.
-    \end{align}
-    Thus, $\gamma_{H}$ is not positive semidefinite when $H>1$. If $H=1$, then $\gamma_{1}(s,t)=st$ is indeed positive semidefinite such that for all $d\geq 1$, $t_{1},\dots,t_{d}\geq 0$, and $a_{1},\dots,a_{d}\in \R$
-    \begin{equation}
-        \sum_{i=1}^{d}\sum_{j=1}^{d}a_{i}a_{j}\gamma_{1}(t_{i},t_{j})= \left(\sum_{i=1}^{d}t_{i}a_{i}\right)^{2}\geq 0.
-    \end{equation}
-    Suppose $H\in (0,1)$
-\end{proof}
+%\begin{proof}
+%    According to the Kolmogorov Theorem \ref{kolmogorov}, to show the existence of $B^{H}$, we have to show that $\gamma_{H}$ is positive semidefinite if and only $H\leq 1$.
+%    Assume first that $H>1$, and take $t_{1}=1$, $t_{2}=2$, $a_{1}=-2$, and $a_{2}=1$. Then consider
+%    \begin{align}
+%        a_{1}^{2}\gamma_{H}(t_{1},t_{1})+2a_{1}a_{2}\gamma_{H}(t_{1},t_{2})+a_{2}^{2}\gamma_{H}(t_{2},t_{2})=4-2^{2H}<0.
+%    \end{align}
+%    Thus, $\gamma_{H}$ is not positive semidefinite when $H>1$. If $H=1$, then $\gamma_{1}(s,t)=st$ is indeed positive semidefinite such that for all $d\geq 1$, $t_{1},\dots,t_{d}\geq 0$, and $a_{1},\dots,a_{d}\in \R$
+%    \begin{equation}
+        %\sum_{i=1}^{d}\sum_{j=1}^{d}a_{i}a_{j}\gamma_{1}(t_{i},t_{j})= \left(\sum_{i=1}^{d}t_{i}a_{i}\right)^{2}\geq 0.
+    %\end{equation}
+    %Suppose $H\in (0,1)$
+%\end{proof}
+The proof of Theorem \ref{existencethm} is omitted. We will now define a fractional Brownian motion as the process, which existence is given by Theorem \ref{existencethm}.
 \begin{defn}[\textit{Fractional Brownian Motion}]
     Let $H\in (0,1]$. A fractional Brownian motion (fBM) of Hurst index $H$ is a continuous centered Gaussian process $B^{H}=(B_{t}^{H})_{t\geq 0}$ such that $B_{0}^{H}=0$ almost surely and with covariance function
     \begin{equation}
@@ -142,16 +143,21 @@ Then, it is easy to see that $f(x)>0$, $\forall x\in [1,\infty)$ if $H>1/2$, and
         %\E\left[(B_{t_{1}}^{H}-B_{s_{1}}^{H})(B_{t_{2}}^{H}-B_{s_{2}}^{H})\right]=\frac{1}{2}\left(f(a_{1})-f(a_{2})-\left(f(b_{1})-f(b_{2})\right)\right).
     %\end{equation}
 \end{proof}
-It is well-known that a discrete stationary stochatic process $(X_{n})_{n\in \N}$ is said to exhibit long memory if its autocovariance function $\rho(n)\coloneqq \textrm{Cov}(X_{k},X_{k+n})$ satisfies $\rho(n)\sim cn^{-\alpha}$, i.e.
-\begin{equation}
-    \lim_{n\to \infty}\frac{\rho(n)}{cn^{-\alpha}}=1,
-\end{equation}
-for some constant $c$ and $\alpha \in (0,1)$. In this case, we have that $\sum_{n=1}^{\infty}\rho(n)=\infty$. Consequently, we obtain that the increments $X_{k}\coloneqq B^{H}_{k}-B^{H}_{k-1}$ and $X_{k+n}\coloneqq B^{H}_{k+n}-B^{H}_{k+n-1}$ of a fBM $B^H$ exhibit long memory for $H>1/2$, since 
+A consequence of Proposition \ref{corr} is that the increments $X_{k}\coloneqq B_{k}^{H}-B_{k-1}^{H}$ and $X_{k+n}\coloneqq B_{k+n}^{H}-B_{k+n-1}^{H}$ of a fBM $B^{H}$ exhibit long memory for $H>1/2$, since the auto-covariance function satisfies
 \begin{equation}\label{asymp}
-    \rho_{H}(n)\coloneqq \frac{1}{2}\left((n+1)^{2H}+(n-1)^{2H}-2n^{2H}\right) \sim H(2H-1)n^{2H-2},
+\gamma_{H}(n)\coloneqq \frac{1}{2}\left((n+1)^{2H}+(n-1)^{2H}-2n^{2H}\right) \sim H(2H-1)n^{2H-2},
 \end{equation}
-as $n\to \infty$. Thus, we obtain that $\sum_{n=1}^{\infty}\rho_{H}(n)=\infty$ for $H>1/2$, and $\sum_{n=1}^{\infty}|\rho_{H}(n)|<\infty$ for $H<1/2$.
-\section{Semimartingale Property}
+as $n\to\infty$. Here $f(n)\sim g(n)$ is used to indicate that $\lim_{n\to\infty}f(n)/g(n)=1$. Thus, we obtain that $\sum_{n=1}^{\infty}|\gamma_{H}(n)|=\infty$ for $H>1/2$ and $\sum_{n=1}^{\infty}|\gamma_{H}(n)|<\infty$ for $H<1/2$. Hence, a fBM can be used to model both long and short memory, when the Hurst index is chosen appropriately. 
+%It is well-known that a discrete weakly stationary stochatic process $(X_{n})_{n\in \N}$ is said to exhibit long memory if its autocovariance function $\rho(n)\coloneqq \textrm{Cov}(X_{k},X_{k+n})$ satisfies $\rho(n)\sim Kn^{2d-1}$, i.e.
+%\begin{equation}
+%    \lim_{n\to \infty}\frac{\rho(n)}{Kn^{2d-1}}=1,
+%\end{equation}
+%for some non-zero constant $K$ and $d \in (0,1/2)$. In this case, we have that $\sum_{n=1}^{\infty}\rho(n)=\infty$. Consequently, we obtain that the increments $X_{k}\coloneqq B^{H}_{k}-B^{H}_{k-1}$ and $X_{k+n}\coloneqq B^{H}_{k+n}-B^{H}_{k+n-1}$ of a fBM $B^H$ exhibit long memory for $H>1/2$, since 
+%\begin{equation}\label{asymp}
+%    \rho_{H}(n)\coloneqq \frac{1}{2}\left((n+1)^{2H}+(n-1)^{2H}-2n^{2H}\right) \sim H(2H-1)n^{2H-2},
+%\end{equation}
+%as $n\to \infty$. Thus, we obtain that $\sum_{n=1}^{\infty}|\rho_{H}(n)|=\infty$ for $H>1/2$, and $\sum_{n=1}^{\infty}|\rho_{H}(n)|<\infty$ for $H<1/2$.
+\section{Non-Semimartingale Property}
 In this section, we will study the asymptotic properties of the $p$-variations of a fBM. Additionally, we will show that a fBM is not a semimartingale except for when $H=1/2$. Firstly, we introduce the class of Hermite polynomials and a useful lemma.
 \begin{defn}[\textit{Hermite Polynomials}]
     The Hermite polynomials are defined as the family $(H_{k})_{k\in \N}\subset \R[x]$ of polynomials satisfying
@@ -199,24 +205,24 @@ Using \eqref{fintresultat}, we deduce
     &\E\left[\left(\frac{1}{n}\sum_{i=1}^{n}f(B_{i}^{H}-B_{i-1}^{H}) - \E[f(G)]\right)^{2}\right]\\
     &= \frac{1}{n^2}\sum_{k=1}^{\infty}\frac{c_{k}^{2}}{k!}\sum_{i'=1}^{n}\sum_{i =1}^{n}\E[H_{k}(B^{H}_{i}-B_{i-1}^{H})H_{k}(B^{H}_{i'}-B^{H}_{i'-1})]\\
     &= \frac{1}{n^2}\sum_{k=1}^{\infty}c_{k}^{2}\sum_{i'=1}^{n}\sum_{i =1}^{n}\E[(B^{H}_{i}-B_{i-1}^{H})(B^{H}_{i'}-B^{H}_{i'-1})]^{k}\\
-    &= \frac{1}{n^2}\sum_{k=1}^{\infty}c_{l}^{2}\sum_{i'=1}^{n}\sum_{i =1}^{n}\rho_{H}(i-i')^{k},
+    &= \frac{1}{n^2}\sum_{k=1}^{\infty}c_{l}^{2}\sum_{i'=1}^{n}\sum_{i =1}^{n}\gamma_{H}(i-i')^{k},
 \end{align}
-where $\rho_{H}$ is the autocovariance function of fractional Gaussian noise
+where $\gamma_{H}$ is the auto-covariance function of fractional Gaussian noise
 \begin{equation}
-    \rho_{H}(x)=\rho_{H}(|x|)=\frac{1}{2}\left(|x+1|^{2H}+|x-1|^{2H}-2|x|^{2H}\right), \quad x\in \Z. 
+    \gamma_{H}(x)=\gamma_{H}(|x|)=\frac{1}{2}\left(|x+1|^{2H}+|x-1|^{2H}-2|x|^{2H}\right), \quad x\in \Z. 
 \end{equation}
-Utilizing the fact that $\rho_{H}(x)=\E[B_{1}^{H}(B_{|x|+1}^{H}-B_{|x|}^{H})]$, and that the covariance is an inner product, we get by Cauchy-Schwarz
+Utilizing the fact that $\gamma_{H}(x)=\E[B_{1}^{H}(B_{|x|+1}^{H}-B_{|x|}^{H})]$, and that the covariance is an inner product, we get by Cauchy-Schwarz
 \begin{align}
-     |\rho_{H}(x)|\leq \sqrt{\E[(B_{1}^{H})^{2}]}\sqrt{\E[(B_{|x|+1}^{H}-B_{|x|}^{H})^{2}]}=1.
+     |\gamma_{H}(x)|\leq \sqrt{\E[(B_{1}^{H})^{2}]}\sqrt{\E[(B_{|x|+1}^{H}-B_{|x|}^{H})^{2}]}=1.
 \end{align}
 We are now ready to study the $L^2$-convergence of $n^{-1}\sum_{i=1}^{n}f(B_{i}^{H}-B_{i-1}^{H})-\E[f(G)]$
 \begin{align}
-    \E\left[\left(\frac{1}{n}\sum_{i=1}^{n}f(B_{i}^{H}-B_{i-1}^{H})-\E[f(G)]\right)^{2}\right] &\leq \frac{1}{n^{2}}\sum_{k=1}^{\infty}c_{k}^{2}\sum_{i'=1}^{n}\sum_{i =1}^{n}|\rho_{H}(i-i')|\\
-    &= \mathrm{Var}[f(G)]\frac{1}{n^2}\sum_{i'=1}^{n}\sum_{i =1}^{n}|\rho_{H}(i-i')|\\
-    &= \mathrm{Var}[f(G)]\frac{1}{n^2}\sum_{i'=1}^{n}\sum_{i=1-i'}^{n-i'}|\rho_{H}(i)|\\
-    &\leq 2\mathrm{Var}[f(G)]\frac{1}{n}\sum_{i=0}^{n-1}|\rho_{H}(i)|.
+    \E\left[\left(\frac{1}{n}\sum_{i=1}^{n}f(B_{i}^{H}-B_{i-1}^{H})-\E[f(G)]\right)^{2}\right] &\leq \frac{1}{n^{2}}\sum_{k=1}^{\infty}c_{k}^{2}\sum_{i'=1}^{n}\sum_{i =1}^{n}|\gamma_{H}(i-i')|\\
+    &= \mathrm{Var}[f(G)]\frac{1}{n^2}\sum_{i'=1}^{n}\sum_{i =1}^{n}|\gamma_{H}(i-i')|\\
+    &= \mathrm{Var}[f(G)]\frac{1}{n^2}\sum_{i'=1}^{n}\sum_{i=1-i'}^{n-i'}|\gamma_{H}(i)|\\
+    &\leq 2\mathrm{Var}[f(G)]\frac{1}{n}\sum_{i=0}^{n-1}|\gamma_{H}(i)|.
 \end{align}
-We already know from \eqref{asymp} that $\rho_{H}(i)\sim H(2H-1)i^{2H-2}$ as $i\to \infty$. We know that if $H<1/2$, then $\sum_{i=1}^{\infty}|\rho_{H}(i)|<\infty$, and the result \eqref{lln} holds. If $H>1/2$, then $\sum_{i=1}^{n-1}|\rho_{H}(i)|\sim H(2H-1)\sum_{i=1}^{n-1}i^{2H-2}\sim Hn^{2H-1}$ as $n\to \infty$, and the result \eqref{lln} holds as well because $H<1$.
+We already know from \eqref{asymp} that $\gamma_{H}(i)\sim H(2H-1)i^{2H-2}$ as $i\to \infty$. We know that if $H<1/2$, then $\sum_{i=1}^{\infty}|\gamma_{H}(i)|<\infty$, and the result \eqref{lln} holds. If $H>1/2$, then $\sum_{i=1}^{n-1}|\gamma_{H}(i)|\sim H(2H-1)\sum_{i=1}^{n-1}i^{2H-2}\sim Hn^{2H-1}$ as $n\to \infty$, and the result \eqref{lln} holds as well because $H<1$.
 \end{proof}
 As a consequence, we have the following corollary.
 \begin{cor}\label{pvariations}
@@ -358,7 +364,7 @@ Hence, $X=(X_{1}, X_{2},\dots,X_{N})$ forms a stationary centered Gaussian vecto
 \end{equation}
 Therefore, we can write $X=LZ$, where $Z=(Z_{1},Z_{2},\dots, Z_{N})$ with $Z_{1},Z_{2},\dots, Z_{N}\overset{\textrm{i.i.d.}}{\sim} \mathcal{N}(0,1)$, and the matrix $L$ is lower triangular with $LL^{\top}=\Gamma_{N}$. The covariance matrix is symmetric and positive definite by definition, and thus it admits such a Cholesky decomposition. The elements of $L$ can be found by 
 \begin{equation}
-    \sum_{k=1}^{j}l_{ik}l_{jk}=\gamma(i-j), \quad i,j=1,\dots, N.
+    \sum_{k=1}^{j}l_{ik}l_{jk}=\gamma(i-j), \quad 1\leq j\leq i\leq N.
 \end{equation}
 One calculates the elements of $L$ recursively by first computing the non-zero elements of the first row of $L$, and then working downwards. Obviously, for $i=1$, we obtain the first row as $l_{11}^{2}=\gamma(0)=1$ and $l_{1k}=0$ for $k=2,\dots,N$. For $i=2$, we obtain the two equations
 \begin{align*}
@@ -389,7 +395,7 @@ For this method, we assume that the sample size $N$ is a power of $2$, i.e. $N=2
     }
 \end{equation}
 where $\Gamma_{N}$ is the $N\times N$ submatrix in the upper-left corner. Note that a circulant matrix is completely determined by the entries of its first row, since the subsequent rows are just cyclic permutations of the first row with each row just being the previous row shifted one place to the right.
-The eigenvalues and eigenvectors of a circulant matrix satisfy certain properties, which the algorithm utilizies.
+The eigenvalues and eigenvectors of a circulant matrix satisfy certain properties, which the algorithm utilizies. In this subsection, $i$ denotes the imaginary unit.
 \begin{thm}\label{circ_thm}
     Let $C$ be a circulant matrix of the form \ref{circmatrix}. Then $C$ admits the decomposition $C=Q\Lambda Q^{*}$, where $Q$ is the unitary matrix given by
     \begin{equation}
@@ -483,19 +489,21 @@ Figure \ref{fig:figure3} shows simulated fBM paths with $10,000$ points each. As
 \newpage
 \textbf{Spørgsmål til vejledermøder:}
 \begin{enumerate}
-    \item Hvorfor forskellige resultater ved de to simulationsprocedure?
-    \item Skal jeg have beviset for eksistensen af fBM med? 
-    \item Forstå selve formuleringen i projektforslaget -
-    \item Volatility surface: "Overall shape does not change; At least to a first degree".
+    \item \st{Hvorfor forskellige resultater ved de to simulationsprocedure?}
+    \item \st{Skal jeg have beviset for eksistensen af fBM med?} 
+    \item \st{Fatte selve formuleringen i projektforslaget} 
+    \item \st{Volatility surface: "Overall shape does not change; At least to a first degree".}
     \item Kunne man ikke også kigge på at forecaste volatilitet med den nævnte OU-model? Og sammenligne med en anden model fx. GARCH eller lignende? 
-    \item Er "equal in law" og "equal in distribution" det samme?
+    \item \st{Er "equal in law" og "equal in distribution" det samme?}
     \item "Nem måde" at web-scrape den seneste aktiekurs på fra yahoo?
-    \item Læse beviset for Proposition 2.14, da det er lidt hjemmebrygget
+    \item \st{Laese beviset for Proposition 2.14, da det er lidt hjemmebrygget}
     \item Kompleksiteten i circulant metoden
     \item Summationsindeks i beviset for Proposition 3.17.
 \end{enumerate}
 \textbf{Ting jeg skal huske}
 \begin{enumerate}
-    \item Samme notation for autokovarians-funktionen for Gaussisk hvid støj - Lige nu er der både $\rho$ og $\gamma$.
-    \item Samme notation for "equal in law" og "equal in distribution".
+    \item \st{Samme notation for autokovarians-funktionen for Gaussisk hvid stoej - Lige nu er der boede $\rho$ og $\gamma$.}
+    \item \st{Samme notation for "equal in law" og "equal in distribution".}
+    \item Autokovariansfunktioen defineret på naturlige tal, hele tal osv.?
+    \item Styr pa kapitlet "Preliminary Theory"
 \end{enumerate}
