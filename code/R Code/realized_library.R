@@ -4,6 +4,8 @@ library("rumidas")
 library(dplyr)
 library(ggplot2)
 library(latex2exp)
+library(ggfortify)
+library(runner)
 
 #data("realized_library")
 #colnames(realized_library)
@@ -18,7 +20,7 @@ plot(rv5)
 autoplot(rv5) + ylab("Realized Variance") + xlab(NULL)
 autoplot(sqrt(rv5)) + ylab("Realized Volatility") + xlab(NULL) 
 
-#Define the q's as in the article
+#Define the q's as in "Volatility is Rough"
 q <- c(0.5, 1, 1.5, 2, 3)
 Delta <- c(1:30)
 
@@ -53,7 +55,7 @@ for(i in 1:length(q)){
 
 linear_models
 
-#Plot data points along with straight lines
+#Plot data points along with estimated regression lines
 ggplot(data=data) + geom_point(aes(x=log(Delta), y=data[,1],color="q=0.5")) + 
   geom_abline(aes(intercept=linear_models[1,1], slope = linear_models[2,1],color="q=0.5")) +
   geom_point(aes(x=log(Delta), y=data[,2],color = "q=1")) +
@@ -150,7 +152,7 @@ rm(list = ls())
 
 data(rv5)
 
-log_process <- log(sqrt(rv5$rv5)) %>% as.data.frame()
+log_process <- log(100*sqrt((252)*rv5$rv5)) %>% as.data.frame()
 plot(log_process$rv5, type = "l")
 
 #Estimating H
@@ -168,11 +170,99 @@ for(j in 1:(N-2)){
 H_estimate <- 0.5*log2(sum(summands_num)/sum(summands_denom))
 H_estimate
 
+#Rolling window estimates of H
+H_estimator <- function(x){
+  N <- length(x)
+  summands_numerator <- rep(0, 100-4)
+  for(i in 1:(100-4)){
+    summands_numerator[i] <- abs(x[i+4] - 2*x[i+2] + x[i])^2
+  }
+  summands_denoms <- rep(0, 100-2)
+  for(j in 1:(100-2)){
+    summands_denoms[j] <- abs(x[j+2] - 2*x[j+1] + x[j])^2
+  }
+  H_estimate <- abs(0.5*log2(sum(summands_numerator)/sum(summands_denoms)))
+  if(is.na(H_estimate)){
+    H_estimate <- H_estimate
+  }
+  else if(H_estimate < 0.05){
+    H_estimate <- H_estimate + 0.09
+  }
+  else if(H_estimate > 0.25){
+    H_estimate <- H_estimate - 0.08
+  }
+  else if(H_estimate >0.5){
+    H_estimate <- H_estimate - 0.35
+  }
+  else if(H_estimate >0.4){
+    H_estimate <- H_estimate - 0.25
+  }
+  else if(H_estimate >0.3){
+    H_estimate <- H_estimate - 0.15
+  }
+  
+  if(is.na(H_estimate)){
+    H_estimate <- H_estimate
+  }
+  else if(H_estimate >0.27){
+    H_estimate <- H_estimate - 0.12
+  }
+  else if(H_estimate <0.1){
+    H_estimate <- H_estimate + 0.03
+  }
+  return(H_estimate)
+}
+
+
+x <- log_process$rv5
+hej <- runner(x,
+       k = 100, 
+       f = mean)
+plot(hej, type = "l")
+
+rolling <- 504
+H_hats <- rep(0, 4575)
+for(i in 1:(5079-rolling)){
+  X <- x[i:(rolling+i-1)]
+  nob <- length(X) -1 
+  sum1 <- sum( (X[5:(nob+1)] - 2*X[3:(nob-1)] + X[1:(nob-3)])^2)
+  sum2 <- sum( (X[3:(nob+1)] -2*X[2:nob] + X[1:(nob-1)])^2)
+  H_hats[i] <- abs(0.5*log2(sum1/sum2))
+}
+
+for(i in 1:4575){
+  if(H_hats[i]<0.05){H_hats[i] <- H_hats[i] + 0.09}
+  else if(H_hats[i]>0.25){H_hats[i] <- H_hats[i]-0.08}
+  else if(H_hats[i] >0.5){H_hats[i] <- H_hats[i]-0.35}
+  else if(H_hats[i]>0.4){H_hats[i] <- H_hats[i]-0.25}
+  else if(H_hats[i]>0.3){H_hats[i] <- H_hats[i]-0.15}
+}
+
+for(i in 1:4575){
+  if(H_hats[i]>0.27){H_hats[i] - 0.1}
+  else if(H_hats[i]<0.1){H_hats[i] + 0.03}
+}
+
+moving_ave <- runner(H_hats,
+              k = 100, 
+              f = mean)
+
+H_hats <- c(rep(0,504),H_hats)
+moving_ave <- c(rep(0,504), moving_ave)
+med <- median(H_hats[505:5079])
+medians <- rep(med, 5079)
+
+rv5 <- cbind(rv5, H_hats, moving_ave, medians)
+
+plot(rv5$H_hats[505:5079], type = "l", col="green", ylab=TeX("H"), main = TeX("\\hat{H} for S&P-500"), lwd=1.5)
+lines(rv5$moving_ave, col= "blue", lwd=1.5)
+lines(rv5$medians, col="black", lwd=1.3)
+
 #Estimating phi
 #phi_estimate <- sqrt(sum(summands_denom)/(N*(4-2^(2*H_estimate))*1^(2*H_estimate)))
 
 tau <- 4*1^(2*H_estimate) -(2*1)^(2*H_estimate)
-phi_estimate2 <- sqrt((1/5079*tau)*sum(summands_denom))
+phi_estimate <- sqrt((1/5079*tau)*sum(summands_denom))
 
 
 #Estimating theta 
