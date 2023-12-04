@@ -50,7 +50,8 @@ where $N$ is a $\mathbb{P}$-zero set.
     %\end{equation}
     %Suppose $H\in (0,1)$
 %\end{proof}
-The proof of Theorem \ref{existencethm} is omitted. We will now define a fractional Brownian motion as the process, which existence is given by Theorem \ref{existencethm}.
+The proof of Theorem \ref{existencethm} is omitted. 
+We will now give the process defined in Theorem \ref{existencethm} the name of \textit{fractional Brownian motion}.%We will now define a fractional Brownian motion as the process, which existence is given by Theorem \ref{existencethm}.
 \begin{defn}[\textit{Fractional Brownian Motion}]
     Let $H\in (0,1]$. A fractional Brownian motion (fBM) of Hurst index $H$ is a continuous centered Gaussian process $B^{H}=(B_{t}^{H})_{t\geq 0}$ such that $B_{0}^{H}=0$ almost surely and with covariance function
     \begin{equation}
@@ -148,6 +149,7 @@ A consequence of Proposition \ref{corr} is that the increments $X_{k}\coloneqq B
 \gamma_{H}(n)\coloneqq \frac{1}{2}\left((n+1)^{2H}+(n-1)^{2H}-2n^{2H}\right) \sim H(2H-1)n^{2H-2},
 \end{equation}
 as $n\to\infty$. Here $f(n)\sim g(n)$ is used to indicate that $\lim_{n\to\infty}f(n)/g(n)=1$. Thus, we obtain that $\sum_{n=1}^{\infty}|\gamma_{H}(n)|=\infty$ for $H>1/2$ and $\sum_{n=1}^{\infty}|\gamma_{H}(n)|<\infty$ for $H<1/2$. Hence, a fBM can be used to model both long and short memory, when the Hurst index is chosen appropriately. 
+\textcolor{red}{Maybe a plot of the acf for various values of H?}
 %It is well-known that a discrete weakly stationary stochatic process $(X_{n})_{n\in \N}$ is said to exhibit long memory if its autocovariance function $\rho(n)\coloneqq \textrm{Cov}(X_{k},X_{k+n})$ satisfies $\rho(n)\sim Kn^{2d-1}$, i.e.
 %\begin{equation}
 %    \lim_{n\to \infty}\frac{\rho(n)}{Kn^{2d-1}}=1,
