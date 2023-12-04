@@ -2,7 +2,155 @@
 In this chapter, we will.....
 
 \section{Arbitrage Theory}
+Let us give a brief overview of the basic set-up, when we are dealing with financial markets and derivatives pricing using the no-arbitrage principle in a continuous-time setting. Firstly, we start off with the definition of a financial market.
+\begin{defn}[\textit{Financial Market}]
+    For a fixed $T>0$, a finite-horizon financial market is a pair
+    \begin{equation}
+        \mathfrak{M}=\left\{\left(\Omega,\mathcal{F},(\mathcal{F}_{t})_{0\leq t\leq T},\hspace{2 pt}\mathbb{P}\right), P=\left(A_{t},S_{t}^{(1)},\dots,S_{t}^{(d)}\right)_{0\leq t\leq T}\right\},
+    \end{equation}
+    where $(\Omega,\mathcal{F},(\mathcal{F}_{t})_{0\leq t\leq T},\hspace{2 pt}\mathbb{P})$ is a filtered probability space satisfying the usual assumptions of right-continuity and completeness, and $P$ is a collection of $d+1\in\N$ continuous semimartingales.
+\end{defn}
+The filtration $(\mathcal{F}_{t})_{0\leq t\leq T}$ satisfies $\mathcal{F}_{s}\subset \mathcal{F}_{t}\subset \mathcal{F}$ for all $s,t\in [0,T]$ with $s\leq t$. The sub-$\sigma$-algebra $\mathcal{F}_{t}$ represents the information in the market up until time $t$, and the inclusion of the sub-$\sigma$-algebras represents that information is increasing as time passes.
+%Note that a filtered probability space is just probability space equipped with a filtration, i.e. a family $\left(\mathcal{F}_{t}\right)_{t\in I}$ of sub-$\sigma$-algebras of $\mathcal{F}$ satisfying $\mathcal{F}_{s}\subset \mathcal{F}_{t}\subset\mathcal{F}$ for all $s,t\in I$ with $s\leq t$. The assumption of right-continuity is that $\mathcal{F}_{t}=\mathcal{F}_{t^{+}}$ for all $t\in [0,\infty)$, where
+%\begin{equation}
+    %\mathcal{F}_{t^{+}}\coloneqq\bigcap_{s>t}\mathcal{F}_{s}.
+%\end{equation}
+%A filtered $(\Omega,\mathcal{F},(\mathcal{F}_{t})_{0\leq t\leq T},\hspace{2 pt}\mathbb{P})$ probability space is said to be complete, if $(\Omega,\mathcal{F},\mathbb{P})$ is a complete measure space, and $\mathcal{F}_{0}$ contains all $\mathbb{P}$-zero sets. 
 
+%A continuous semimartingale is a process $(X_{t})_{t\geq 0}$ defined on a filtered probability space, which admits the decomposition
+%\begin{equation}\label{decomp}
+    %X_{t}=X_{0}+M_{t}+A_{t},\quad t\geq 0,
+%\end{equation}
+%where $M\in \mathcal{M}_{c,loc}$ and $A\in \mathcal{A}_{loc}$ with $M_{0}=A_{0}=0$. Such a decomposition is unique up to indistinguishability. $M$ is a local martingale with continuous paths, and $A$ is an adapted process with locally bounded variation.
+
+The process $A$ is a unique numéraire, which measures the value of money through time. A numéraire is a semimartingale $A$ defined on $(\Omega,\mathcal{F},(\mathcal{F}_{t})_{0\leq t\leq T},\mathbb{P})$, which satisfies for all $t\in [0,T]$ that 
+\begin{equation}
+    \mathbb{P}(A_{t}>0)=1.
+\end{equation}
+Intuitively, the numéraire is a risk-free asset, which could be a money market account or a government bond.
+%The process $A$ (not the same $A$ as in \eqref{decomp}) is our numéraire, which measures the value of money through time. It satisfies for all $t\in [0,T]$ that
+%\begin{equation}
+%    \mathbb{P}(A_{t}>0)=1.
+%\end{equation}
+\begin{defn}[\textit{Portfolio, Wealth Process}]
+    A portfolio is any adapted process
+    \begin{equation}
+        \theta=(\phi_{t},\pi_{t}^{(1)},\dots,\pi_{t}^{(d)})_{0\leq t\leq T}.
+    \end{equation}
+    The wealth process associated to the portfolio $\theta$ with initial investment $V_{0}\in \mathcal{F}_{0}$ is
+    \begin{equation}
+        V_{t}^{\theta}=\phi_{t}A_{t}+\sum_{j=1}^{d}\pi_{t}^{(j)}S_{t}^{(j)}, V_{0}^{\theta}=V_{0}, \quad t\in [0,T].
+    \end{equation}
+\end{defn}
+Next, we introduce the class of admissible strategies:
+\begin{defn}[\textit{Admissible Strategy}]
+    A strategy $\theta=(\phi_{t},\pi_{t}^{(1)},\dots,\pi_{t}^{(d)})_{0\leq t\leq T}$ is said to be admissible if
+    \begin{enumerate}
+        \item It is self-financed
+        \begin{equation}
+            dV_{t}^{\theta}=\phi_{t}dA_{t}+\sum_{j=1}^{d}\pi_{t}^{(j)}dS_{t}^{(j)},
+        \end{equation}
+        i.e. no exogenous capital is injected into the portfolio.
+        \item It has a finite credit line, i.e. there exists a non-random constant $C>0$ such that almost surely
+        \begin{equation}
+            V_{t}^{\theta}>-C, \quad t\in [0,T].
+        \end{equation}
+    \end{enumerate}
+\end{defn}
+Now, we are ready to define the very important concept of an arbitrage.
+\begin{defn}[\textit{Arbitrage}]
+    An admissible strategy $\theta$ is said to be an arbitrage if
+    \begin{enumerate}
+        \item It has zero initial capital
+        \begin{equation}
+            V_{0}^{\theta}=\phi_{0}A_{0}+\sum_{j=1}^{d}\theta_{0}^{(j)}S_{0}^{(j)}=0.
+        \end{equation}
+        \item There is a non-random point in time $t_{0}\in (0,T]$ in which we are out of debts almost surely
+        \begin{equation}
+            V_{t_{0}}^{\theta}=\phi_{t_{0}}A_{t_{0}}+\sum_{j=1}^{d}\theta_{t_{0}}^{(j)}S_{t_{0}}^{(j)}\geq 0.
+        \end{equation}
+        \item We have a chance to make a profit at that moment
+        \begin{equation}
+            \mathbb{P}\left(V_{t_{0}}^{\theta}>0\right)>0.
+        \end{equation}
+    \end{enumerate}
+\end{defn}
+In a perfect market there should be no arbitrage opportunities, since this indicates a risk-less chance of profit. Therefore, we want to price derivatives using the no-arbitrage principle, such that every investor, who wants to make a profit, also has to take on some risk. 
+
+The discounted price process relative to the numéraire $A$ is defined by
+\begin{equation}
+    \Tilde{P}_{t}\coloneqq\frac{P_t}{A_t}, \quad j=0,1,\dots,d+1.
+\end{equation}
+\begin{defn}[\textit{Martingale Measure}]
+    A probability measure $\mathbb{Q}$ on $(\Omega,\mathcal{F}_{T})$ is said to be a (local) martingale measure, if the discounted price process $(\Tilde{P}_{t})_{0\leq t\leq T}$ is a $\mathbb{Q}$ (local) martingale.
+\end{defn}
+We are now ready to present the First Fundamental Theorem of Asset Pricing.
+\begin{thm}
+The market $\mathfrak{M}$ is arbitrage free, if there exists a local martingale measure $\mathbb{Q}$, which is equivalent to $\mathbb{P}$.
+\end{thm}
+Note that this is not an "if and only if"-statement. Hence, we only have to prove that if there exists a local martingale measure $\mathbb{Q}$ equivalent to $\mathbb{P}$, then the market $\mathfrak{M}$ is arbitrage free.
+\begin{proof} Let $\theta=(\phi_{t},\pi_{t}^{(1)},\dots,\pi_{t}^{(d)})_{0\leq t\leq T}$ be an admissible strategy such that $V_{0}^{\theta}=0$. Assume that $\mathbb{Q}$ is a martingale measure equivalent to $\mathbb{P}$. Then the discounted wealth process
+\begin{equation}
+    \Tilde{V}_{t}^{\theta}=\int_{0}^{t}\pi_{s}d\Tilde{S}_{s}, \quad 0\leq t\leq T,
+\end{equation}
+is local martingale with respect to $\mathbb{Q}$. Since $\theta$ is an admissible strategy, there is a non-random constant $C>0$ such that $V^{\theta}+C$ is a non-negative local martingale. We then use the fact that any continuous non-negative local martingale is a supermartingale. Consequently, we have
+\begin{equation}\label{supermart}
+    \mathbb{E}_{\mathbb{Q}}(\Tilde{V}_{t}^{\theta})\leq \mathbb{E}_{\mathbb{Q}}(\Tilde{V}_{0}^{\theta})=0, \quad 0\leq t\leq T.
+\end{equation}
+Let $t_{0}\in [0,T]$ such that $\mathbb{P}(\Tilde{V}_{t_0}^{\theta}\geq 0)=1$. Since $\mathbb{P}$ and $\mathbb{Q}$ are equivalent measures, we have $\mathbb{Q}(\Tilde{V}_{t_0}^{\theta}\geq 0)=1$, whence $\mathbb{E}_{\mathbb{Q}}(\Tilde{V}_{t_{0}}^{\theta})\geq 0$. It now follows from \eqref{supermart} that $\Tilde{V}_{t_{0}}^{\theta}=0$ $\mathbb{P}$ and $\mathbb{Q}$-a.s. Hence, we have shown that an admissible strategy with zero initial capital with which we are out of debts almost surely, will have no chance of making a profit, i.e. the market does not admit an arbitrage.
+\end{proof}
+We can now define the concept of a European financial derivative. For a financial market $\mathfrak{M}$, we will say that a random variable $\xi$ is a European financial derivative with date of maturity $T>0$, if it is $\mathcal{F}_{T}$-measurable and integrable. Furthermore, $\xi$ is called simple if it only depends on $P_T$, i.e. $\xi=\Phi(P_T)$ for some measurable function $\Phi:\R^{d+1}\to \R$. The function $\Phi$ is called the pay-off function of $\xi$.
+
+We can now price derivatives using the First Fundamental Theorem of Asset Pricing.
+\begin{cor}
+Consider the market
+\begin{equation}
+    \mathfrak{M}=\left\{\left(\Omega,\mathcal{F},(\mathcal{F}_{t})_{0\leq t\leq T},\hspace{2 pt}\mathbb{P}\right), P=\left(A_{t},S_{t}^{(1)},\dots,S_{t}^{(d)}\right)_{0\leq t\leq T}\right\}.
+\end{equation}
+Let $\xi$ be a European financial derivative. Then the extended market
+\begin{equation}
+    \mathfrak{M}=\left\{\left(\Omega,\mathcal{F},(\mathcal{F}_{t})_{0\leq t\leq T},\hspace{2 pt}\mathbb{P}\right), P=\left(A_{t},S_{t}^{(1)},\dots,S_{t}^{(d)}, \xi_{t}\right)_{0\leq t\leq T}\right\}
+\end{equation}
+is arbitrage free, if there is a local martingale measure $\mathbb{Q}$ equivalent to $\mathbb{P}$ such that
+\begin{equation}
+    \xi_{t}=\mathbb{E}_{\mathbb{Q}}\left(\frac{A_t}{A_T}\xi\mid \mathcal{F}_{t}\right),\quad 0\leq t\leq T.
+\end{equation}
+\end{cor}
+The First Fundamental Theorem of Asset Pricing thus enables us to price a European derivative. However, it doesn't necessarily ensure that this price is unique. This leads to the Second Fundamental Theorem of Asset Pricing. 
+\begin{defn}[\textit{Attainable Derivative, Complete Market}]
+Let $\xi$ be an $\mathcal{F}_{T}$-measurable random variable. We say $\xi$ is attainable if there exists $x\in\R$ and an admissible strategy $\theta = (\phi_{t},\pi_{t}^{(1)},\dots, \pi_{t}^{(d)})_{0\leq t\leq T}$ such that the wealth process $(V_{t}^{\theta})_{0\leq t\leq T}$ is bounded and
+\begin{equation}
+    \frac{\xi}{A_{T}}=\Tilde{V}_{T}^{\theta}=x+\sum_{j=1}^{d}\int_{0}^{T}\pi_{s}^{(j)}d\Tilde{S}_{s}^{(j)}.
+\end{equation}
+We say a financial market $\mathfrak{M}$ is complete if every $\mathcal{F}_T$-measurable bounded random variable is attained.
+\end{defn}
+We can now present the Second Fundamental Theorem of Asset Pricing.
+\begin{thm}
+Suppose there exists a local martingale measure $\mathbb{Q}$ equivalent to $\mathbb{P}$. If the market is complete, then $\mathbb{Q}$ is the unique local martingale measure, which is equivalent to $\mathbb{P}$.
+\end{thm}
+\begin{proof}
+    Let $\mathbb{Q},\mathbb{Q}'$ be two local martingale measures equivalent to $\mathbb{P}$, and let $\xi$ be $\mathcal{F}_T$-measurable and bounded. Put
+    \begin{equation}
+        \frac{d\mathbb{Q}}{d\mathbb{P}}=Z\in\mathcal{F}_{T},\quad \frac{d\mathbb{Q}'}{d\mathbb{P}}=Z' \in \mathcal{F}_{T}.
+    \end{equation}
+    Since the market is complete, there exists $\theta = (\phi_{t},\pi_{t}^{(1)},\dots,\pi_{t}^{(d)})_{0\leq t\leq T}$ such that the wealth process $(V_{t}^{\theta})_{0\leq t\leq T}$ is bounded and
+    \begin{equation}
+        \frac{\xi}{A_{T}}=\Tilde{V}_{T}^{\theta}=x+\sum_{j=1}^{d}\int_{0}^{T}\pi_{s}^{(j)}d\Tilde{S}_{s}^{(j)}.
+    \end{equation}
+    Furthermore, since $\mathbb{Q}$ and $\mathbb{Q}'$ are local martingale measures, we deduce that the wealth process is a $\mathbb{Q},\mathbb{Q}'$-local martingale. A bounded local martingale is a true martingale, and thus
+    \begin{equation}
+        \mathbb{E}_{\mathbb{P}}\left(Z\frac{\xi}{A_T}\right)=\mathbb{E}_{\mathbb{Q}}\left(\frac{\xi}{A_T}\right)=x=\mathbb{E}_{\mathbb{Q}'}\left(\frac{\xi}{A_T}\right)=\mathbb{E}_{\mathbb{P}}\left(Z'\frac{\xi}{A_T}\right),
+    \end{equation}
+    or 
+    \begin{equation}
+        \mathbb{E}_{\mathbb{P}}\left(\frac{Z-Z'}{A_T}\xi\right)=0,
+    \end{equation}
+    for every bounded $\mathcal{F}_T$-measurable random variable. Consequently
+    \begin{equation}
+        \frac{Z-Z'}{A_T}=0, \mathbb{P}-a.s.
+    \end{equation}
+Since $A$ is numéraire, then necessarily $Z=Z'$ $\mathbb{P}$ almost surely.
+\end{proof}
 \section{Stochastic Differential Equations}\label{section:SDE}
 A general stochastic differential equation (SDE) is a $d$-dimensional system of the form
 \begin{equation}\label{integral}
