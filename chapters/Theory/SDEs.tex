@@ -2,11 +2,13 @@
 In this chapter, we will.....
 
 \section{Arbitrage Theory}
+This section is based on \cite{bjork} and \cite{Orimarsnoter}.
+
 Let us give a brief overview of the basic set-up, when we are dealing with financial markets and derivatives pricing using the no-arbitrage principle in a continuous-time setting. Firstly, we start off with the definition of a financial market.
 \begin{defn}[\textit{Financial Market}]
     For a fixed $T>0$, a finite-horizon financial market is a pair
-    \begin{equation}
-        \mathfrak{M}=\left\{\left(\Omega,\mathcal{F},(\mathcal{F}_{t})_{0\leq t\leq T},\hspace{2 pt}\mathbb{P}\right), P=\left(A_{t},S_{t}^{(1)},\dots,S_{t}^{(d)}\right)_{0\leq t\leq T}\right\},
+    \begin{equation}\label{eq:market}
+        \mathfrak{M}=\left\{\left(\Omega,\mathcal{F},(\mathcal{F}_{t})_{0\leq t\leq T},\mathbb{P}\right),\hspace{2 pt} P=\left(A_{t},S_{t}^{(1)},\dots,S_{t}^{(d)}\right)_{0\leq t\leq T}\right\},
     \end{equation}
     where $(\Omega,\mathcal{F},(\mathcal{F}_{t})_{0\leq t\leq T},\hspace{2 pt}\mathbb{P})$ is a filtered probability space satisfying the usual assumptions of right-continuity and completeness, and $P$ is a collection of $d+1\in\N$ continuous semimartingales.
 \end{defn}
@@ -27,30 +29,33 @@ The process $A$ is a unique numéraire, which measures the value of money throug
 \begin{equation}
     \mathbb{P}(A_{t}>0)=1.
 \end{equation}
-Intuitively, the numéraire is a risk-free asset, which could be a money market account or a government bond.
+Intuitively, the numéraire is a risk-free asset, which could be a money market account or a government bond. 
+
+Having defined a financial market $\mathfrak{M}$, we are now able to define a strategy (or equivalently a portfolio) on that market.
 %The process $A$ (not the same $A$ as in \eqref{decomp}) is our numéraire, which measures the value of money through time. It satisfies for all $t\in [0,T]$ that
 %\begin{equation}
 %    \mathbb{P}(A_{t}>0)=1.
 %\end{equation}
 \begin{defn}[\textit{Portfolio, Wealth Process}]
-    A portfolio is any adapted process
+    Let a financial market $\mathfrak{M}$ with numéraire $A$ and risky assets $S^{(1)},\dots,S^{(d)}$ be given. A strategy is then any predictable process
     \begin{equation}
-        \theta=(\phi_{t},\pi_{t}^{(1)},\dots,\pi_{t}^{(d)})_{0\leq t\leq T}.
+        \theta=(\phi_{t},\pi_{t}^{(1)},\dots,\pi_{t}^{(d)})_{0\leq t\leq T}
     \end{equation}
-    The wealth process associated to the portfolio $\theta$ with initial investment $V_{0}\in \mathcal{F}_{0}$ is
+    such that $\phi$ is integrable with respect to the numéraire, and $\pi^{(i)}$ is integrable with respect to $S^{(i)}$ for $j=1,\dots,d$.
+    The wealth process associated to the strategy $\theta$ with initial investment $V_{0}\in \mathcal{F}_{0}$ is then
     \begin{equation}
-        V_{t}^{\theta}=\phi_{t}A_{t}+\sum_{j=1}^{d}\pi_{t}^{(j)}S_{t}^{(j)}, V_{0}^{\theta}=V_{0}, \quad t\in [0,T].
+        V_{t}^{\theta}=\phi_{t}A_{t}+\sum_{j=1}^{d}\pi_{t}^{(j)}S_{t}^{(j)},\hspace{5 pt} V_{0}^{\theta}=V_{0}, \quad t\in [0,T].
     \end{equation}
 \end{defn}
-Next, we introduce the class of admissible strategies:
+Next, we introduce the class of admissible strategies.
 \begin{defn}[\textit{Admissible Strategy}]
     A strategy $\theta=(\phi_{t},\pi_{t}^{(1)},\dots,\pi_{t}^{(d)})_{0\leq t\leq T}$ is said to be admissible if
     \begin{enumerate}
-        \item It is self-financed
+        \item It is self-financed in the sense that
         \begin{equation}
-            dV_{t}^{\theta}=\phi_{t}dA_{t}+\sum_{j=1}^{d}\pi_{t}^{(j)}dS_{t}^{(j)},
+            dV_{t}^{\theta}=\phi_{t}dA_{t}+\sum_{j=1}^{d}\pi_{t}^{(j)}dS_{t}^{(j)}.
         \end{equation}
-        i.e. no exogenous capital is injected into the portfolio.
+        %i.e. no exogenous capital is injected into the portfolio.
         \item It has a finite credit line, i.e. there exists a non-random constant $C>0$ such that almost surely
         \begin{equation}
             V_{t}^{\theta}>-C, \quad t\in [0,T].
@@ -59,43 +64,49 @@ Next, we introduce the class of admissible strategies:
 \end{defn}
 Now, we are ready to define the very important concept of an arbitrage.
 \begin{defn}[\textit{Arbitrage}]
-    An admissible strategy $\theta$ is said to be an arbitrage if
+    An admissible strategy $\theta=(\phi_{t},\pi_{t}^{(1)},\dots, \pi_{t}^{(d)})_{0\leq t\leq T}$ is said to be an arbitrage, if there is a non-random point in time $t_{0}\in (0,T]$ such that
     \begin{enumerate}
-        \item It has zero initial capital
-        \begin{equation}
-            V_{0}^{\theta}=\phi_{0}A_{0}+\sum_{j=1}^{d}\theta_{0}^{(j)}S_{0}^{(j)}=0.
-        \end{equation}
-        \item There is a non-random point in time $t_{0}\in (0,T]$ in which we are out of debts almost surely
-        \begin{equation}
-            V_{t_{0}}^{\theta}=\phi_{t_{0}}A_{t_{0}}+\sum_{j=1}^{d}\theta_{t_{0}}^{(j)}S_{t_{0}}^{(j)}\geq 0.
-        \end{equation}
-        \item We have a chance to make a profit at that moment
-        \begin{equation}
-            \mathbb{P}\left(V_{t_{0}}^{\theta}>0\right)>0.
-        \end{equation}
+        \item $V_{0}^{\theta}=0$.
+        \item $\mathbb{P}\left(V_{t_{0}}^{\theta}\geq 0\right)=1$.
+        \item $\mathbb{P}\left(V_{t_{0}}^{\theta}>0\right)>0$.
     \end{enumerate}
+    %\begin{enumerate}
+        %\item It has zero initial capital
+        %\begin{equation}
+            %V_{0}^{\theta}=\phi_{0}A_{0}+\sum_{j=1}^{d}\theta_{0}^{(j)}S_{0}^{(j)}=0.
+        %\end{equation}
+        %\item There is a non-random point in time $t_{0}\in (0,T]$ in which we are out of debts almost surely
+        %\begin{equation}
+            %V_{t_{0}}^{\theta}=\phi_{t_{0}}A_{t_{0}}+\sum_{j=1}^{d}\theta_{t_{0}}^{(j)}S_{t_{0}}^{(j)}\geq 0.
+        %\end{equation}
+        %\item We have a chance to make a profit at that moment
+        %\begin{equation}
+            %\mathbb{P}\left(V_{t_{0}}^{\theta}>0\right)>0.
+       % \end{equation}
+    %\end{enumerate}
 \end{defn}
-In a perfect market there should be no arbitrage opportunities, since this indicates a risk-less chance of profit. Therefore, we want to price derivatives using the no-arbitrage principle, such that every investor, who wants to make a profit, also has to take on some risk. 
+In a perfect market there should be no arbitrage opportunities, since this indicates a risk-less chance of profit. Therefore, we want to price derivatives using the no-arbitrage principle, such that every investor, who wants to make a profit, also has to take on some risk. In general, investors have different risk preferences, but our valuation formula will hold for all investors. The valuation formula will use the concept of a martingale measure, which is defined in the subsequent definition.
 
-The discounted price process relative to the numéraire $A$ is defined by
+Note that the discounted price process relative to the numéraire $A$ is defined by
 \begin{equation}
-    \Tilde{P}_{t}\coloneqq\frac{P_t}{A_t}, \quad j=0,1,\dots,d+1.
+    \Tilde{S}_{t}^{(j)}\coloneqq\frac{S_{t}^{(j)}}{A_{t}}, \quad j=1,\dots,d,
 \end{equation}
+and $\Tilde{A}_{t}=1$.
 \begin{defn}[\textit{Martingale Measure}]
-    A probability measure $\mathbb{Q}$ on $(\Omega,\mathcal{F}_{T})$ is said to be a (local) martingale measure, if the discounted price process $(\Tilde{P}_{t})_{0\leq t\leq T}$ is a $\mathbb{Q}$ (local) martingale.
+    Let $(\Omega, \mathcal{F})$ be a measurable space. A probability measure $\mathbb{Q}$ on $(\Omega,\mathcal{F})$ is said to be a (local) martingale measure, if the discounted price process $(\Tilde{S}_{t})_{0\leq t\leq T}$ is a $\mathbb{Q}$ (local) martingale.
 \end{defn}
-We are now ready to present the First Fundamental Theorem of Asset Pricing.
-\begin{thm}
-The market $\mathfrak{M}$ is arbitrage free, if there exists a local martingale measure $\mathbb{Q}$, which is equivalent to $\mathbb{P}$.
+The relationship between martingale measures and no-arbitrage pricing is given by the First Fundamental Theorem of Asset Pricing.%We are now ready to present the First Fundamental Theorem of Asset Pricing.
+\begin{thm}[\textit{First Fundamental Theorem of Asset Pricing}]
+The financial market $\mathfrak{M}$ is arbitrage free, if there exists a local martingale measure $\mathbb{Q}$, which is equivalent to $\mathbb{P}$.
 \end{thm}
-Note that this is not an "if and only if"-statement. Hence, we only have to prove that if there exists a local martingale measure $\mathbb{Q}$ equivalent to $\mathbb{P}$, then the market $\mathfrak{M}$ is arbitrage free.
+The measure $\mathbb{Q}$ is also referred to as a risk-neutral measure. Note that the above is not an "if and only if"-statement. Hence, we only have to prove that if there exists a local martingale measure $\mathbb{Q}$ equivalent to $\mathbb{P}$, then the market $\mathfrak{M}$ is arbitrage free.
 \begin{proof} Let $\theta=(\phi_{t},\pi_{t}^{(1)},\dots,\pi_{t}^{(d)})_{0\leq t\leq T}$ be an admissible strategy such that $V_{0}^{\theta}=0$. Assume that $\mathbb{Q}$ is a martingale measure equivalent to $\mathbb{P}$. Then the discounted wealth process
 \begin{equation}
     \Tilde{V}_{t}^{\theta}=\int_{0}^{t}\pi_{s}d\Tilde{S}_{s}, \quad 0\leq t\leq T,
 \end{equation}
-is local martingale with respect to $\mathbb{Q}$. Since $\theta$ is an admissible strategy, there is a non-random constant $C>0$ such that $V^{\theta}+C$ is a non-negative local martingale. We then use the fact that any continuous non-negative local martingale is a supermartingale. Consequently, we have
+is a local martingale with respect to $\mathbb{Q}$. Since $\theta$ is an admissible strategy, there is a non-random constant $C>0$ such that $V^{\theta}+C$ is a non-negative local martingale. We then use the fact that any continuous non-negative local martingale is a supermartingale. Consequently, we have
 \begin{equation}\label{supermart}
-    \mathbb{E}_{\mathbb{Q}}(\Tilde{V}_{t}^{\theta})\leq \mathbb{E}_{\mathbb{Q}}(\Tilde{V}_{0}^{\theta})=0, \quad 0\leq t\leq T.
+    \mathbb{E}_{\mathbb{Q}}[\Tilde{V}_{t}^{\theta}]\leq \mathbb{E}_{\mathbb{Q}}[\Tilde{V}_{0}^{\theta}]=0, \quad 0\leq t\leq T.
 \end{equation}
 Let $t_{0}\in [0,T]$ such that $\mathbb{P}(\Tilde{V}_{t_0}^{\theta}\geq 0)=1$. Since $\mathbb{P}$ and $\mathbb{Q}$ are equivalent measures, we have $\mathbb{Q}(\Tilde{V}_{t_0}^{\theta}\geq 0)=1$, whence $\mathbb{E}_{\mathbb{Q}}(\Tilde{V}_{t_{0}}^{\theta})\geq 0$. It now follows from \eqref{supermart} that $\Tilde{V}_{t_{0}}^{\theta}=0$ $\mathbb{P}$ and $\mathbb{Q}$-a.s. Hence, we have shown that an admissible strategy with zero initial capital with which we are out of debts almost surely, will have no chance of making a profit, i.e. the market does not admit an arbitrage.
 \end{proof}
@@ -103,56 +114,63 @@ We can now define the concept of a European financial derivative. For a financia
 
 We can now price derivatives using the First Fundamental Theorem of Asset Pricing.
 \begin{cor}
-Consider the market
+Consider the market $\mathfrak{M}$ as given by \eqref{eq:market}, and let $\xi$ be a European financial derivative. Then the extended market
+%\begin{equation}
+    %\mathfrak{M}=\left\{\left(\Omega,\mathcal{F},(\mathcal{F}_{t})_{0\leq t\leq T},\hspace{2 pt}\mathbb{P}\right), P=\left(A_{t},S_{t}^{(1)},\dots,S_{t}^{(d)}\right)_{0\leq t\leq T}\right\}.
+%\end{equation}
+%Let $\xi$ be a European financial derivative. Then the extended market
 \begin{equation}
-    \mathfrak{M}=\left\{\left(\Omega,\mathcal{F},(\mathcal{F}_{t})_{0\leq t\leq T},\hspace{2 pt}\mathbb{P}\right), P=\left(A_{t},S_{t}^{(1)},\dots,S_{t}^{(d)}\right)_{0\leq t\leq T}\right\}.
-\end{equation}
-Let $\xi$ be a European financial derivative. Then the extended market
-\begin{equation}
-    \mathfrak{M}=\left\{\left(\Omega,\mathcal{F},(\mathcal{F}_{t})_{0\leq t\leq T},\hspace{2 pt}\mathbb{P}\right), P=\left(A_{t},S_{t}^{(1)},\dots,S_{t}^{(d)}, \xi_{t}\right)_{0\leq t\leq T}\right\}
+    \Tilde{\mathfrak{M}}=\left\{\left(\Omega,\mathcal{F},(\mathcal{F}_{t})_{0\leq t\leq T}, \mathbb{P}\right),\hspace{2 pt} P'=\left(A_{t},S_{t}^{(1)},\dots,S_{t}^{(d)}, \xi_{t}\right)_{0\leq t\leq T}\right\}
 \end{equation}
 is arbitrage free, if there is a local martingale measure $\mathbb{Q}$ equivalent to $\mathbb{P}$ such that
 \begin{equation}
-    \xi_{t}=\mathbb{E}_{\mathbb{Q}}\left(\frac{A_t}{A_T}\xi\mid \mathcal{F}_{t}\right),\quad 0\leq t\leq T.
+    \xi_{t}=\mathbb{E}_{\mathbb{Q}}\left[\frac{A_t}{A_T}\xi\mid \mathcal{F}_{t}\right],\quad 0\leq t\leq T.
 \end{equation}
 \end{cor}
-The First Fundamental Theorem of Asset Pricing thus enables us to price a European derivative. However, it doesn't necessarily ensure that this price is unique. This leads to the Second Fundamental Theorem of Asset Pricing. 
-\begin{defn}[\textit{Attainable Derivative, Complete Market}]
-Let $\xi$ be an $\mathcal{F}_{T}$-measurable random variable. We say $\xi$ is attainable if there exists $x\in\R$ and an admissible strategy $\theta = (\phi_{t},\pi_{t}^{(1)},\dots, \pi_{t}^{(d)})_{0\leq t\leq T}$ such that the wealth process $(V_{t}^{\theta})_{0\leq t\leq T}$ is bounded and
+Thus, the First Fundamental Theorem of Asset Pricing enables us to calculate the risk-neutral price of European derivative. If we assume that $A_{t}=e^{rt}$, where $r$ is the risk-free rate, then for a risk-neutral measure $\mathbb{Q}$, we can compute the risk-neutral price of a simple European derivative as
 \begin{equation}
-    \frac{\xi}{A_{T}}=\Tilde{V}_{T}^{\theta}=x+\sum_{j=1}^{d}\int_{0}^{T}\pi_{s}^{(j)}d\Tilde{S}_{s}^{(j)}.
+    \xi_{t}=e^{-r(T-t)}\mathbb{E}_{\mathbb{Q}}[\Phi(P_{T})\mid \mathcal{F}_{t}].
 \end{equation}
-We say a financial market $\mathfrak{M}$ is complete if every $\mathcal{F}_T$-measurable bounded random variable is attained.
-\end{defn}
-We can now present the Second Fundamental Theorem of Asset Pricing.
-\begin{thm}
-Suppose there exists a local martingale measure $\mathbb{Q}$ equivalent to $\mathbb{P}$. If the market is complete, then $\mathbb{Q}$ is the unique local martingale measure, which is equivalent to $\mathbb{P}$.
-\end{thm}
-\begin{proof}
-    Let $\mathbb{Q},\mathbb{Q}'$ be two local martingale measures equivalent to $\mathbb{P}$, and let $\xi$ be $\mathcal{F}_T$-measurable and bounded. Put
-    \begin{equation}
-        \frac{d\mathbb{Q}}{d\mathbb{P}}=Z\in\mathcal{F}_{T},\quad \frac{d\mathbb{Q}'}{d\mathbb{P}}=Z' \in \mathcal{F}_{T}.
-    \end{equation}
-    Since the market is complete, there exists $\theta = (\phi_{t},\pi_{t}^{(1)},\dots,\pi_{t}^{(d)})_{0\leq t\leq T}$ such that the wealth process $(V_{t}^{\theta})_{0\leq t\leq T}$ is bounded and
-    \begin{equation}
-        \frac{\xi}{A_{T}}=\Tilde{V}_{T}^{\theta}=x+\sum_{j=1}^{d}\int_{0}^{T}\pi_{s}^{(j)}d\Tilde{S}_{s}^{(j)}.
-    \end{equation}
-    Furthermore, since $\mathbb{Q}$ and $\mathbb{Q}'$ are local martingale measures, we deduce that the wealth process is a $\mathbb{Q},\mathbb{Q}'$-local martingale. A bounded local martingale is a true martingale, and thus
-    \begin{equation}
-        \mathbb{E}_{\mathbb{P}}\left(Z\frac{\xi}{A_T}\right)=\mathbb{E}_{\mathbb{Q}}\left(\frac{\xi}{A_T}\right)=x=\mathbb{E}_{\mathbb{Q}'}\left(\frac{\xi}{A_T}\right)=\mathbb{E}_{\mathbb{P}}\left(Z'\frac{\xi}{A_T}\right),
-    \end{equation}
-    or 
-    \begin{equation}
-        \mathbb{E}_{\mathbb{P}}\left(\frac{Z-Z'}{A_T}\xi\right)=0,
-    \end{equation}
-    for every bounded $\mathcal{F}_T$-measurable random variable. Consequently
-    \begin{equation}
-        \frac{Z-Z'}{A_T}=0, \mathbb{P}-a.s.
-    \end{equation}
-Since $A$ is numéraire, then necessarily $Z=Z'$ $\mathbb{P}$ almost surely.
-\end{proof}
+For a European call option written on the underlying asset $S=(S_{t})_{0\leq t\leq T}$, we have pay-off function $\Phi(S_{T})=(S_{T}-K)^{+}$, where $K>0$ is the strike price.
+%The First Fundamental Theorem of Asset Pricing thus enables us to price a European derivative. However, it doesn't necessarily ensure that this price is unique. This leads to the Second Fundamental Theorem of Asset Pricing. 
+%\begin{defn}[\textit{Attainable Derivative, Complete Market}]
+%Let $\xi$ be an $\mathcal{F}_{T}$-measurable random variable. We say $\xi$ is attainable if there exists $x\in\R$ and an admissible strategy $\theta = (\phi_{t},\pi_{t}^{(1)},\dots, \pi_{t}^{(d)})_{0\leq t\leq T}$ such that the wealth process $(V_{t}^{\theta})_{0\leq t\leq T}$ is bounded and
+%\begin{equation}
+%    \frac{\xi}{A_{T}}=\Tilde{V}_{T}^{\theta}=x+\sum_{j=1}^{d}\int_{0}^{T}\pi_{s}^{(j)}d\Tilde{S}_{s}^{(j)}.
+%\end{equation}
+%We say a financial market $\mathfrak{M}$ is complete if every $\mathcal{F}_T$-measurable bounded random variable is attained.
+%\end{defn}
+%We can now present the Second Fundamental Theorem of Asset Pricing.
+%\begin{thm}
+%Suppose there exists a local martingale measure $\mathbb{Q}$ equivalent to $\mathbb{P}$. If the market is complete, then $\mathbb{Q}$ is the unique local martingale measure, which is equivalent to $\mathbb{P}$.
+%\end{thm}
+%\begin{proof}
+    %Let $\mathbb{Q},\mathbb{Q}'$ be two local martingale measures equivalent to $\mathbb{P}$, and let $\xi$ be $\mathcal{F}_T$-measurable and bounded. Put
+    %\begin{equation}
+        %\frac{d\mathbb{Q}}{d\mathbb{P}}=Z\in\mathcal{F}_{T},\quad \frac{d\mathbb{Q}'}{d\mathbb{P}}=Z' \in \mathcal{F}_{T}.
+    %\end{equation}
+    %Since the market is complete, there exists $\theta = (\phi_{t},\pi_{t}^{(1)},\dots,\pi_{t}^{(d)})_{0\leq t\leq T}$ such that the wealth process $(V_{t}^{\theta})_{0\leq t\leq T}$ is bounded and
+    %\begin{equation}
+       % \frac{\xi}{A_{T}}=\Tilde{V}_{T}^{\theta}=x+\sum_{j=1}^{d}\int_{0}^{T}\pi_{s}^{(j)}d\Tilde{S}_{s}^{(j)}.
+    %\end{equation}
+    %Furthermore, since $\mathbb{Q}$ and $\mathbb{Q}'$ are local martingale measures, we deduce that the wealth process is a $\mathbb{Q},\mathbb{Q}'$-local martingale. A bounded local martingale is a true martingale, and thus
+    %\begin{equation}
+        %\mathbb{E}_{\mathbb{P}}\left(Z\frac{\xi}{A_T}\right)=\mathbb{E}_{\mathbb{Q}}\left(\frac{\xi}{A_T}\right)=x=\mathbb{E}_{\mathbb{Q}'}\left(\frac{\xi}{A_T}\right)=\mathbb{E}_{\mathbb{P}}\left(Z'\frac{\xi}{A_T}\right),
+    %\end{equation}
+    %or 
+    %\begin{equation}
+        %\mathbb{E}_{\mathbb{P}}\left(\frac{Z-Z'}{A_T}\xi\right)=0,
+    %\end{equation}
+   % for every bounded $\mathcal{F}_T$-measurable random variable. Consequently
+    %\begin{equation}
+        %\frac{Z-Z'}{A_T}=0, \mathbb{P}-a.s.
+    %\end{equation}
+%Since $A$ is numéraire, then necessarily $Z=Z'$ $\mathbb{P}$ almost surely.
+%\end{proof}
 \section{Stochastic Differential Equations}\label{section:SDE}
-A general stochastic differential equation (SDE) is a $d$-dimensional system of the form
+This section is based on \cite{Orimarsnoter}.
+
+In order to use the pricing theory of the previous section, we have to speify the dynamics of the price process $P=(A_{t},S_{t}^{(1)},\dots,S_{t}^{(d)})_{0\leq t\leq T}$. The dynamics of the prices are often formulated as a stochastic differential equation. Recall that a general stochastic differential equation (SDE) is a $d$-dimensional system of the form
 \begin{equation}\label{integral}
     X_{t}^{(i)}=X_{0}^{(i)}+ \int_{0}^{t}b^{(i)}(s,X_{s})ds+\sum_{j=1}^{m}\int_{0}^{t}\sigma^{(i,j)}(s,X_{s})dB_{s}^{(j)},\quad t\geq 0,
 \end{equation}
@@ -162,13 +180,13 @@ where $b^{(i)}:[0,\infty)\times \R^{d}\to \R$, $\sigma^{(i,j)}:[0,\infty)\times\
 \end{equation}
 Recall that a solution of a stochastic differential equation is a triplet of the form \newline$\left((\Omega,\mathcal{F},(\mathcal{F}_{t})_{t\geq 0},\mathbb{P}),B,X\right)$ consisting of a filtered probability space satisfying the usual conditions, a $\R^{m}$-valued Brownian motion $B$ adapted to $(\mathcal{F}_{t})_{t\geq 0}$, and the $(\mathcal{F}_{t})_{t\geq 0}$-adapted $\R^{d}$-valued continuous solution process $X$.
 
-A solution to a SDE, say $\left((\Omega,\mathcal{F},(\mathcal{F}_{t})_{t\geq 0},\mathbb{P}),B,X\right)$, is said to be a strong solution if $X$ is $(\mathcal{F}_{t}^{B})_{t\geq 0}$-adapted, where 
-\begin{equation}
-    \mathcal{F}_{t}^{B}\coloneqq \sigma\left(\left\{B_{s}^{-1}(A)\mid A\in\mathcal{F}, s\in [0,t] \right\}\right),\quad t\geq 0.
-\end{equation}
+A solution to a SDE, say $\left((\Omega,\mathcal{F},(\mathcal{F}_{t})_{t\geq 0},\mathbb{P}),B,X\right)$, is said to be a strong solution if $X$ is $(\mathcal{F}_{t}^{B})_{t\geq 0}$-adapted, where $(\mathcal{F}_{t}^{B})_{t\geq 0}$ is the filtration generated by the Brownian motion $B$.
+%\begin{equation}
+    %\mathcal{F}_{t}^{B}\coloneqq \sigma\left(\left\{B_{s}^{-1}(A)\mid A\in\mathcal{F}, s\in [0,t] \right\}\right),\quad t\geq 0.
+%\end{equation}
 A solution, which is not strong, is said to be weak. 
 
-Analogous to the theory for ordinary differential equations, we have that if the family of functions $\sigma=(\sigma^{(i,j)})_{1\leq i\leq d, 1\leq j\leq m}$ and $b=(b^{(i)})_{1\leq i\leq d}$ satisfy a Lipschitz-condition in the spatial variable, then existence and uniqueness is guaranteed. More precisely, there is a constant $K>0$ such that
+Analogous to the theory for ordinary differential equations, we have that if the family of functions $\sigma=(\sigma^{(i,j)})_{1\leq i\leq d, 1\leq j\leq m}$ and $b=(b^{(i)})_{1\leq i\leq d}$ satisfy a Lipschitz-condition in the spatial variable, then existence and uniqueness is guaranteed. More precisely, there exists a constant $K>0$ such that
 \begin{equation}\label{lipschitz}
     \lVert \sigma(t,x)-\sigma(t,y)\rVert+ \lVert b(t,x)-b(t,y)\rVert \leq K\lVert x-y\rVert
 \end{equation}
@@ -184,7 +202,7 @@ In general, finding the solution of a given SDE is a non-trivial task. Consequen
 \begin{equation}
     X_{t}=x_{0} + \int_{0}^{t}b(s,X_{s})ds + \int_{0}^{t}\sigma(s,X_{s})dB_{s}, \quad t\geq 0,
 \end{equation}
-where $x_{0}\in \R^{d}$, $B$ is a $m$-dimensional Brownian motion, and the families $b$ and $\sigma$ are as in Section \ref{section:SDE}. Since it is only possible to simulate a finite number of points, we will adopt the notation $X_{t_{0}}^{N},X_{t_{1}}^{N},\dots,X_{t_{N}}^{N}$ for a simulation of $X$ at times $0=t_{0}<t_{1}<\dots <t_{N}=T$ with $T>0$ and $N\in \N$. Suppose, we wish to find an approximation of the solution process $X$ that can be represented as
+where $x_{0}\in \R^{d}$, $B$ is a $m$-dimensional Brownian motion, and the families $b$ and $\sigma$ are as in Section \ref{section:SDE}. Since it is only possible to simulate a finite number of points, we will adopt the notation $X_{t_{0}}^{N},X_{t_{1}}^{N},\dots,X_{t_{N}}^{N}$ for a simulation of $X$ at times $0=t_{0}<t_{1}<\dots <t_{N}=T$ with $T>0$ and $N\in \N$. Suppose we wish to find an approximation of the solution process $X$ that can be represented as
 \begin{equation}\label{simulation}
     X_{0}^{N}=x_{0},\quad X_{t_{k}}^{N}=\Psi_{k,N}(X_{0},\Delta_{1}^{N}B,\dots,\Delta_{k}^{N}B), \quad k=1,\dots,N,
 \end{equation}
@@ -247,34 +265,40 @@ Hence, as previously discussed, we just need to simulate the path of a Brownian 
 \label{alg:euler}
 \end{algorithm}
 
+\section{Models for Dynamics}
 \subsection{The Black \& Scholes Model}\label{sec:BSM}
+This section is based on \cite{black1973} and \cite{blackscholes}.
+
 Let $\mathfrak{M}=\{(\Omega,\mathcal{F},(\mathcal{F}_{t})_{0\leq t\leq T},\mathbb{P}), (A_{t},S_{t})_{0\leq t\leq T}\}$ with $T>0$ be our finite-horizon financial market consisting of a risky asset $S_{t}$ and a risk-free bond $A_{t}$ playing the role as a numéraire. The price dynamics specified by the Black \& Scholes Model are given by the pair of SDEs:
 \begin{align}
     dS_{t}&=\mu S_{t}dt+\sigma S_{t}dB_{t},\\
     dA_{t}&=rA_{t}dt,
 \end{align}
-where $r>0$ is the risk-free rate, $(\mu,\sigma)\in\R\times (0,\infty)$ are constants, $A_{0}=1$, and $B_t$ is a Brownian motion. Obviously, the solution to (2.7) is given by $A_{t}=e^{rt}$ for $t\in [0,T]$.
-
-Recall the (simple) Itô's lemma
-\begin{equation}\label{itoslemma}
-    f(t,B_{t})= f(0,B_{0})+\int_{0}^{t}\frac{\partial f}{\partial s}ds + \int_{0}^{t}\frac{\partial f}{\partial x}dB_{s}+\frac{1}{2}\int_{0}^{t}\frac{\partial^{2}f}{\partial x^{2}}d\langle B\rangle_{s},
-\end{equation}
-where $f\in C^{1,2}(\R^{2},\R)$ is once and twice continuously differentiable in the first and second variable, respectively. We now define the function
+where $r>0$ is the risk-free rate, $(\mu,\sigma)\in\R\times (0,\infty)$ are constants, $A_{0}=1$, and $B_t$ is a Brownian motion. Obviously, the solution to (2.29) is given by $A_{t}=e^{rt}$ for $t\in [0,T]$. Using Itô's lemma, one can easily show that the solution to (2.28) is given by the geometric Brownian motion
 \begin{equation}
-    f(t,B_{t})\coloneqq S_{0}\exp\left\{\left(\mu-\frac{\sigma^2}{2}\right)t+\sigma B_{t}\right\},\quad S_{0}>0.
+    S_{t}=S_{0}\exp\left\{\left(\mu-\frac{\sigma^2}{2}\right)t+\sigma B_{t}\right\}, \quad 0\leq t\leq T.
 \end{equation}
-We can now easily calculate the partial derivatives as $\partial_{t}f=(\mu-\sigma^{2}/2)f$, $\partial_{x}f=\sigma f$, and $\partial^{2}_{x}f=\sigma^{2}f$. Furthermore, we have $f(0,B_{0})=S_{0}$. Inserting this into Itô's lemma, we obtain
-\begin{align}
-    f(t,B_{t})&=S_{0} + \left(\mu-\frac{\sigma^{2}}{2}\right)\int_{0}^{t}f(s,B_{s})ds+\sigma\int_{0}^{t}f(s,B_{s})dB_{s}+\frac{\sigma^{2}}{2}\int_{0}^{t}f(s,B_{s})ds\\
-    &= S_{0}+\mu\int_{0}^{t}f(s,B_{s})ds+\sigma\int_{0}^{t}f(s,B_{s})dB_{s},
-\end{align}
-where we have also used that $\langle B\rangle_{t}=t$. The above can be written equivalently as
-\begin{equation}
-    df=\mu fdt+ \sigma fdB_{t}.
-\end{equation}
-Hence, the process $S_{t}\coloneqq f(t,B_{t})=S_{0}\exp\left\{(\mu-\sigma^{2}/2)t+\sigma B_{t}\right\}$ solves the SDE (2.6). Such a process is called a geometric Brownian motion.
 
-Consider a trading strategy in this market with continuous rebalancing, and which is self-financing, i.e. there are no exogenous incoming or outgoing cash flows. If we hold $\delta_{t}$ units of the risky asset (stock) $S_t$ for each point in time $t$, then the portfolio value changes as
+%Recall the (simple) Itô's lemma
+%\begin{equation}\label{itoslemma}
+    %f(t,B_{t})= f(0,B_{0})+\int_{0}^{t}\frac{\partial f}{\partial s}ds + \int_{0}^{t}\frac{\partial f}{\partial x}dB_{s}+\frac{1}{2}\int_{0}^{t}\frac{\partial^{2}f}{\partial x^{2}}d\langle B\rangle_{s},
+%\end{equation}
+%where $f\in C^{1,2}(\R^{2},\R)$ is once and twice continuously differentiable in the first and second variable, respectively. We now define the function
+%\begin{equation}
+    %f(t,B_{t})\coloneqq S_{0}\exp\left\{\left(\mu-\frac{\sigma^2}{2}\right)t+\sigma B_{t}\right\},\quad S_{0}>0.
+%\end{equation}
+%We can now easily calculate the partial derivatives as $\partial_{t}f=(\mu-\sigma^{2}/2)f$, $\partial_{x}f=\sigma f$, and $\partial^{2}_{x}f=\sigma^{2}f$. Furthermore, we have $f(0,B_{0})=S_{0}$. Inserting this into Itô's lemma, we obtain
+%\begin{align}
+    %f(t,B_{t})&=S_{0} + \left(\mu-\frac{\sigma^{2}}{2}\right)\int_{0}^{t}f(s,B_{s})ds+\sigma\int_{0}^{t}f(s,B_{s})dB_{s}+\frac{\sigma^{2}}{2}\int_{0}^{t}f(s,B_{s})ds\\
+    %&= S_{0}+\mu\int_{0}^{t}f(s,B_{s})ds+\sigma\int_{0}^{t}f(s,B_{s})dB_{s},
+%\end{align}
+%where we have also used that $\langle B\rangle_{t}=t$. The above can be written equivalently as
+%\begin{equation}
+    %df=\mu fdt+ \sigma fdB_{t}.
+%\end{equation}
+%Hence, the process $S_{t}\coloneqq f(t,B_{t})=S_{0}\exp\left\{(\mu-\sigma^{2}/2)t+\sigma B_{t}\right\}$ solves the SDE (2.6). Such a process is called a geometric Brownian motion.
+
+If we consider a strategy in this market with continuous rebalancing, and which is self-financing, i.e. there are no exogenous incoming or outgoing cash flows. If we hold $\delta_{t}$ units of the risky asset $S_t$ for each point in time $t$, then the portfolio value changes as
 \begin{equation}
     dV_{t}=\delta_{t}dS_{t}+(V_{t}-\delta_{t}S_{t})rdt,\quad 0\leq t\leq T.
 \end{equation}
@@ -282,7 +306,7 @@ Now, consider a European option with maturity time $T$ and pay-off $\Phi(S_{T})$
 \begin{equation}
     V_{t}=F(t,S_{t})
 \end{equation}
-for some function $F$. By the no-arbitrage principle, our function $F$, which equals the replicating portfolio $V_t$, must be the price function of our option. If we apply Itô's lemma \eqref{itoslemma} to $V_{t}=F(t,S_{t})$ with $B_{t}=S_{t}$ we obtain
+for some function $F$. By the no-arbitrage principle, our function $F$, which equals the replicating portfolio $V_t$, must be the price function of our option. If we apply Itô's lemma to $V_{t}=F(t,S_{t})$, we obtain
 \begin{equation}\label{hejhej}
     dV_{t}=\delta_{t}dS_{t}+(V_{t}-\delta_{t}S_{t})rdt=\frac{\partial F}{\partial t}dt+\frac{\partial F}{\partial S_{t}}dS_{t}+\frac{1}{2}\frac{\partial^{2}F}{\partial S_{t}^{2}}d\langle S\rangle_{t}.
 \end{equation}
@@ -294,15 +318,15 @@ Whence, we have derived the Black \& Scholes partial differential equation with 
 \begin{equation}\label{blackscholespde}
     -rF(t,S_{t})+\frac{\partial F}{\partial t}+rS_{t}\frac{\partial F}{\partial S_{t}}+\frac{1}{2}\sigma^{2}S_{t}^{2}\frac{\partial^{2}F}{\partial S_{t}^{2}},\quad F(T,S_{t})=\Phi(S_{T}).
 \end{equation}
-The portfolio $V_{t}=\delta_{t}S_{t}+(V_{t}-\delta_{t}S_{t})r$ with $\delta_{t}=\partial_{S_{t}}F(t,S_{t})$ thus replicates the pay-off of the option. The quantity $\delta_{t}$ is called the delta of the option and measures the sensitivity of the option price to changes in the underlying stock price. Hence, the price function of the option $F$ must satisfy \eqref{blackscholespde}. 
+The portfolio $V_{t}=\delta_{t}S_{t}+(V_{t}-\delta_{t}S_{t})r$ with $\delta_{t}=\partial_{S_{t}}F(t,S_{t})$ thus replicates the pay-off of the option. The quantity $\delta_{t}$ is called the delta of the option and measures the sensitivity of the option price to changes in the underlying stock price. Consequently, the price function of the option $F$ must satisfy the PDE \eqref{blackscholespde}. 
 
-For a European call option with strike price $K>0$ and pay-off $\Phi(S_{T})=(S_{T}-K)^{+}$, we obtain
+For a European call option with strike price $K>0$ and pay-off $\Phi(S_{T})=(S_{T}-K)^{+}$, we obtain the famous Black \& Scholes formula
 \begin{align}
     F(t,S_{t})&=S_{t}N(d_{1})-e^{-r(T-t)}KN(d_{2}),\quad 0\leq t\leq T,\label{BSFormula}\\
     d_{1}&\coloneqq \frac{\ln\left(\frac{S_{t}}{K}\right)+\left(r+\frac{\sigma^{2}}{2}\right)(T-t)}{\sigma\sqrt{T-t}},\\
     d_{2}&\coloneqq d_{1}-\sigma\sqrt{T-t},
 \end{align}
-and where $N(\cdot)$ is the standard normal cdf. For a general simple derivative $\xi=\Phi(S_{T})$, we have the following result.
+and where $N(\cdot)$ is the standard normal cdf. For a general simple derivative $\xi=\Phi(S_{T})$, we have the following result, which is stated without proof.
 \begin{thm}[\textit{Price Function}]
     Let $\xi$ be a simple derivative, i.e. $\xi=\Phi(S_{T})$ for some measurable function $\Phi$. Then the function
     \begin{equation}
@@ -317,32 +341,35 @@ satifies almost surely that
     F(t,S_{t})=\mathbb{E}_{\mathbb{Q}}\left(\frac{A_{t}}{A_{T}}\xi \mid \mathcal{F}_{t}\right).
 \end{equation}
 \end{thm}
-Before we prove Theorem 2.2, we present a lemma on conditional expectations.
-\begin{lem}\label{lem23}
-    Let $X,Y$ be two $d$-dimensional random vectors and $\mathcal{G}$ a sub-$\sigma$-algebra of $\mathcal{F}$. Suppose that $Y$ is $\mathcal{G}$-measurable, and $X$ is independent of $Y$. Then for any measurable function $f:\R^{d}\times \R^{d}\to\R$ satisfying that $\mathbb{E}(|f(X,Y)|)<\infty$, we have that almost surely
-    \begin{equation}
-\mathbb{E}(f(X,Y)\mid \mathcal{G})=g(Y),
-    \end{equation}
-    where $g(x)\coloneqq \mathbb{E}(f(X,x))$.
-\end{lem}
-\begin{proof}
-    Using Girsanov's Theorem, one can show that in the Black \& Scholes model
-    \begin{equation}
-        S_{T}=S_{t}e^{(r-\sigma^{2}/2)(T-t)+\sigma(B_{T}^{\mathbb{Q}}-B_{t}^{\mathbb{Q}})}.
-    \end{equation}
-    Thus, we have
-    \begin{equation}
-        \mathbb{E}_{\mathbb{Q}}\left(\frac{A_{t}}{A_{T}}\xi \mid \mathcal{F}_{t}\right)=e^{-r(T-t)}\mathbb{E}_{\mathbb{Q}}\left[\Phi\left(S_{t}e^{(r-\sigma^{2}/2)(T-t)+\sigma(B_{T}^{\mathbb{Q}}-B_{t}^{\mathbb{Q}})}\right)\mid \mathcal{F}_{t}\right].
-    \end{equation}
-    Since $B_{T}^{\mathbb{Q}}-B_{t}^{\mathbb{Q}}$ is independent of $\mathcal{F}_t$, we can use Lemma \ref{lem23} to the case when $X=e^{(r-\sigma^{2}/2)(T-t)+\sigma(B_{T}^{\mathbb{Q}}-B_{t}^{\mathbb{Q}})}$, $Y=S_{t}$, $\mathcal{G}=\mathcal{F}_{t}$, and $f(x,y)=\Phi(xy)$ to obtain that
-    \begin{equation}
-        \mathbb{E}_{\mathbb{Q}}\left(\frac{A_{t}}{A_{T}}\xi \mid \mathcal{F}_{t}\right)=e^{-r(T-t)}g(S_{t}),
-    \end{equation}
-    where
-    \begin{equation}
-        g(x)=\mathbb{E}_{\mathbb{Q}}\left[\Phi\left(xe^{(r-\sigma^{2}/2)(T-t)+\sigma(B_{T}^{\mathbb{Q}}-B_{t}^{\mathbb{Q}})}\right)\right]=\mathbb{E}_{\mathbb{Q}}[\Phi(X(x,t,T))].
-    \end{equation}
-\end{proof}
+%Before we prove Theorem 2.2, we present a lemma on conditional expectations.
+%\begin{lem}\label{lem23}
+    %Let $X,Y$ be two $d$-dimensional random vectors and $\mathcal{G}$ a sub-$\sigma$-algebra of $\mathcal{F}$. Suppose that $Y$ is $\mathcal{G}$-measurable, and $X$ is independent of $Y$. Then for any measurable function $f:\R^{d}\times \R^{d}\to\R$ satisfying that $\mathbb{E}(|f(X,Y)|)<\infty$, we have that almost surely
+    %\begin{equation}
+%\mathbb{E}(f(X,Y)\mid \mathcal{G})=g(Y),
+    %\end{equation}
+    %where $g(x)\coloneqq \mathbb{E}(f(X,x))$.
+%\end{lem}
+%\begin{proof}
+    %Using Girsanov's Theorem, one can show that in the Black \& Scholes model
+    %\begin{equation}
+        %S_{T}=S_{t}e^{(r-\sigma^{2}/2)(T-t)+\sigma(B_{T}^{\mathbb{Q}}-B_{t}^{\mathbb{Q}})}.
+    %\end{equation}
+    %Thus, we have
+    %\begin{equation}
+        %\mathbb{E}_{\mathbb{Q}}\left(\frac{A_{t}}{A_{T}}\xi \mid \mathcal{F}_{t}\right)=e^{-r(T-t)}\mathbb{E}_{\mathbb{Q}}\left[\Phi\left(S_{t}e^{(r-\sigma^{2}/2)(T-t)+\sigma(B_{T}^{\mathbb{Q}}-B_{t}^{\mathbb{Q}})}\right)\mid \mathcal{F}_{t}\right].
+    %\end{equation}
+    %Since $B_{T}^{\mathbb{Q}}-B_{t}^{\mathbb{Q}}$ is independent of $\mathcal{F}_t$, we can use Lemma \ref{lem23} to the case when $X=e^{(r-\sigma^{2}/2)(T-t)+\sigma(B_{T}^{\mathbb{Q}}-B_{t}^{\mathbb{Q}})}$, $Y=S_{t}$, $\mathcal{G}=\mathcal{F}_{t}$, and $f(x,y)=\Phi(xy)$ to obtain that
+    %\begin{equation}
+        %\mathbb{E}_{\mathbb{Q}}\left(\frac{A_{t}}{A_{T}}\xi \mid \mathcal{F}_{t}\right)=e^{-r(T-t)}g(S_{t}),
+    %\end{equation}
+    %where
+    %\begin{equation}
+        %g(x)=\mathbb{E}_{\mathbb{Q}}\left[\Phi\left(xe^{(r-\sigma^{2}/2)(T-t)+\sigma(B_{T}^{\mathbb{Q}}-B_{t}^{\mathbb{Q}})}\right)\right]=\mathbb{E}_{\mathbb{Q}}[\Phi(X(x,t,T))].
+    %\end{equation}
+%\end{proof}
+\subsection{The Heston Model}
+Hej min ven
+
 \subsection{Implied Volatility}
 If we return to the price function (2.18). Then we could reparameterize $F$, and consider it as a function of $(\tau, y, \sigma)$, where $\tau=T-t$ is time to maturity, $y=S_{t}/K$ is the so-called moneyness, and $\sigma$ is the volatility. These quantities are all observable except for $\sigma$. However, the mapping $\sigma\mapsto F(t,x,\sigma)$ is strictly increasing on $(0,\infty)$, and consequently also invertible. Hence, there is a one-to-one correspondence between the price of an option and the volatility of the underlying stock. 
 \begin{defn}[\textit{Implied Volatility}]
