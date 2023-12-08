@@ -2,7 +2,9 @@
 %\section{Fractional Brownian Motion}
 This chapter is based on \cite{fBMbook} unless specified otherwise.
 
-In this section, we assume that every random variable $X_{t}$ is defined on some appropriate probability space $(\Omega, \mathcal{F},\mathbb{P})$. Furthermore, we assume that the index set $I$ is either equal to $\R$, $[0,\infty)$ or $[0,T]$ for some $T>0$. 
+In this chapter, we assume that every random variable $X_{t}$ is defined on some appropriate probability space $(\Omega, \mathcal{F},\mathbb{P})$. Furthermore, we assume that the index set $I$ of the stochastic process $X=(X_{t})_{t\in I}$ is either equal to $\R$, $[0,\infty)$ or $[0,T]$ for some $T>0$. 
+
+The fractional Brownian motion is a stochastic process, which is a generalization of the well-known standard Brownian motion. However, the fractional Brownian motion is in general neither a semimartingale nor Markovian. Consequently, new simulation techniques and methods of stochastic integration have to be developed, which is done in Section \ref{sec:integration} and \ref{sec:simu}, respectively.
 \begin{defn}[\textit{Gaussian Process}]
     A stochastic process $X=(X_{t})_{t\in I}$ is said to be Gaussian if for all $d\geq 1$ and all $t_{1},\dots,t_{d}\in I$, $(X_{t_{1}},\dots,X_{t_{d}})$ is a Gaussian random vector. The mean function $m: I\to \R$ of $X$ is given by $m(t)=\mathbb{E}[X_{t}]$, and the covariance function $\gamma: I^{2}\to\R$ of $X$ is given by $\gamma(s,t)=\textrm{Cov}(X_{s},X_{t})$. If $m\equiv 0$, $X $ is said to be centered.
 \end{defn}
@@ -51,7 +53,7 @@ where $N$ is a $\mathbb{P}$-zero set.
     %Suppose $H\in (0,1)$
 %\end{proof}
 The proof of Theorem \ref{existencethm} is omitted. 
-We will now give the process defined in Theorem \ref{existencethm} the name of \textit{fractional Brownian motion}.%We will now define a fractional Brownian motion as the process, which existence is given by Theorem \ref{existencethm}.
+We will now give the process in Theorem \ref{existencethm} the name of fractional Brownian motion.%We will now define a fractional Brownian motion as the process, which existence is given by Theorem \ref{existencethm}.
 \begin{defn}[\textit{Fractional Brownian Motion}]
     Let $H\in (0,1]$. A fractional Brownian motion (fBM) of Hurst index $H$ is a continuous centered Gaussian process $B^{H}=(B_{t}^{H})_{t\geq 0}$ such that $B_{0}^{H}=0$ almost surely and with covariance function
     \begin{equation}
@@ -100,7 +102,7 @@ In particular, Proposition \ref{prop211} shows that it suffices to only consider
          &=\frac{a^{-2H}}{2}\left((at)^{2H}+(as)^{2H}-|at-as|^{2H}\right)\\
          &= \frac{1}{2}(t^{2H}+s^{2H}-|t-s|^{2H}).
      \end{align}
-     The proof of 2. and 3. are completely analogous, and are therefore omitted. Conversely, let $B^{H}=(B_{t}^{H})_{t\geq 0}$ be a continuous Gaussian process with $B^{H}_{0}=0$ and $\textrm{Var}[B_{1}^{H}]=1$, which additionally satisfies 1. and 2. Using 2. with $t=h>0$, we get $\mathbb{E}[B_{2t}^{H}]=2\mathbb{E}[B_{t}^{H}]$, and using 1. we infer that $\mathbb{E}[B_{2t}^{H}]=2^{H}\mathbb{E}[B_{t}^{H}]$. Combining these two equalities gives $\mathbb{E}[B_{t}^{H}]=0$ for all $t>0$, and thus $B^{H}$ is centered. Let $s,t\geq 0$. Then we infer that
+     The proof of 2. and 3. are completely analogous and are therefore omitted. Conversely, let $B^{H}=(B_{t}^{H})_{t\geq 0}$ be a continuous Gaussian process with $B^{H}_{0}=0$ and $\textrm{Var}[B_{1}^{H}]=1$, which additionally satisfies 1. and 2. Using 2. with $t=h>0$, we get $\mathbb{E}[B_{2t}^{H}]=2\mathbb{E}[B_{t}^{H}]$, and using 1., we infer that $\mathbb{E}[B_{2t}^{H}]=2^{H}\mathbb{E}[B_{t}^{H}]$. Combining these two equalities gives $\mathbb{E}[B_{t}^{H}]=0$ for all $t>0$, and thus $B^{H}$ is centered. Let $s,t\geq 0$. Then we infer that
      \begin{align}
          \E[B_{s}^{H}B_{t}^{H}]&=\frac{1}{2}\left(\E\left[(B_{t}^{H})^{2}\right]+\E\left[(B_{s}^{H})^{2}\right]-\E\left[(B_{t}^{H}-B_{s}^{H})^{2}\right]\right)\\
          &= \frac{1}{2}\left(\E\left[(B_{t}^{H})^{2}\right]+\E\left[(B_{s}^{H})^{2}\right]-\E[(B_{|t-s|}^{H})^{2}]\right)\\
@@ -121,7 +123,7 @@ We have the following proposition.
     Let $B^{H}=(B_{t}^{H})_{t\geq 0}$ be a fractional Brownian motion of Hurst index $H\in (0,1)$. Then disjoint increments of $B^H$ are negatively correlated for $H\in (0,1/2)$, positively correlated for $H\in (1/2,1)$, and uncorrelated for $H=1/2$.
 \end{prop}
 \begin{proof}
-Let $\Delta B_{t}^{H}=B_{t+h}^{H}-B_{t}^{H}$ and $\Delta B_{s}^{H}=B_{s+h}^{H}-B_{s}^{H}$ be increments of a fractional Brownian motion $B^{H}$ such that $s+h< t$ and $t-s=nh$, $n\in \N$ so as to ensure $[s,s+h]\cap [t,t+h]=\emptyset$. Then the covariance of the increments is given as
+Let $\Delta B_{t}^{H}=B_{t+h}^{H}-B_{t}^{H}$ and $\Delta B_{s}^{H}=B_{s+h}^{H}-B_{s}^{H}$ for $h>0$ be increments of a fractional Brownian motion $B^{H}$ such that $s+h< t$ and $t-s=nh$, $n\in \N$ so as to ensure $[s,s+h]\cap [t,t+h]=\emptyset$. Then the covariance of the increments is given as
 \begin{align*}
     \E\left[\Delta B_{t}^{H}\Delta B_{s}^{H}\right]&=\E[B_{t+h}^{H}B_{s+h}^{H}]-\E[B_{t+h}^{H}B_{s}^{H}]-\E[B_{t}^{H}B_{s+h}^{H}]+\E[B_{t}^{H}B_{s}^{H}]\\
     &= \frac{1}{2}\left((t+h)^{2H}+(s+h)^{2H}-|nh|^{2H}\right)-\frac{1}{2}\left((t+h)^{2H}+s^{2H}-|h(n+1)|^{2H}\right)\\
@@ -132,7 +134,8 @@ Thus, for a fixed $h$, the covariance of the increments only depends on $n\in \N
 \begin{equation}
 f(x)\coloneqq (x+1)^{2H}+(x-1)^{2H}-2x^{2H}.
 \end{equation}
-Then, it is easy to see that $f(x)>0$, $\forall x\in [1,\infty)$ if $H>1/2$, and $f(x)<0$, $\forall x\in [1,\infty)$ if $H<1/2$. In the case of $H=1/2$, the increments are independent, and by virtue of the Brownian motion being a Gaussian process, they are consequently also uncorrelated.
+Then, it is easy to see that $f(x)>0$, $\forall x\in [1,\infty)$ if $H>1/2$, and $f(x)<0$, $\forall x\in [1,\infty)$ if $H<1/2$. In the case of $H=1/2$, we see that the increments are uncorrelated. Since the fBM is a Gaussian process, the increments are consequently also independent for $H=1/2$, which is in accordance with the definition of a standard Brownian motion.
+%In the case of $H=1/2$, the increments are independent, and by virtue of the Brownian motion being a Gaussian process, they are consequently also uncorrelated.
     %Suppose that $0\leq s_{1}<t_{1}<s_{2}<t_{2}$ such that $[s_{1},t_
     %{1}]\cap [s_{2},t_{2}]=\emptyset$. Then the covariance of the increments is given as
     %\begin{align*}
@@ -144,12 +147,18 @@ Then, it is easy to see that $f(x)>0$, $\forall x\in [1,\infty)$ if $H>1/2$, and
         %\E\left[(B_{t_{1}}^{H}-B_{s_{1}}^{H})(B_{t_{2}}^{H}-B_{s_{2}}^{H})\right]=\frac{1}{2}\left(f(a_{1})-f(a_{2})-\left(f(b_{1})-f(b_{2})\right)\right).
     %\end{equation}
 \end{proof}
-A consequence of Proposition \ref{corr} is that the increments $X_{k}\coloneqq B_{k}^{H}-B_{k-1}^{H}$ and $X_{k+n}\coloneqq B_{k+n}^{H}-B_{k+n-1}^{H}$ of a fBM $B^{H}$ exhibit long memory for $H>1/2$, since the auto-covariance function satisfies
+A consequence of Proposition \ref{corr} is that the increments $X_{k}\coloneqq B_{k}^{H}-B_{k-1}^{H}$ and $X_{k+n}\coloneqq B_{k+n}^{H}-B_{k+n-1}^{H}$ with $n\in\N$ of a fBM $B^{H}$ exhibit long memory for $H>1/2$, since the auto-covariance function satisfies
 \begin{equation}\label{asymp}
 \gamma_{H}(n)\coloneqq \frac{1}{2}\left((n+1)^{2H}+(n-1)^{2H}-2n^{2H}\right) \sim H(2H-1)n^{2H-2},
 \end{equation}
 as $n\to\infty$. Here $f(n)\sim g(n)$ is used to indicate that $\lim_{n\to\infty}f(n)/g(n)=1$. Thus, we obtain that $\sum_{n=1}^{\infty}|\gamma_{H}(n)|=\infty$ for $H>1/2$ and $\sum_{n=1}^{\infty}|\gamma_{H}(n)|<\infty$ for $H<1/2$. Hence, a fBM can be used to model both long and short memory, when the Hurst index is chosen appropriately. 
-\textcolor{red}{Maybe a plot of the acf for various values of H?}
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale = 0.55]{fig/img/acf/acf2.pdf}
+    \includegraphics[scale=0.55]{fig/img/acf/acf1.pdf}
+    \caption{Auto-Covariance Functions for $H=0.3$ (left) and $H=0.8$ (right).}
+    \label{fig:enter-label}
+\end{figure}
 %It is well-known that a discrete weakly stationary stochatic process $(X_{n})_{n\in \N}$ is said to exhibit long memory if its autocovariance function $\rho(n)\coloneqq \textrm{Cov}(X_{k},X_{k+n})$ satisfies $\rho(n)\sim Kn^{2d-1}$, i.e.
 %\begin{equation}
 %    \lim_{n\to \infty}\frac{\rho(n)}{Kn^{2d-1}}=1,
@@ -169,7 +178,7 @@ In this section, we will study the asymptotic properties of the $p$-variations o
     where $1$ is the function constantly equal to $1$, and $(\delta\varphi)(x)\coloneqq x\varphi(x)-\varphi'(x)$ for $\varphi\in C^{1}$.
 \end{defn}
 \begin{lem}\label{l2lemma}
-    Let $(h_{k})_{k\in \N}$ be the family of Hermite polynomials. Then $(\frac{1}{\sqrt{k!}}H_{k})_{k\in\N}$ is an orthonormal basis of $L^{2}\left(\R,\mathcal{B}(\R),\nu\right)$, where $\nu$ is the standard Gaussian measure
+    Let $(H_{k})_{k\in \N}$ be the family of Hermite polynomials. Then $(\frac{1}{\sqrt{k!}}H_{k})_{k\in\N}$ is an orthonormal basis of $L^{2}\left(\R,\mathcal{B}(\R),\nu\right)$, where $\nu$ is the standard Gaussian measure
     \begin{equation}
         \nu(A)\coloneqq \frac{1}{\sqrt{2\pi}}\int_{A}e^{-x^{2}/2}dx,\quad A\in\mathcal{B}(\R).
     \end{equation}
@@ -213,7 +222,7 @@ where $\gamma_{H}$ is the auto-covariance function of fractional Gaussian noise
 \begin{equation}
     \gamma_{H}(x)=\gamma_{H}(|x|)=\frac{1}{2}\left(|x+1|^{2H}+|x-1|^{2H}-2|x|^{2H}\right), \quad x\in \Z. 
 \end{equation}
-Utilizing the fact that $\gamma_{H}(x)=\E[B_{1}^{H}(B_{|x|+1}^{H}-B_{|x|}^{H})]$, and that the covariance is an inner product, we get by Cauchy-Schwarz
+Note that we have extended the domain of $\gamma_{H}$ to $\Z$. Utilizing the fact that $\gamma_{H}(x)=\E[B_{1}^{H}(B_{|x|+1}^{H}-B_{|x|}^{H})]$, and that the covariance is an inner product, we get by Cauchy-Schwarz
 \begin{align}
      |\gamma_{H}(x)|\leq \sqrt{\E[(B_{1}^{H})^{2}]}\sqrt{\E[(B_{|x|+1}^{H}-B_{|x|}^{H})^{2}]}=1.
 \end{align}
@@ -252,7 +261,7 @@ We are now ready to prove that a fBM is not a semimartingale, except when $H=1/2
     Let $B^H$ be a fractional Brownian motion of Hurst index $H\in (0,\frac{1}{2})\cup (\frac{1}{2},1)$. Then $B^H$ is not a semimartingale.
 \end{thm}
 \begin{proof}
-    By selfsimilarity, it is sufficient to consider the time interval $[0,1]$ for the proof. Firstly, recall that the following two properties hold for a semimartingale $S$ on $[0,1]$
+    By self-similarity, it is sufficient to consider the time interval $[0,1]$ for the proof. Firstly, recall that the following two properties hold for a semimartingale $S$ on $[0,1]$
     \begin{enumerate}
         \item $\sum_{k=1}^{n}\left(S_{k/n}-S_{(k-1)/n}\right)^{2}\overset{\mathbb{P}}{\to} \langle S\rangle_{1}<\infty$ as $n\to\infty$.
         \item Moreover, if $\langle S\rangle_{1}=0$, then $S$ is of bounded variation, i.e. it holds almost surely that
@@ -264,13 +273,15 @@ We are now ready to prove that a fBM is not a semimartingale, except when $H=1/2
     \begin{equation}
         \sup_{1\leq k\leq n}|B_{k/n}^{H}-B_{(k-1)/n}^{H}|^{p-1}<\varepsilon, \quad \forall \varepsilon>0.
     \end{equation}
-    Combining the above, we ge the inequality
+    Combining the above, we get the inequality
     \begin{equation}
         \sum_{k=1}^{n}\left|B_{k/n}^{H}-B_{(k-1)/n}^{H}\right|^{p}\leq \sup_{1\leq k\leq n}|B_{k/n}^{H}-B_{(k-1)/n}^{H}|^{p-1}\sum_{k=1}^{n}\left|B_{k/n}^{H}-B_{(k-1)/n}^{H}\right|
     \end{equation}
-    from which we deduce that $\sum_{k=1}^{n}|B_{k/n}^{H}-B_{(k-1)/n}^{H}|\to \infty$. Consequently, $B^H$ is also not a semimartingale, when $H>1/2$.
+    from which we deduce that $\sum_{k=1}^{n}|B_{k/n}^{H}-B_{(k-1)/n}^{H}|\to \infty$. Consequently, $B^H$ is also not a semimartingale when $H>1/2$.
 \end{proof}
-\section{Integration wrt. Fractional Brownian Motion}
+\section{Integration wrt. Fractional Brownian Motion}\label{sec:integration}
+This section is based on \cite{fBMbook} and \cite{intbook}.
+
 In the previous section, it was shown that a fBM $B^H$ is not a semimartingale whenever $H\neq 1/2$. Consequently, the usual Itô calculus is not applicable, and alternative methods must be utilized to define and solve SDE's of the form
 \begin{equation}
     X_{t}=X_{0}+\int_{0}^{t}b(s,X_{s})ds + \int_{0}^{t}\sigma(s,X_{s})dB_{s}^{H},\quad t\geq 0. 
@@ -318,22 +329,26 @@ This is clearly in contradiction with Corollary \ref{pvariations}, which states 
     \begin{equation}
         \psi^{(\mathcal{P})}_{t}\coloneqq \sum_{j=0}^{N-1}\psi_{t_{j}}\mathbbm{1}_{(t_{j},t_{j+1}]}(t)
     \end{equation}
-    be a cádlág step function with respect to the partition $\mathcal{P}=\{0=t_{0}<t_{1}<\dots <t_{N}=T\}$. Then $\psi^{(\mathcal{P})}$ almost surely to $\psi$ as $|\mathcal{P}|\to 0$. According to \eqref{defn:forward2}, the forward integral of $\psi^{(\mathcal{P})}$ is then given by
+    be a cádlág step function with respect to the partition $\mathcal{P}=\{0=t_{0}<t_{1}<\dots <t_{N}=T\}$. Then $\psi^{(\mathcal{P})}$ converges almost surely to $\psi$ as $|\mathcal{P}|\to 0$. According to \eqref{defn:forward2}, the forward integral of $\psi^{(\mathcal{P})}$ is then given by
     \begin{align}
         \int_{0}^{T}\psi^{(\mathcal{P})}_{t}d^{-}B^{H}_{t}&=\lim_{\varepsilon\to 0}\int_{0}^{T}\psi^{(\mathcal{P})}_{s}\frac{B^{H}_{s+\varepsilon}-B_{s}^{H}}{\varepsilon}ds\\
         &= \lim_{\varepsilon\to 0}\sum_{j=0}^{N-1}\psi_{t_{j}}\int_{t_{j}}^{t_{j+1}}\frac{1}{\varepsilon}\int_{s}^{s+\varepsilon}dB_{u}^{H}\hspace{2 pt}ds\\
         &= \lim_{\varepsilon\to 0}\sum_{j=0}^{N-1}\psi_{t_{j}}\int_{t_{j}}^{t_{j+1}}\frac{1}{\varepsilon}\int_{u-\varepsilon}^{u}ds\hspace{2 pt}dB_{u}^{H}\\
         &= \sum_{j=0}^{N-1}\psi_{t_{j}}\Delta B_{t_{j}}^{H}.
     \end{align}
-We have the pointwise limit $\psi^{(\mathcal{P})}_{t}\to\psi_{t}$ as $|\mathcal{P}|\to 0$, and step functions are trivially bounded, since $|\psi^{(\mathcal{P})}_{t}|\leq M$ for $M\coloneqq \max\left\{|\psi^{(\mathcal{P})}_{t_{0}}|, |\psi^{(\mathcal{P})}_{t_{1}}|,\dots,|\psi^{(\mathcal{P})}_{t_{N}}|\right\}$. Thus, by applying the dominated convergence theorem, we obtain the result.
+We have the pointwise limit $\psi^{(\mathcal{P})}_{t}\to\psi_{t}$ as $|\mathcal{P}|\to 0$, and step functions are trivially bounded, since $|\psi^{(\mathcal{P})}_{t}|\leq M$ for $M\coloneqq \max\left\{|\psi^{(\mathcal{P})}_{t_{0}}|, |\psi^{(\mathcal{P})}_{t_{1}}|,\dots,|\psi^{(\mathcal{P})}_{t_{N}}|\right\}$. Thus, by applying the dominated convergence theorem above, we obtain the result.
 \end{proof}
 Theorem \ref{thm:integration} states that forward integrals with respect to fBMs can simply be evaluated as the limit of Riemann-sums, when the integrand is sufficiently well-behaved. This means that for this class of integrands, we can just evaluate the stochastic integral pathwise via Riemann-sums. This pathwise Riemann-Stieltjes approach will be utilized, when we later on have to evaulate stochastic integrals of this type. 
 %If we let $\mathcal{C}^{\alpha}\left([0,T]\right)$ denote the set of real-valued Hölder continuous functions of order $\alpha\in (0,1)$ on $[0,T]$, $T>0$
-\section{Simulation of a Fractional Brownian Motion}
+\section{Simulation of a Fractional Brownian Motion}\label{sec:simu}
+This section is based on \cite{simfBM} and \cite{simfBMappendix}.
+
 As was established in Proposition \ref{corr}, the increments of a fractional Brownian motion are correlated, whenever $H\neq 1/2$. Thus, the procedure presented in Algorithm \ref{alg:BM} is no longer applicable.
 %Thus, the usual simulation procedure for standard Brownian motions, which consists of taking cumulative sums of i.i.d. standard normal variables, is no longer applicable. 
 
-Suppose we wish to simulate the path of a fBM $B^{H}$ on the interval $[0,T]$ for some $T>0$. Since it is only possible to sample at a finite number of points, we will adopt the notation $Y_{t_{0}},Y_{t_{1}},\dots,Y_{t_{N}}$ for a simulated sample of $B^H$ at the points $0=t_{0}<t_{1}<\dots<t_{N}=T$. Then $(Y_{t_{0}},Y_{t_{1}},\dots,Y_{t_{N}})$ forms a centered Gaussian vector with a certain covariance matrix. Therefore, it can be simulated as a linear transformation of a standard Gaussian vector, i.e. a vector of i.i.d. standard normal variables. This basic idea will be utilized in both simulation procedures presented, which are the Cholesky decomposition method and the circulant embedding method. 
+Suppose we wish to simulate the path of a fBM $B^{H}$ on the interval $[0,T]$ for some $T>0$. We will again adopt the notation $Y_{t_{0}},Y_{t_{1}},\dots,Y_{t_{N}}$ for a simulated sample of $B^{H}$ at the points $0=t_{0}<t_{1}<\dots<t_{N}=T$.
+%Since it is only possible to sample at a finite number of points, we will adopt the notation $Y_{t_{0}},Y_{t_{1}},\dots,Y_{t_{N}}$ for a simulated sample of $B^H$ at the points $0=t_{0}<t_{1}<\dots<t_{N}=T$. 
+Then $(Y_{t_{0}},Y_{t_{1}},\dots,Y_{t_{N}})$ forms a centered Gaussian vector with a certain covariance matrix. Therefore, it can be simulated as a linear transformation of a standard Gaussian vector, i.e. a vector of i.i.d. standard normal variables. This basic idea will be utilized in both simulation procedures presented, which are the Cholesky decomposition method and the circulant embedding method. 
 
 Note that due to the self-similarity property, it is suffcient to simulate $(Y_{0},Y_{1},\dots, Y_{N})$ and then multiply these values by $(T/N)^H$. Furthermore, both methods presented are exact simulation techniques in the sense that if $(B_{t_{0}}^{H},B_{t_{1}}^{H},\dots, B_{t_{N}}^{H})$ is a sample from a fBM $B^H$, then 
 \begin{equation}
@@ -349,7 +364,7 @@ as opposed to techniques that simulate with error like the Euler-Maruyama scheme
 %as opposed to simulation techniques that sample with error.
 \subsection{The Cholesky Decomposition Method}
 %Let $0=t_{0}<t_{1}<\dots <t_{N}=T$ be an equidistant partition of the interval $[0,T]$. 
-As was established in Proposition \ref{corr}, the increments of a fBM $X_{1}=B_{1}^{H},X_{2}=B_{2}^{H}-B_{1}^{H}, \dots, X_{N}=B_{N}^{H}-B_{N-1}^{H}$ are stationary with autocovariance function
+As was established in Proposition \ref{corr}, the increments of a fBM $X_{1}=B_{1}^{H},X_{2}=B_{2}^{H}-B_{1}^{H}, \dots, X_{N}=B_{N}^{H}-B_{N-1}^{H}$ are stationary with auto-covariance function
 \begin{equation}
     \gamma(k)=\frac{1}{2}\left((k+1)^{2H}+|k-1|^{2H}-2k^{2H}\right), \quad k\in\N_{0}.
 \end{equation}
@@ -364,7 +379,7 @@ Hence, $X=(X_{1}, X_{2},\dots,X_{N})$ forms a stationary centered Gaussian vecto
         \gamma(N-1) & \gamma(N-2) & \gamma(N-3) & \dots & \gamma(1) & 1
     \end{pmatrix}.
 \end{equation}
-Therefore, we can write $X=LZ$, where $Z=(Z_{1},Z_{2},\dots, Z_{N})$ with $Z_{1},Z_{2},\dots, Z_{N}\overset{\textrm{i.i.d.}}{\sim} \mathcal{N}(0,1)$, and the matrix $L$ is lower triangular with $LL^{\top}=\Gamma_{N}$. The covariance matrix is symmetric and positive definite by definition, and thus it admits such a Cholesky decomposition. The elements of $L$ can be found by 
+Therefore, we can write $X=LZ$, where $Z=(Z_{1},Z_{2},\dots, Z_{N})$ with $Z_{1},Z_{2},\dots, Z_{N}\overset{\textrm{i.i.d.}}{\sim} \mathcal{N}(0,1)$, and the matrix $L$ is such that $LL^{\top}=\Gamma_{N}$. The covariance matrix is symmetric and positive definite by definition, and thus it admits a Cholesky decomposition of the form $\Gamma_{N}=LL^{\top}$, where $L$ is a lower triangular matrix. The elements of $L$ can be found by 
 \begin{equation}
     \sum_{k=1}^{j}l_{ik}l_{jk}=\gamma(i-j), \quad 1\leq j\leq i\leq N.
 \end{equation}
@@ -378,11 +393,11 @@ which gives $l_{21}=\gamma(1)$ and $l_{22}=\sqrt{1-\gamma^{2}(1)}$. For $n\geq 2
     l_{n+1,j}&=l_{jj}^{-1}\left(\gamma(n+1-j)-\sum_{k=1}^{j-1}l_{n+1,k}l_{jk}\right),\quad j=2,\dots,n,\\
     l_{n+1,n+1}&= \sqrt{1-\sum_{k=1}^{n}l_{n+1,k}^{2}}.
 \end{align*}
-Thus, we can compute $X=LZ$, and then obtain the samples by taking cumulative sums such that $B_{0}^{H}=0, B_{k}^{H}=B_{k-1}^{H}+X_{k}$ for $k=1,\dots,N$. Finally, we can rescale by $(T/N)^H$ to obtain a simulation on the interval $[0,T]$.
+Thus, we can compute $X=LZ$, and then obtain the desired sample by taking cumulative sums such that $B_{0}^{H}=0, B_{k}^{H}=B_{k-1}^{H}+X_{k}$ for $k=1,\dots,N$. Finally, we can rescale by $(T/N)^H$ to obtain a simulation on the interval $[0,T]$.
 
 The advantage of the Cholesky method is that it is easy to implement. However, it is computationally slow with a complexity of order $\mathcal{O}(N^{3})$, and even if the Cholesky decomposition is computed beforehand, the matrix-vector product $LZ$ still takes $\mathcal{O}(N^2)$ operations to compute.
 \subsection{The Circulant Embedding Method}
-For this method, we assume that the sample size $N$ is a power of $2$, i.e. $N=2^{g}$ for some $g\in \N$. The covariance matrix $\Gamma_N$ is then a square matrix of size $N\times N$, which we embed in a so-called circulant covariance matrix of size $2N\times 2N$. More precisely, we define $C$ by
+For this method, we assume that the size of the desired sample $N$ is a power of $2$, i.e. $N=2^{g}$ for some $g\in \N$. The covariance matrix $\Gamma_N$ is then a square matrix of size $N\times N$, which we embed in a so-called circulant covariance matrix $C$ of size $2N\times 2N$. More precisely, we define $C$ by
 \begin{equation}\label{circmatrix}
 \scalebox{0.77}{
     \begin{pmatrix}
@@ -411,7 +426,7 @@ The eigenvalues and eigenvectors of a circulant matrix satisfy certain propertie
 \end{thm}
 The formal proof of Theorem \ref{circ_thm} is omitted, but one can relatively easy show that the eigenvectors of a circulant matrix $C$ are the Fourier modes
 \begin{equation}
-    q_{k}=\frac{1}{\sqrt{2N}}\left(1,e^{-2\pi i m/2N},\dots,e^{-2\pi i(m-1)/2N}\right),\quad k=0,1,\dots,2N-1.
+    q_{k}=\frac{1}{\sqrt{2N}}\left(1,e^{-2\pi ik /2N},\dots,e^{-2\pi ik(2N-1)/2N}\right)^{\top},\quad k=0,1,\dots,2N-1.
 \end{equation}
 The corresponding eigenvalues are then given by
 \begin{equation}
@@ -420,7 +435,7 @@ The corresponding eigenvalues are then given by
 which is just the discrete Fourier transform of the sequence $(C_{11},C_{12},\dots,C_{1,2N})$, i.e. the first row of $C$. With this in mind, the decomposition $C=Q\Lambda Q^{*}$ is merely the complex diagonalization of $C$.
 Note that the eigenvalues \eqref{eigenvalues} are real and positive, since $C$ is a positive definite matrix. 
 
-If we define $S\coloneqq Q \Lambda^{1/2}Q^{*}$, where $\Lambda^{1/2}\coloneqq \textrm{diag}(\sqrt{\lambda_{0}},\sqrt{\lambda_{1}},\dots,\sqrt{\lambda_{2N-1}})$, then the $S$ matrix satisfies $SS^{*}=SS^{\top}=C$. Note, however, that $S$ is not the same as the matrix $L$ found using the Cholesky decomposition, since $S$ is not lower triangular. Finally, to obtain the desired sample, we compute $SZ=Q\Lambda^{1/2}Q^{*}Z$, where $Z=(Z_{1},Z_{2},\dots,Z_{N})$ with $Z_{1},Z_{2},\dots,Z_{N}\overset{\textrm{i.i.d.}}{\sim}\mathcal{N}(0,1)$.
+If we define $S\coloneqq Q \Lambda^{1/2}Q^{*}$, where $\Lambda^{1/2}\coloneqq \textrm{diag}(\sqrt{\lambda_{0}},\sqrt{\lambda_{1}},\dots,\sqrt{\lambda_{2N-1}})$, then the $S$ matrix satisfies $SS^{*}=SS^{\top}=C$. Note, however, that $S$ is not the same as the matrix $L$ found using the Cholesky decomposition, since $S$ is not lower triangular. Finally, to obtain the desired sample, we compute $SZ=Q\Lambda^{1/2}Q^{*}Z$, where $Z=(Z_{1},Z_{2},\dots,Z_{2N})$ with $Z_{1},Z_{2},\dots,Z_{2N}\overset{\textrm{i.i.d.}}{\sim}\mathcal{N}(0,1)$.
 
 The way the circulant embedding method is implemented in practice, is by using the Fast Fourier Transform (FFT) to compute the eigenvalues. Thus, in practice, the method is as follows
 \begin{enumerate}
@@ -465,7 +480,7 @@ Cholesky  & 1864.5 & 3526.4 & 4182.2 & 7130.8 & 1000 \\
 Circulant & 2.5    & 7.4    & 6.1    & 115.4  & 1000 \\
 \bottomrule
 \end{tabular}
-\caption{Running times in milliseconds for simulating 100 paths with 100/1000 points.}
+\caption{Running times in milliseconds for simulating paths with 100/1000 points.}
 \label{Tab:Tcr}
 \end{table}
 
@@ -488,24 +503,24 @@ Figure \ref{fig:figure3} shows simulated fBM paths with $10,000$ points each. As
 %Even though in theory, the eigenvalues \eqref{eigenvalues} are real, and the resulting vector $V$ is real by construction, one might still need to take the real part of these when implementing the method due to the nature of floating point arithmetic.
 %The matrix $L$ can be computed more efficiently, if we utilize the fact that $\Gamma_N$ is Toeplitz matrix. 
 
-\newpage
-\textbf{Spørgsmål til vejledermøder:}
-\begin{enumerate}
-    \item \st{Hvorfor forskellige resultater ved de to simulationsprocedure?}
-    \item \st{Skal jeg have beviset for eksistensen af fBM med?} 
-    \item \st{Fatte selve formuleringen i projektforslaget} 
-    \item \st{Volatility surface: "Overall shape does not change; At least to a first degree".}
-    \item Kunne man ikke også kigge på at forecaste volatilitet med den nævnte OU-model? Og sammenligne med en anden model fx. GARCH eller lignende? 
-    \item \st{Er "equal in law" og "equal in distribution" det samme?}
-    \item "Nem måde" at web-scrape den seneste aktiekurs på fra yahoo?
-    \item \st{Laese beviset for Proposition 2.14, da det er lidt hjemmebrygget}
-    \item Kompleksiteten i circulant metoden
-    \item Summationsindeks i beviset for Proposition 3.17.
-\end{enumerate}
-\textbf{Ting jeg skal huske}
-\begin{enumerate}
-    \item \st{Samme notation for autokovarians-funktionen for Gaussisk hvid stoej - Lige nu er der boede $\rho$ og $\gamma$.}
-    \item \st{Samme notation for "equal in law" og "equal in distribution".}
-    \item Autokovariansfunktioen defineret på naturlige tal, hele tal osv.?
-    \item Styr pa kapitlet "Preliminary Theory"
-\end{enumerate}
+%\newpage
+%\textbf{Spørgsmål til vejledermøder:}
+%\begin{enumerate}
+    %\item \st{Hvorfor forskellige resultater ved de to simulationsprocedure?}
+    %\item \st{Skal jeg have beviset for eksistensen af fBM med?} 
+    %\item \st{Fatte selve formuleringen i projektforslaget} 
+    %\item \st{Volatility surface: "Overall shape does not change; At least to a first degree".}
+    %\item Kunne man ikke også kigge på at forecaste volatilitet med den nævnte OU-model? Og sammenligne med en anden model fx. GARCH eller lignende? 
+    %\item \st{Er "equal in law" og "equal in distribution" det samme?}
+    %\item "Nem måde" at web-scrape den seneste aktiekurs på fra yahoo?
+    %\item \st{Laese beviset for Proposition 2.14, da det er lidt hjemmebrygget}
+    %\item Kompleksiteten i circulant metoden
+    %\item Summationsindeks i beviset for Proposition 3.17.
+%\end{enumerate}
+%\textbf{Ting jeg skal huske}
+%\begin{enumerate}
+    %\item \st{Samme notation for autokovarians-funktionen for Gaussisk hvid stoej - Lige nu er der boede $\rho$ og $\gamma$.}
+    %\item \st{Samme notation for "equal in law" og "equal in distribution".}
+    %\item Autokovariansfunktioen defineret på naturlige tal, hele tal osv.?
+    %\item Styr pa kapitlet "Preliminary Theory"
+%\end{enumerate}

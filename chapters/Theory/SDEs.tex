@@ -99,7 +99,7 @@ The relationship between martingale measures and no-arbitrage pricing is given b
 \begin{thm}[\textit{First Fundamental Theorem of Asset Pricing}]
 The financial market $\mathfrak{M}$ is arbitrage free, if there exists a local martingale measure $\mathbb{Q}$, which is equivalent to $\mathbb{P}$.
 \end{thm}
-The measure $\mathbb{Q}$ is also referred to as a risk-neutral measure. Note that the above is not an "if and only if"-statement. Hence, we only have to prove that if there exists a local martingale measure $\mathbb{Q}$ equivalent to $\mathbb{P}$, then the market $\mathfrak{M}$ is arbitrage free.
+The measure $\mathbb{Q}$ is also referred to as a risk-neutral measure, and $\mathbb{P}$ is also commonly referred to as the physical measure. Note that the above is not an "if and only if"-statement. Hence, we only have to prove that if there exists a local martingale measure $\mathbb{Q}$ equivalent to $\mathbb{P}$, then the market $\mathfrak{M}$ is arbitrage free.
 \begin{proof} Let $\theta=(\phi_{t},\pi_{t}^{(1)},\dots,\pi_{t}^{(d)})_{0\leq t\leq T}$ be an admissible strategy such that $V_{0}^{\theta}=0$. Assume that $\mathbb{Q}$ is a martingale measure equivalent to $\mathbb{P}$. Then the discounted wealth process
 \begin{equation}
     \Tilde{V}_{t}^{\theta}=\int_{0}^{t}\pi_{s}d\Tilde{S}_{s}, \quad 0\leq t\leq T,
@@ -186,17 +186,17 @@ A solution to a SDE, say $\left((\Omega,\mathcal{F},(\mathcal{F}_{t})_{t\geq 0},
 %\end{equation}
 A solution, which is not strong, is said to be weak. 
 
-Analogous to the theory for ordinary differential equations, we have that if the family of functions $\sigma=(\sigma^{(i,j)})_{1\leq i\leq d, 1\leq j\leq m}$ and $b=(b^{(i)})_{1\leq i\leq d}$ satisfy a Lipschitz-condition in the spatial variable, then existence and uniqueness is guaranteed. More precisely, there exists a constant $K>0$ such that
-\begin{equation}\label{lipschitz}
-    \lVert \sigma(t,x)-\sigma(t,y)\rVert+ \lVert b(t,x)-b(t,y)\rVert \leq K\lVert x-y\rVert
-\end{equation}
-holds for all $x,y\in\R$ and $t\geq 0$. The existence and uniqueness result is stated in the following.
-\begin{thm}\label{existanduniqthm} Let $\sigma=(\sigma^{(i,j)})_{1\leq i\leq d, 1\leq j\leq m}$ and $b=(b^{(i)})_{1\leq i\leq d}$ satisfy the condition \eqref{lipschitz}. Then strong uniqueness holds for the SDE defined by $\sigma$ and $b$. Furthermore, for every probability space $(\Omega,\mathcal{F},(\mathcal{F}_{t})_{t\geq 0},\mathbb{P})$ supporting an $(\mathcal{F}_{t})_{t\geq 0}$-Brownian motion $B$ and every $x\in \R^d$, there exists a unique solution $(B,X^{x})$ such that $X_{0}=x$. Finally, there is a $a>0$ such that
-\begin{equation}
-    \sup_{t\geq 0}\left\{e^{-at}\sqrt{\mathbb{E}\left[\sup_{0\leq s\leq t}(X_{s}^{x}-X_{t}^{y})^{2}\right]}\right\}\leq C(a,K)\lVert x-y\rVert, \quad \forall x,y\in\R^{d}.
-\end{equation}
-\end{thm}
-The proof of Theorem \ref{existanduniqthm} is omitted.
+%Analogous to the theory for ordinary differential equations, we have that if the family of functions $\sigma=(\sigma^{(i,j)})_{1\leq i\leq d, 1\leq j\leq m}$ and $b=(b^{(i)})_{1\leq i\leq d}$ satisfy a Lipschitz-condition in the spatial variable, then existence and uniqueness is guaranteed. More precisely, there exists a constant $K>0$ such that
+%\begin{equation}\label{lipschitz}
+    %\lVert \sigma(t,x)-\sigma(t,y)\rVert+ \lVert b(t,x)-b(t,y)\rVert \leq K\lVert x-y\rVert
+%\end{equation}
+%holds for all $x,y\in\R$ and $t\geq 0$. The existence and uniqueness result is stated in the following.
+%\begin{thm}\label{existanduniqthm} Let $\sigma=(\sigma^{(i,j)})_{1\leq i\leq d, 1\leq j\leq m}$ and $b=(b^{(i)})_{1\leq i\leq d}$ satisfy the condition \eqref{lipschitz}. Then strong uniqueness holds for the SDE defined by $\sigma$ and $b$. Furthermore, for every probability space $(\Omega,\mathcal{F},(\mathcal{F}_{t})_{t\geq 0},\mathbb{P})$ supporting an $(\mathcal{F}_{t})_{t\geq 0}$-Brownian motion $B$ and every $x\in \R^d$, there exists a unique solution $(B,X^{x})$ such that $X_{0}=x$. Finally, there is a $a>0$ such that
+%\begin{equation}
+    %\sup_{t\geq 0}\left\{e^{-at}\sqrt{\mathbb{E}\left[\sup_{0\leq s\leq t}(X_{s}^{x}-X_{t}^{y})^{2}\right]}\right\}\leq C(a,K)\lVert x-y\rVert, \quad \forall x,y\in\R^{d}.
+%\end{equation}
+%\end{thm}
+%The proof of Theorem \ref{existanduniqthm} is omitted.
 \subsection{Simulation of SDEs}
 In general, finding the solution of a given SDE is a non-trivial task. Consequently, we may turn to numerical simulations of the solution process $X$ of the SDE
 \begin{equation}
@@ -266,15 +266,17 @@ Hence, as previously discussed, we just need to simulate the path of a Brownian 
 \end{algorithm}
 
 \section{Models for Dynamics}
+In this section, we present two possible models that can be used for option pricing. Firstly, we present the popular Black \& Scholes model, which also gives rise to the important concept of implied volatility of an option. The second model is the Heston model, which is a so-called stochastic volatility model. 
+%also the basis for the concept of the implied volatility of an option. The second model is the Heston model, which is a so-called stochastic volatility model. 
 \subsection{The Black \& Scholes Model}\label{sec:BSM}
 This section is based on \cite{black1973} and \cite{blackscholes}.
 
 Let $\mathfrak{M}=\{(\Omega,\mathcal{F},(\mathcal{F}_{t})_{0\leq t\leq T},\mathbb{P}), (A_{t},S_{t})_{0\leq t\leq T}\}$ with $T>0$ be our finite-horizon financial market consisting of a risky asset $S_{t}$ and a risk-free bond $A_{t}$ playing the role as a numéraire. The price dynamics specified by the Black \& Scholes Model are given by the pair of SDEs:
 \begin{align}
-    dS_{t}&=\mu S_{t}dt+\sigma S_{t}dB_{t},\\
-    dA_{t}&=rA_{t}dt,
+    dS_{t}&=\mu S_{t}dt+\sigma S_{t}dB_{t},\label{bs1} \\ 
+    dA_{t}&=rA_{t}dt, \label{bs2}
 \end{align}
-where $r>0$ is the risk-free rate, $(\mu,\sigma)\in\R\times (0,\infty)$ are constants, $A_{0}=1$, and $B_t$ is a Brownian motion. Obviously, the solution to (2.29) is given by $A_{t}=e^{rt}$ for $t\in [0,T]$. Using Itô's lemma, one can easily show that the solution to (2.28) is given by the geometric Brownian motion
+where $r>0$ is the risk-free rate, $(\mu,\sigma)\in\R\times (0,\infty)$ are constants, $A_{0}=1$, and $B_t$ is a Brownian motion. Obviously, the solution to \eqref{bs2} is given by $A_{t}=e^{rt}$ for $t\in [0,T]$. Using Itô's lemma, one can easily show that the solution to \eqref{bs1} is given by the geometric Brownian motion
 \begin{equation}
     S_{t}=S_{0}\exp\left\{\left(\mu-\frac{\sigma^2}{2}\right)t+\sigma B_{t}\right\}, \quad 0\leq t\leq T.
 \end{equation}
@@ -368,13 +370,119 @@ satifies almost surely that
     %\end{equation}
 %\end{proof}
 \subsection{The Heston Model}
-Hej min ven
+This section is based on \cite{heston} and \cite{heston2}.
 
-\subsection{Implied Volatility}
-If we return to the price function (2.18). Then we could reparameterize $F$, and consider it as a function of $(\tau, y, \sigma)$, where $\tau=T-t$ is time to maturity, $y=S_{t}/K$ is the so-called moneyness, and $\sigma$ is the volatility. These quantities are all observable except for $\sigma$. However, the mapping $\sigma\mapsto F(t,x,\sigma)$ is strictly increasing on $(0,\infty)$, and consequently also invertible. Hence, there is a one-to-one correspondence between the price of an option and the volatility of the underlying stock. 
+%\section{The Heston Model}
+The motivation for the development of stochastic volatility models was the constant volatility assumption of the Black \& Scholes model, which proved to be incompatible with observed market option prices. Hence, stochastic volatility models must also specify the stochastics of the volatility process. One of the most popular stochastic volatility models is the Heston model, which is specified by the pair of SDEs
+\begin{align}
+    dS_{t}&= \mu S_{t}dt + \sqrt{\nu_{t}}S_{t}dB_{t}^{(1)},\\
+    d\nu_{t}&= \kappa(\theta - \nu_{t})dt + \xi\sqrt{\nu_{t}}dB_{t}^{(2)},
+\end{align}
+where $\langle B^{(1)},B^{(2)}\rangle_{t}=\rho t$ with $|\rho|\leq 1$. The first SDE specifies the dynamics for the underlying asset $S_{t}$, and the second SDE is a Cox-Ingersoll-Ross process specifying the dynamics of the variance process $\nu_{t}$. Additionally, it is assumed that $S_{0},\nu_{0}>0$, and that the so-called Feller condition $2\kappa\theta >\xi^{2}$ is satisfied ensuring the variance process is strictly positive. The parameter $\theta>0$ is the long-run variance, $\kappa$ governs the speed of reversion of $\nu_{t}$ towards $\theta$, and $\xi$ is the variance of $\nu_{t}$.
+
+For a given set of model parameters, we can simulate the paths of $S_{t}$ and $\nu_{t}$ on $[0,T]$ by the following Euler-Maruyama scheme
+\begin{align}
+    S_{t_{k}}^{N}&= S_{t_{k-1}}^{N} + \mu S_{t_{k-1}}^{N}\Delta_{N} + S_{t_{k-1}}^{N}\sqrt{\nu_{t_{k-1}}^{N}\left(t_{k}-t_{t_{k-1}}\right)}\zeta_{k}^{(1)}, \quad S_{0}^{N}=S_{0},\\
+    \nu_{t_{k}}^{N}&= \nu_{t_{k-1}}^{N} + \kappa(\theta-\nu_{t_{k-1}}^{N})\Delta_{N} + \xi\sqrt{\nu_{t_{k-1}}^{N}\left(t_{k}-t_{t_{k-1}}\right)}\zeta_{k}^{(2)}, \quad \nu_{0}^{N}=\nu_{0},
+\end{align}
+for $N\in\N$, $\Delta_{N}=T/N$, and $k=1,\dots,N$. Furthermore
+\begin{equation}
+    \begin{pmatrix}
+        \zeta_{k}^{(1)}\\
+        \zeta_{k}^{(2)}
+    \end{pmatrix} \sim \mathcal{N}(0,\Sigma),\quad \Sigma = \begin{pmatrix}
+        1 & \rho \\
+        \rho & 1
+    \end{pmatrix}.
+\end{equation}
+As an example, we simulate 3 paths of $S_{t}$ and $\nu_{t}$ on the interval $[0,1]$ with 1000 points each with the following parameters.
+\begin{table}[H]
+\centering
+\begin{tabular}{@{}lllllll@{}}
+\toprule
+$S_{0}$  & $\nu_{0}$   & $\mu$   & $\kappa$ & $\theta$ & $\rho$  & $\xi$ \\ \midrule
+100 & 0.01 & 0.01 & 4     & 0.03  & -0.3 & 0.4   \\ \bottomrule
+\end{tabular}
+\caption{Parameters for Simulation.}
+\label{heston_tabel}
+\end{table}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.53]{fig/img/HestonModel/heston_simulationsflottere.png}
+    \caption{Simulated Paths with Parameters in Table \ref{heston_tabel}.}
+    \label{fig:heston_simsl}
+\end{figure}
+
+%The Heston model will serve as a comparative model for our rough volatility model.
+If we let $F(t,S_{t},\nu_{t})$ denote the price function of a European call option with maturity time $T>0$ and strike price $K>0$ in the Heston model, then we can apply Itô's lemma and standard arbitrage arguments as in Section \ref{sec:BSM} to obtain Garman's partial differential equation
+\begin{align*}
+    &\frac{\partial F}{\partial t} + \frac{S_{t}^{2}\nu_{t}}{2}\frac{\partial^{2}F}{\partial S_{t}^{2}} + (r-q)S_{t}\frac{\partial F}{\partial S_{t}} - (r-q)F\\
+    &+ \left(\kappa(\theta - \nu_{t})-\lambda \nu_{t}\right)\frac{\partial F}{\partial \nu_{t}} + \frac{\xi^{2}\nu_{t}}{2}\frac{\partial^{2}F}{\partial \nu_{t}^{2}} + \rho\xi S_{t}\nu_{t}\frac{\partial^{2}F}{\partial S_{t}\partial \nu_{t}}=0,
+\end{align*}
+where $r$ is the risk-free rate, $q$ is the dividend yield, and $\lambda$ is the market price of risk. As in the Black-Scholes model, we will assume that stocks don't pay dividens and therefore $q=0$. By analogy with the Black-Scholes formula \eqref{BSFormula}, we guess a solution of the form
+\begin{equation}
+    F(t,S_{t},\nu_{t})=S_{t}P_{1} - e^{-r(T-t)}KP_{2},
+\end{equation}
+where $P_{1}$ and $P_{2}$ are the conditional risk neutral probabilities of the option expiring in the money. These probabilities are not immediately available in closed-form.
+%where $P_{1}$ is the delta of the option, and $P_{2}$ is the conditional risk neutral probability of the option expiring in the money, i.e. $P_{2}=\mathbb{Q}(S_{T}>K)$ for some martingale measure $\mathbb{Q}\sim \mathbb{P}$.
+However, if we let $\psi_{1},\psi_{2}$ denote the characterstic functions (Fourier transforms) of $P_{1}$ and $P_{2}$, we then have that $P_{1}$ and $P_{2}$ can be computed via the inverse Fourier transform
+\begin{equation}
+    P_{j}=\frac{1}{2}+\frac{1}{\pi}\int_{0}^{\infty}\textrm{Re}\left[\frac{\exp\left\{-i\phi \ln K\right\}\psi_{j}}{i\phi}\right]d\phi, \quad j\in \{1,2\},
+\end{equation}
+where $i$ is the imaginary unit. Heston assumes the characteristic functions have the functional form
+\begin{equation}
+    \psi_{j}(\tau; \phi)=\exp\left\{C_{j}(\tau;\phi)+D_{j}(\tau;\phi)\nu_{0}+i\phi S_{0}\right\},\quad \tau=T-t, \hspace{6 pt}j\in\{1,2\}.
+\end{equation}
+If we substitute $\psi_{1}$ and $\psi_{2}$ into Garman's partial differential equation, we get the following ordinary differential equations for the unknown functions $C_{j}(\tau;\phi)$ and $D_{j}(\tau;\phi)$
+\begin{align}
+    &\frac{dC_{j}(\tau;\phi)}{d\tau}-\kappa\theta D_{j}(\tau;\phi) - r\phi i=0,\label{ode1}\\
+    &\frac{dD_{j}(\tau;\phi)}{d\tau}-\frac{\xi^{2}D_{j}^{2}(\tau;\phi)}{2} + (b_{j}-\rho\xi\phi i)D_{j}(\tau;\phi) - u_{j}\phi i + \frac{\phi^2}{2}=0,\label{ode2}
+\end{align}
+where $j\in\{1,2\}$, and the initial conditions are $C_{j}(0;\phi)=D_{j}(0;\phi)=0$. The solution of the system \eqref{ode1} - \eqref{ode2} is given by
+\begin{align}
+    C(\tau;\phi)&=r\phi i\tau+\frac{\kappa\theta}{\xi^{2}}\left((b_{j}-\rho\xi \phi i+d)\tau -2\ln\left(\frac{1-ge^{d\tau}}{1-g}\right)\right),\\
+    D(\tau;\phi)&=\frac{b_{j}-\rho\xi\phi i+d}{\xi^{2}}\left(\frac{1-e^{d\tau}}{1-ge^{d\tau}}\right),
+\end{align}
+where 
+\begin{equation*}
+    g=\frac{b_{j}-\rho\xi\phi i+d}{b_{j}-\rho\xi\phi i-d}, \quad d=\sqrt{(\rho\xi\phi i-b_{j})^{2}-\xi^{2}(2u_{j}\phi i-\phi^{2})},
+\end{equation*}
+with $u_{1}=1/2$, $u_{2}=-1/2$, $b_{1}=\kappa + \lambda-\rho\xi$, and $b_{2}=\kappa + \lambda$. 
+
+As argued in \cite[p.~16]{volsurface}, we assume that the Heston process calibrated to option prices, generates the risk-neutral measure such that market price of risk $\lambda$ henceforth will be set to zero. 
+
+\subsection{Heston Model Calibration}
+Model calibration is the problem of determining the model parameters to match the market prices of a given set of options. However, in practice it is not possible nor meaningful to match the market prices exactly. Therefore, model calibration is formulated as an optimization problem, where we attempt to find the model parameters that minimize the pricing error by our model on a given set of options. One possible metric for the pricing error is the squared distance, which leads to the non-linear least squares problem
+\begin{equation}\label{eq:calibration}
+    \hat{\Theta}=\argmin_{\Theta}G(\Theta),\quad G(\Theta)= \sum_{i=1}^{N}w_{i}\left(F^{\Theta}_{i}(t,S_{t},T_{i},K_{i}) - F_{i}^{MP}(T_{i},K_{i})\right)^{2},
+\end{equation}
+where $N$ is the number of options used, $w_{i}$ are weights, $F^{MP}_{i}(T_{i},K_{i})$ is the market price of option $i$ with maturity time $T_{i}>0$ and strike price $K_{i}>0$, and $F^{\Theta}_{i}(t,S_{t},T_{i},K_{i})$ is the model price of the same option computed with the model parameters $\Theta$. For the Heston model, the parameter space is $\Theta=(\nu_{0},\kappa,\theta,\xi,\rho)\subset \R^{5}$. We simply set $w_{i}=1$ for $i=1,\dots,N$ and impose the constraints on the calibrated parameters $\hat{\Theta}=(\hat{\nu}_{0},\hat{\kappa},\hat{\theta},\hat{\xi},\hat{\rho})$ that $\hat{\nu}_{0}\in [0.001, 0.25]$, $\hat{\kappa}\in [0.001, 5]$, $\hat{\theta}\in [0.001, 0.1]$, $\hat{\xi}\in [0.01, 1]$, and $\hat{\rho}\in [-0.99, 0.99]$ with initial guesses $\hat{\Theta}_{0}=(0.1, 3, 0.05, 0.3, -0.8)$. Additionally, we set to the tolerance for termination to $0.001$. We use an extension of the limited-memory BFGS algorithm, which can handle the box constraints just imposed on the parameter space, to solve the optimization problem \eqref{eq:calibration}.
+%Applying Itô's lemma and standard arbitrage arguments as in Section \ref{sec:BSM}, we obtain the 
+\section{Implied Volatility}
+This section is based on \cite{impvol}.
+
+If we consider the Black \& Scholes price function $F$ given by \eqref{BSFormula}, then we could reparameterize it, and instead consider $F$ as a function of $(\tau, y, \sigma)$, where $\tau=T-t$ is time to maturity, $y=S_{t}/K$ is the so-called moneyness, and $\sigma$ is the volatility term. These quantities are all observable except for $\sigma$. However, the mapping $\sigma\mapsto F(t,S_{t},\sigma)$ is continuous and strictly increasing on $(0,\infty)$, and consequently also invertible on $(0,\infty)$. Hence, there is a one-to-one correspondence between the price of an option and the volatility of the underlying stock. This leads us to the concept of implied volatility.
 \begin{defn}[\textit{Implied Volatility}]
-    Let $F$ be the Black \& Scholes price function of a European call option. If $\Pi_{t}$ denotes the market price of a European call option with time to maturity $\tau=T-t$ and moneyness $y=S_{t}/K$, then the implied volatility of such a contract is defined as the unique number $\sigma_{BS}(\tau, y)>0$, which satisfies
-    \begin{equation}
-        \Pi_{t}=F\left(T-\tau, \hspace{1 pt}yK,\hspace{1 pt}\sigma_{BS}(\tau,y)\right).
+    Let $F$ be the Black \& Scholes price function for a European call option. If $F^{MP}(t, K)$ denotes the market price of a European call option with time to maturity $\tau=T-t$ and moneyness $y=S_{t}/K$, then the implied volatility of the option is defined as the unique number $\sigma_{BS}(\tau, y)>0$, which satisfies
+    \begin{equation}\label{eq:impvol}
+        F^{MP}(t,K)=F\left(T-\tau, \hspace{1 pt}yK,\hspace{1 pt}\sigma_{BS}(\tau,y)\right).
     \end{equation}
 \end{defn}
+In practice, we compute the implied volatility numerically using a root-finding algorithm such as the Newton-Raphson method to find the number $\sigma_{BS}(\tau,y)>0$ that satisfies \eqref{eq:impvol}. 
+
+Intuitively, implied volatility is the market's forecast of the future volatility of the underlying asset, and can be thought of as a proxy of market risk. It is important to note that although implied volatility helps quantify market sentiment, it doesn't actually predict the direction nor magnitude of the price fluctuations of the underlying asset. If an investor wants to gain an overview of how the implied volatility changes with respect to the strike price and the time to maturity, they can look at the implied volatility surface. Such a surface is seen in Figure \ref{fig:impVolsurf}, which shows the implied volatility of options written on the SPDR S\&P 500 ETF (SPY) with expiration dates ranging from 6/12-2023 to 21/3-2025.
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.75]{fig/img/ImpliedVol/vol_surface_lidtflottereigen.PNG}
+    \caption{Implied Volatility Surface, SPY ETF.}
+    \label{fig:impVolsurf}
+\end{figure}
+In Figure \ref{fig:impVolsurf}, it is seen that for options at-the-money (ATM) with $\ln(S_{t}/K)=0$, there is a certain symmetry around ATM, which gets more pronounced closer to maturity. Intuitively, this means that ATM options have lower implied volatility than options out-the-money (OTM) or in-the-money (ITM). In Figure \ref{fig:impVolsurf}, the ITM have higher implied volatilities than those OTM, which gives rise to the so-called volatility skew observed. If the surface was symmetric around ATM, we would observe a so-called volatility smile. Examples of both a volatility smile and volatility skew are seen in Figure \ref{fig:smileskew} below.
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.6]{fig/img/ImpliedVol/VolSmile20231003.pdf}
+    \includegraphics[scale=0.52]{fig/img/ImpliedVol/VolSkewNov13.pdf}
+    \caption{Volatility Smile (left) and Volatility Skew (right).}
+    \label{fig:smileskew}
+\end{figure}
