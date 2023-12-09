@@ -96,11 +96,11 @@ The RSFV model, as proposed in \cite{volisrough}, model is given by
 \end{align}
 where $t\in [0,T]$, $\mu_{t}$ is a suitable drift term, $W_{t}$ is a standard Brownian motion, and $Y_{t}$ is a fractional Ornstein-Uhlenbeck process satisfying the SDE
 \begin{align}
-    dY_{t}&= -\alpha(Y_{t}-m)dt + \varphi dB^{H}_{t},
+    dY_{t}&= -\alpha(Y_{t}-m)dt + \varphi dB^{H}_{t},\quad Y_{0}=y_{0},
 \end{align}
-where $m \in \R$, $\alpha,\varphi >0$, and $B^{H}$ is a fBM of Hurst index $H\in(0,1/2)$, which is where the "rough" nomenclature stems from. As for the standard Ornstein-Uhlenbeck process, there is an explicit form for the solution given by
+where $m \in \R$, $\alpha,\varphi >0$, and $B^{H}$ is a fBM of Hurst index $H\in(0,1/2)$, which is where the "rough" nomenclature stems from. As for the standard Ornstein-Uhlenbeck process, there is an explicit form of the solution given by
 \begin{equation}\label{ornstein_sol}
-    Y_{t}= m + (Y_{0}-m)e^{-\alpha t} + \varphi e^{-\alpha t}\int_{0}^{t}e^{\alpha s}dB_{s}^{H}.
+    Y_{t}= m + e^{-\alpha t}\left(y_{0}-m+\varphi\int_{0}^{t}e^{\alpha s}dB_{s}^{H}\right).
 \end{equation}
 %model that we will consider in the subsequent section, models the volatility process via the fractional Ornstein-Uhlenbeck process, which is given by the SDE
 %\begin{align}
@@ -120,11 +120,11 @@ Thus, for $N\in\N$ sufficiently large, the above Riemann-sum will approximate th
 \end{equation}
 Thus, we can simulate a fractional Ornstein-Uhlenbeck process on the grid $0=t_{0}<t_{1}<\dots<t_{N}=T$ by the following scheme
 \begin{equation}\label{fou_exact}
-    Y_{t_{j}}^{N}=m + (Y_{0}-m)e^{-\alpha t_{j}} + \varphi e^{-\alpha t_{j}}\mathbb{B}_{t_{j}}^{H,N},\quad Y_{0}^{N}=Y_{0}, \quad j=1,\dots,N.
+    Y_{t_{j}}^{N}=m + (y_{0}-m)e^{-\alpha t_{j}} + \varphi e^{-\alpha t_{j}}\mathbb{B}_{t_{j}}^{H,N},\quad Y_{0}^{N}=y_{0}, \quad j=1,\dots,N.
 \end{equation}
-Alternatively, we could use the Euler-Maruyama scheme to simulate the process
+Alternatively, we could use the Euler-Maruyama scheme to simulate the process via
 \begin{equation}\label{fou_euler}
-    Y_{t_{j}}^{N}=Y_{t_{j-1}} -\alpha(Y_{t_{j-1}}-m)\Delta_{N} + \varphi\Delta B_{t_{j-1}}^{H},\quad Y_{0}^{N}=Y_{0},\quad j=1,\dots,N,
+    Y_{t_{j}}^{N}=Y_{t_{j-1}} -\alpha(Y_{t_{j-1}}-m)\Delta_{N} + \varphi\Delta B_{t_{j}}^{H},\quad Y_{0}^{N}=y_{0},\quad j=1,\dots,N,
 \end{equation}
 where $\Delta_{N}=T/N$ and $\Delta B_{t_{j}}^{H}=B^{H}_{t_{j}}-B^{H}_{t_{j-1}}$. The error rates for the two simulation methods in \eqref{fou_exact} and \eqref{fou_euler} are approximately the same, and since the Euler-Maruyama scheme is computationally faster, we will use the methodology in \eqref{fou_euler} for simulation.
 
@@ -132,7 +132,7 @@ As an example, if we take the process with $H=0.2$, $\alpha = 1$, $m=1$, $\varph
 \begin{equation}
     dY_{t}=-(Y_{t}-1)dt+\frac{1}{2}dB^{0.2}_{t},\quad Y_{0}=0,
 \end{equation}
-and use \eqref{fou_exact} with $N=100,000$ as our true solution path $Y_{t}$, then we can compare the Euler-approximations. This comparison is seen in Figure \ref{fig:euler-scheme}, where the true solution path is plotted with the Euler-approximations superimposed. It is seen that for $N\geq 1000$, the true solution is approximated well by the Euler scheme.
+and use \eqref{fou_exact} with $N=100,000$ as our true solution path $Y_{t}$, then we can compare the Euler-approximations. This comparison is seen in Figure \ref{fig:euler-scheme}, where the true solution path is plotted in blue with the Euler-approximations superimposed. It is seen that for $N\geq 1000$, the true solution is approximated well by the Euler scheme.
 \begin{figure}[H]
     \centering
     \includegraphics[scale=0.52]{fig/img/EulerScheme/EulerScheme10.pdf}
@@ -143,9 +143,8 @@ and use \eqref{fou_exact} with $N=100,000$ as our true solution path $Y_{t}$, th
     \label{fig:euler-scheme}
 \end{figure}
 
-\section{Volatility is Rough}
-This section is based on \cite{volisrough}.
-
+\section{Volatility is Rough}\label{sec:volisrough}
+%This section is based on \cite{volisrough}.
 In this section, we will use the methodology presented in \cite{volisrough} to argue that the volatility process of financial time series is indeed rough and estimate the roughness of the volatility process. Suppose we have discrete observations of the volatility process $\sigma$ on the interval $[0,T]$ with mesh size $\Delta$, i.e. $\sigma_{0},\sigma_{\Delta},\dots,\sigma_{N\Delta}$ with $N\coloneqq \lfloor T/\Delta\rfloor$. Then for $q\geq 0$, we define the statistic
 \begin{equation}\label{eq:mstat}
     m(q,\Delta)\coloneqq \frac{1}{N}\sum_{k=1}^{N}|\log(\sigma_{k\Delta})-\log(\sigma_{(k-1)\Delta})|^{q}.
@@ -154,12 +153,12 @@ It is assumed that for some $s_{q}>0$ and $b_{q}>0$, we have
 \begin{equation}\label{weirdlim}
     N^{qs_{q}}m(q,\Delta)\to b_{q}\quad \textrm{as}\quad \Delta\to 0^{+}.
 \end{equation}
-Under additional technical conditions, $s_{q}$ can be viewed as the regularity of the volatility. In particular, a function satisfying \eqref{weirdlim} is Hölder continuous with Hölder exponent $\alpha$ for any $\alpha <s_{q}$. For instance, if $\log(\sigma_{t})$ was a fBM with Hurst index $H$, then \eqref{weirdlim} would hold in probability with $s_{q}=H$ for any $q\geq 0$. Assuming the increments of the log-volatility process are stationary and that a law of large numbers can be applied, \eqref{eq:mstat} can be seen as the empirical counterpart of 
+Under additional technical conditions, $s_{q}$ can be viewed as the regularity of the volatility. In particular, a function satisfying \eqref{weirdlim} is Hölder continuous with Hölder exponent $\eta$ for any $\eta <s_{q}$. For instance, if $\log(\sigma_{t})$ was a fBM with Hurst index $H$, then \eqref{weirdlim} would hold in probability with $s_{q}=H$ for any $q\geq 0$. Assuming the increments of the log-volatility process are stationary and that a law of large numbers can be applied, \eqref{eq:mstat} can be seen as the empirical counterpart of 
 \begin{equation}
     \E\left[|\log(\sigma_{\Delta})-\log(\sigma_{0})|^{q}\right].
 \end{equation}
 
-To estimate the smoothness parameter $s_{q}$ for each $q$, we compute $m(q,\Delta)$ for different $\Delta$ and regress $\log(m(q,\Delta))$ against $\log(\Delta)$. Since the volatility process is not directly observable, we have to proxy the true spot volatility. For this purpose, we use the daily realized variance estimates of the Oxford-Man Institute of Quantitative Finance Realized Library as our proxy for daily spot variance. The daily realized variance is calculated using intradaily intervals of 5 minutes over the 8 hour trading day of the S\&P-500 index. The data starts at 1/3-2000 and ends at 3/31-2020 totalling 5079 trading days. A plot of the data is seen in Figure \ref{fig:realized} along with the realized volatility (square root of the realized variance estimates).
+To estimate the smoothness parameter $s_{q}$ for each $q$, we compute $m(q,\Delta)$ for different $\Delta$ and regress $\log(m(q,\Delta))$ against $\log(\Delta)$. Since the volatility process is not directly observable, we have to proxy the true spot volatility. For this purpose, we use the daily realized variance from the Oxford-Man Institute of Quantitative Finance Realized Library as our proxy for the daily spot variance. The daily realized variance is calculated using intradaily intervals of 5 minutes over the 8 hour trading day of the S\&P 500 index. The data starts at 1/3-2000 and ends at 3/31-2020 totalling 5079 trading days. A plot of the data is seen in Figure \ref{fig:realized} along with the realized volatility (square root of the realized variance estimates).
 
 %\begin{figure}[H]
 %    \centering
@@ -172,28 +171,29 @@ To estimate the smoothness parameter $s_{q}$ for each $q$, we compute $m(q,\Delt
     \centering
     \includegraphics[scale=0.6]{fig/img/RealizedLib/realized_variance_longplot.pdf}
     \includegraphics[scale=0.6]{fig/img/RealizedLib/realized_volatility_longplot.pdf}
-    \caption{Realized Variance (top) and Realized Volatility (bottom) of the S\&P-500.}
+    \caption{Realized Variance (top) and Realized Volatility (bottom) of the S\&P 500.}
     \label{fig:realized}
 \end{figure}
 We proceed to compute $m(q,\Delta)$ for $q\in \{0.5,1,1.5,2,3\}$ and $\Delta \in \{1,2,\dots,30\}$, and regress $\log m(q,\Delta)$ against $\log\Delta$. As seen in Figure \ref{fig: Linear_reg}, the points lie very close to the regression line for each value of $q$.
 \begin{figure}[H]
     \centering
     \includegraphics[scale=0.8]{fig/img/RealizedLib/Linear_Reg_rigtig.pdf}
-    \caption{$\log m(q,\Delta)$ as a function of $\log\Delta$, S\&P-500.}
+    \caption{$\log m(q,\Delta)$ as a function of $\log\Delta$, S\&P 500.}
     \label{fig: Linear_reg}
 \end{figure}
  If we assume stationarity of the log-volatility process, then the linear relationship in Figure \ref{fig: Linear_reg} implies the following scaling property in expectation
  \begin{equation}\label{eq:scaling}
      \E[|\log(\sigma_{\Delta})-\log(\sigma_{0})|^{q}]=K_{q}\Delta^{\zeta_{q}},
  \end{equation}
- where $\zeta_{q}>0$ is the slope of the regression line associated to $q$. The log-log plot in Figure \ref{fig: Linear_reg} establishes that $m(q,\Delta)\hspace{2 pt}\propto\hspace{2 pt} \Delta^{\zeta_{q}}$ for each $q$, and we now turn to how $\zeta_{q}$ scales with $q$. From Figure \ref{fig:slope_plot}, we find the monofractal scaling relationship $\zeta_{q}=qH$, i.e. $\zeta_{q}$ and $q$ are proportional. In Figure \ref{fig:slope_plot}, we have plotted the best straight line fit (blue) along with the line $q\mapsto 0.15183\cdot q$ (black). The two lines are hardly distinguishable, and therefore the estimated smoothness is $H=0.15183$. 
+ where $\zeta_{q}>0$ is the slope of the regression line associated to $q$. The log-log plot in Figure \ref{fig: Linear_reg} establishes that $m(q,\Delta)\hspace{2 pt}\propto\hspace{2 pt} \Delta^{\zeta_{q}}$ for each $q$, and we now turn to how $\zeta_{q}$ scales with $q$. From Figure \ref{fig:slope_plot}, we find the monofractal scaling relationship $\zeta_{q}=qH$, i.e. $\zeta_{q}$ and $q$ are proportional. In Figure \ref{fig:slope_plot}, we have plotted the slopes $\zeta_{q}$ against $q$ along with the best straight line (blue) fit to the points and the line $q\mapsto 0.15183\cdot q$ (black). The two lines are hardly distinguishable, and therefore the estimated roughness is $\hat{H}=0.15183$. 
+ %the best straight line (blue) fit to the points along with the line $q\mapsto 0.15183\cdot q$ (black). The two lines are hardly distinguishable, and therefore the estimated roughness is $H=0.15183$. 
  \begin{figure}[H]
      \centering
-     \includegraphics[scale=0.75]{fig/img/RealizedLib/slope_plot.pdf}
+     \includegraphics[scale=0.7]{fig/img/RealizedLib/slope_plot.pdf}
      \caption{Scaling of $\zeta_{q}$ with $q$.}
      \label{fig:slope_plot}
  \end{figure}
- Hence, we have obtained a methodology for measuring the smoothness parameter $s_{q}=H$ by taking $\hat{H}=\zeta_{q}/q$. In Figure \ref{fig: Linear_reg}, we computed the slopes $\zeta_{q}$ for $q\in\{0.5,1, 1.5,2,3\}$, and therefore obtain the estimates
+ Hence, we have obtained a methodology for measuring the roughness parameter $s_{q}=H$ by taking $\hat{H}=\zeta_{q}/q$. In Figure \ref{fig: Linear_reg}, we computed the slopes $\zeta_{q}$ for $q\in\{0.5,1, 1.5,2,3\}$, and therefore obtain the estimates
  \begin{table}[H]
 \centering
 \begin{tabular}{@{}llllll@{}}
@@ -202,10 +202,10 @@ $q$  & $0.5$   & $1$   & $1.5$ & $2$ & $3$ \\ \midrule
 $\zeta_{q}$ & 0.07435 & 0.14885 & 0.22498     & 0.30365  & 0.47087 \\  \midrule
 $\hat{H}$ & 0.14870 & 0.14885 & 0.14999 & 0.15183 & 0.15696 \\ \bottomrule
 \end{tabular}
-\caption{Estimated smoothness $\hat{H}$ for different $q$.}
+\caption{Estimated roughness $\hat{H}$ for different $q$.}
 \label{heston_tab}
 \end{table}
-In Figure \ref{fig:slope_plot}, the estimate $\hat{H}=0.15183$ was used, since this gave the best fit to the blue regression line.
+In Figure \ref{fig:slope_plot}, the estimate $\hat{H}=0.15183$ was used, since this gave the best fit to the blue regression line. It is important to note that our estimation procedure of $H$ is based on the realized variance across entire trading days, and consequently we expect the estimates of the roughness to be biased upwards. Since the realized variances are estimates of the integrated variances, the estimated $H$ will likely be higher, i.e. more smooth than the true $H$ due to integration being a regularizing operation. 
  %As shown in \cite{volisrough}, the slope $\zeta_{q}$ is approximately directly proportional to the smoothness parameter $s_{q}$, i.e. $\xi_{q}\approx qs_{q}$. 
  
  The increments of a fBM $\Delta B_{t}^{H}=B_{t+\Delta}^{H}-B_{t}^{H}$ is a centered Gaussian with variance $\Delta^{2H}$. Thus, we obtain that its absolute moments satisfy 
@@ -214,32 +214,32 @@ In Figure \ref{fig:slope_plot}, the estimate $\hat{H}=0.15183$ was used, since t
  \end{equation}
  where $K_{q}$ is the $q$'th absolute moment of a standard Gaussian variable and $\zeta_{q}=qH$. Hence, the fractional Brownian motion $B^{H}$ also satisfies the scaling property \eqref{eq:scaling}. Consequently, the fBM seems like a good choice as a model for the log-volatility process based on the above discussion.
  
- Having established the scaling property in \eqref{eq:scaling}, we now turn to the distribution of the increments of the log-volatility. It is a well-established stylized fact that the distribution of increments of log-volatility is close to Gaussian (see e.g. \cite{bollerslev}), which is also validated in Figure \ref{fig:histograms} for the S\&P-500, where the Gaussian distribution seems to hold for any lag $\Delta$. The fitted normal density $\hat{f}\sim \mathcal{N}(\hat{\mu}, \hat{\sigma})$ with the sample mean and sample standard deviation as parameters is also superimposed in red.
+Having established the scaling property in \eqref{eq:scaling}, we now turn to the distribution of the increments of the log-volatility. It is a well-established stylized fact that the distribution of increments of log-volatility is close to Gaussian (see e.g. \cite{bollerslev}), which is also validated in Figure \ref{fig:histograms} for the S\&P-500, where the Gaussian distribution seems to hold for any lag $\Delta$. The fitted normal density $\hat{f}\sim \mathcal{N}(\hat{\mu}, \hat{\sigma})$ with the sample mean and sample standard deviation as parameters is also superimposed in red.\vspace{-7 pt}
  \begin{figure}[H]
     \centering
-    \includegraphics[scale=0.5, width = 7cm]{fig/img/RealizedLib/histograms/histogram1.pdf}
-    \includegraphics[scale=0.5, width = 7cm]{fig/img/RealizedLib/histograms/histogram5.pdf}\hfill
-    \includegraphics[scale=0.5, width = 7cm]{fig/img/RealizedLib/histograms/histogram25.pdf}
-    \includegraphics[scale=0.5, width = 7cm]{fig/img/RealizedLib/histograms/histogram125.pdf}
-    \caption{Histograms for different lags $\Delta$ of increments $\log\sigma_{t+\Delta}-\log\sigma_{t}$, S\&P-500.}
+    \includegraphics[scale=0.5, width = 6.7cm]{fig/img/RealizedLib/histograms/histogram1.pdf}
+    \includegraphics[scale=0.5, width = 6.7cm]{fig/img/RealizedLib/histograms/histogram5.pdf}\hfill
+    \includegraphics[scale=0.5, width = 6.7cm]{fig/img/RealizedLib/histograms/histogram25.pdf}
+    \includegraphics[scale=0.5, width = 6.7cm]{fig/img/RealizedLib/histograms/histogram125.pdf}
+    \caption{Histograms for different lags $\Delta$ of increments $\log\sigma_{t+\Delta}-\log\sigma_{t}$, S\&P 500.}
     \label{fig:histograms}
 \end{figure}
 In conclusion, the preceding discussion would seem to suggest a model of the form
 \begin{equation}\label{eq:simple_model}
     \log \sigma_{t+\Delta} - \log \sigma_{t} = \varphi(B^{H}_{t+\Delta}-B^{H}_{t}),
 \end{equation}
-where $\varphi >0$ is a positive constant, and $B^{H}$ is a fractional Brownian motion with Hurst index $H$ equal to the measured smoothness $s_{q}$ of the process. The model \eqref{eq:simple_model} can be rewritten as 
+where $\varphi >0$ is a positive constant, and $B^{H}$ is a fractional Brownian motion with Hurst index $H$ equal to the measured roughness $s_{q}$ of the process. The model \eqref{eq:simple_model} can be rewritten as 
 \begin{equation}
     \sigma_{t}=\sigma \exp\left(\varphi B_{t}^{H}\right),
 \end{equation}
-where $\sigma$ is another positive constant. However, this model is not stationary, which implies that the volatility in theory could grow infinitely large. Stationarity is imposed by modelling the log-volatility as a fractional Ornstein-Uhlenbeck process. Hence, we arrive at the rough volatility model suggested in the previous section
+where $\sigma$ is another positive constant. However, this model is not stationary, which implies that the volatility in theory could grow infinitely large. Stationarity is imposed by modelling the log-volatility as a fractional Ornstein-Uhlenbeck process. Hence, we arrive at the RFSV model suggested in the previous section
 \begin{align}
     dY_{t}&= -\alpha(Y_{t}-m)dt + \varphi dB^{H}_{t},\\
     \sigma_{t} &= e^{Y_{t}},
 \end{align}
 where $\alpha,\varphi>0$, $m\in \R$, and $H\in (0,1/2)$.
-\subsection{Estimation of Parameters}
-We now turn to the problem of estimating the parameters for a fractional Ornstein-Uhlenbeck process $Y$, if we have a discrete sample $Y_{i\Delta}$, where $i=0,1,\dots,N$ and $\Delta>0$. We propose a two-stage estimation approach, where the first stage consists of estimating $H$ by using the change-of-frequency estimator based on the second-order differences of $Y$. Based on the estimator of $H$, we then obtain a plug-in estimator of $\varphi$. In the second stage, we esimate $m$ and $\alpha$ by using method-of-moments estimators. 
+\section{Estimation of Parameters}
+We now turn to the problem of estimating the parameters for a fractional Ornstein-Uhlenbeck process $Y$, if we have a discrete sample $Y_{i\Delta}$, where $i=0,1,\dots,N$ and $\Delta>0$. We propose a two-stage estimation approach as suggested in \cite{estimationfOU}, where the first stage consists of estimating $H$ by using the change-of-frequency estimator based on the second-order differences of $Y$. Based on the estimator of $H$, we then obtain a plug-in estimator of $\varphi$. In the second stage, we esimate $m$ and $\alpha$ by using method-of-moments estimators. 
 
 For estimating the Hurst index $H$, we make use of the following result derived in \cite{barndorff}. It states that for fixed $T>0$ and $N\coloneqq \lfloor T/\Delta\rfloor$, we have
 \begin{equation}
@@ -262,37 +262,49 @@ Since $\alpha>0$, $Y$ is both stationary and ergodic, which means that we can us
 \end{align}
 where $\Gamma: (0,\infty)\to (0,\infty)$ denotes the gamma function.
 
-If we use the estimators defined above on our data with $\Delta=1$ (for 1 trading day) and $N=5079$, we can simulate a path of the volatility process $\sigma_{t}=\exp(Y_{t})$. Our estimated parameter values are $\hat{H}=0.128$, $\hat{\varphi}=0.842$, $\hat{m} = -4.95$, and $\hat{\alpha} = 0.05$.
+If we use the estimators defined above on our data set with $\Delta=1$ (for 1 trading day) and $N=5079$, we can simulate a path of the volatility process $\sigma_{t}=\exp(Y_{t})$. Our estimated parameter values are $\hat{H}=0.128$, $\hat{\varphi}=0.842$, $\hat{m} = -4.95$, and $\hat{\alpha} = 0.05$. The volatility of the S\&P 500 is shown in Figure \ref{fig:datavol_modelvol} along with a simulated path of $\sigma_{t}=\exp(Y_{t})$ using the estimated parameters.
 \begin{figure}[H]
     \centering
     \includegraphics[scale=0.65]{fig/img/RealizedLib/RealizedVolWithoutDates.pdf}
     \includegraphics[scale=0.6]{fig/img/RealizedLib/simulated_vol_ny.pdf}
-    \caption{Volatility of S\&P-500 (top) and of the model (bottom).}
+    \caption{Volatility of S\&P 500 (top) and of the model (bottom).}
     \label{fig:datavol_modelvol}
 \end{figure}
-All of the estimators turn out to be consistent and have tractable asymptotic distributions. Since we will mainly focus on the estimation of the roughness parameter $H$, we will only present results for $\hat{H}$.
-\begin{thm}\label{thm:asymp}
-    Let $H\in (0,1)$ and $T>0$ be fixed and set $N\coloneqq T/\Delta$. Then as $\Delta\to 0^{+}$, we have $\hat{H}\overset{\mathbb{P}}{\to} H$ and 
-    \begin{equation}
-        \sqrt{N}(\hat{H}-H)\overset{d}{\to}\mathcal{N}\left(0,\frac{\Sigma_{11}+\Sigma_{22}-2\Sigma_{12}}{(2\log 2)^2}\right),
-    \end{equation}
-    where 
-    \begin{align}
-        \Sigma_{11} &\coloneqq 2 + 2^{2-4H}\sum_{j=1}^{\infty}\left(\rho_{j+2}+4\rho_{j+1}+6\rho_{j} + 4\rho_{|j-1|}+ \rho_{|j-2|}\right)^{2},\\
-        \Sigma_{12}&\coloneqq 2^{1-2H}\left(4(\rho_{1}+1)^{2}+2\sum_{j=0}^{\infty}(\rho_{j+2}+2\rho_{j+1}+\rho_{j})^{2}\right),\\
-        \Sigma_{22}&\coloneqq 2+4\sum_{j=1}^{\infty}\rho_{j}^{2},
-    \end{align}
-with 
-\begin{equation}
-    \rho_{j}\coloneqq \frac{1}{2(4-2^{2H})}\left(-|j+2|^{2H} + 4|j+1|^{2H} - 6|j|^{2H} + 4|j-1|^{2H} - |j-2|^{2H}\right).
-\end{equation}
-\end{thm}
-We will only apply Theorem \ref{thm:asymp} and not prove it. Note that although, we are only interested in $H<1/2$, the asymptotics of $\hat{H}$ apply to all $H\in (0,1)$.
+An initial reaction to Figure \ref{fig:datavol_modelvol} is that the simulated and actual data look qualitatively very alike. The roughness of the two time series appears to be the same, and they have the same order of magnitude. Additionally, both time series have persistent periods of high volatility that alternate with low volatility periods, and thus the model is able to reproduce volatility clustering.
+\subsection{Roughness over Time}
+Thus far, for both estimation procedures we have estimated $H$ across the entire data set. Naturally, this raises the question of whether the Hurst index is constant over time. In Figure \ref{fig:diff_plot}, the differenced daily realized volatilities are plotted in both panels on different scales. It is clear that the volatility changes more at certain time periods in the series.
 \begin{figure}[H]
     \centering
-    \includegraphics[scale=0.65]{fig/img/RealizedLib/rolling_H.pdf}
-    \caption{Caption}
-    \label{fig:enter-label}
+    \includegraphics[scale=0.5]{fig/img/RealizedLib/diff_plot.pdf}
+    \includegraphics[scale=0.5]{fig/img/RealizedLib/diff_plot2.pdf}
+    \caption{Differenced Volatility of S\&P 500, Different Scales.}
+    \label{fig:diff_plot}
+\end{figure}
+
+%All of the estimators turn out to be consistent and have tractable asymptotic distributions. Since we will mainly focus on the estimation of the roughness parameter $H$, we will only present results for $\hat{H}$.
+%\begin{thm}\label{thm:asymp}
+    %Let $H\in (0,1)$ and $T>0$ be fixed and set $N\coloneqq T/\Delta$. Then as $\Delta\to 0^{+}$, we have $\hat{H}\overset{\mathbb{P}}{\to} H$ and 
+    %\begin{equation}
+        %\sqrt{N}(\hat{H}-H)\overset{d}{\to}\mathcal{N}\left(0,\frac{\Sigma_{11}+\Sigma_{22}-2\Sigma_{12}}{(2\log 2)^2}\right),
+    %\end{equation}
+    %where 
+    %\begin{align}
+        %\Sigma_{11} &\coloneqq 2 + 2^{2-4H}\sum_{j=1}^{\infty}\left(\rho_{j+2}+4\rho_{j+1}+6\rho_{j} + 4\rho_{|j-1|}+ \rho_{|j-2|}\right)^{2},\\
+        %\Sigma_{12}&\coloneqq 2^{1-2H}\left(4(\rho_{1}+1)^{2}+2\sum_{j=0}^{\infty}(\rho_{j+2}+2\rho_{j+1}+\rho_{j})^{2}\right),\\
+        %\Sigma_{22}&\coloneqq 2+4\sum_{j=1}^{\infty}\rho_{j}^{2},
+    %\end{align}
+%with 
+%\begin{equation}
+    %\rho_{j}\coloneqq \frac{1}{2(4-2^{2H})}\left(-|j+2|^{2H} + 4|j+1|^{2H} - 6|j|^{2H} + 4|j-1|^{2H} - |j-2|^{2H}\right).
+%\end{equation}
+%\end{thm}
+%We will only apply Theorem \ref{thm:asymp} and not prove it. Note that although, we are only interested in $H<1/2$, the asymptotics of $\hat{H}$ apply to all $H\in (0,1)$.
+The temporal dimension of the roughness $H$ is best emphasized in Figure \ref{fig:fedfgrafmand}, where we estimate $H$ based on rolling windows each with $504$ observations. These estimates $\hat{H}$ (green) are plotted along with a smoothed version (blue), which is a simple moving average filter using 50 values on both sides. The dashed line is the median value of the estimates, which is equal to $0.1376$. Figure \ref{fig:fedfgrafmand} shows that $H$ indeed varies in time. Although $\hat{H}$ varies significantly in time, their values always lie in the interval $[0.05, 0.28]$. Furthermore, we observe that there are several peaks in smoothness, which occur simultaneously with periods of financial distress and market turmoil. For example, there is a peak around the 2007-2008 financial crisis, and another peak towards the end of the data with the Covid-19 pandemic. 
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.71]{fig/img/RealizedLib/rolling_H_75.pdf}
+    \caption{Rolling Window Estimates of $H$ for S\&P 500.}
+    \label{fig:fedfgrafmand}
 \end{figure}
 %For our rough stochastic volatility model, the underlying asset $S_{t}$ follows the SDE
 %\begin{equation}
