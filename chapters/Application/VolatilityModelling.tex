@@ -89,18 +89,18 @@ In this chapter, we will introduce the Rough Fractional Stochastic Volatility (R
 %where $N$ is the number of options used, $w_{i}$ are weights, $F^{*}_{i}(T_{i},K_{i})$ is the market price of option $i$ with maturity time $T_{i}$ and strike price $K_{i}$, and $F^{\Theta}_{i}(t,S_{t},T_{i},K_{i})$ is the model price of the same option $i$ with model parameters $\Theta$. For the Heston model, the parameter space is $\Theta=(\nu_{0},\kappa,\theta,\xi,\rho)\subset \R^{5}$. We simply set $w_{i}=1$ for $i=1,\dots,N$ and impose the constraints on the calibrated parameters $\hat{\Theta}=(\hat{\nu}_{0},\hat{\kappa},\hat{\theta},\hat{\xi},\hat{\rho})$ that $\hat{\nu}_{0}\in [0.001, 0.25]$, $\hat{\kappa}\in [0.001, 5]$, $\hat{\theta}\in [0.001, 0.1]$, $\hat{\xi}\in [0.01, 1]$, and $\hat{\rho}\in [-0.99, 0.99]$ with initial guesses $\hat{\Theta}_{0}=(0.1, 3, 0.05, 0.3, -0.8)$. Additionally, we set to the tolerance for termination to $0.001$, and we use an extension of the limited-memory BFGS algorithm, which can handle the box constraints imposed on the parameters, to solve the optimization problem \eqref{eq:calibration}.
 %Applying Itô's lemma and standard arbitrage arguments as in Section \ref{sec:BSM}, we obtain the 
 \section{Fractional Ornstein-Uhlenbeck Process}
-The RSFV model, as proposed in \cite{volisrough}, model is given by
+The RSFV model, as proposed in \cite{volisrough}, is given by
 \begin{align}
     \frac{dS_{t}}{S_{t}}&= \mu_{t}dt + \sigma_{t}dW_{t},\\
-    \sigma_{t}&= e^{Y_{t}},
+    \sigma_{t}&= e^{X_{t}},
 \end{align}
-where $t\in [0,T]$, $\mu_{t}$ is a suitable drift term, $W_{t}$ is a standard Brownian motion, and $Y_{t}$ is a fractional Ornstein-Uhlenbeck process satisfying the SDE
+where $t\in [0,T]$, $S_{t}$ is the underlying asset, $\mu_{t}$ is a suitable drift term, $W_{t}$ is a standard Brownian motion, and $X_{t}$ is a fractional Ornstein-Uhlenbeck process satisfying the SDE
 \begin{align}
-    dY_{t}&= -\alpha(Y_{t}-m)dt + \varphi dB^{H}_{t},\quad Y_{0}=y_{0},
+    dX_{t}&= -\alpha(X_{t}-m)dt + \varphi dB^{H}_{t},\quad X_{0}=x_{0},
 \end{align}
 where $m \in \R$, $\alpha,\varphi >0$, and $B^{H}$ is a fBM of Hurst index $H\in(0,1/2)$, which is where the "rough" nomenclature stems from. As for the standard Ornstein-Uhlenbeck process, there is an explicit form of the solution given by
 \begin{equation}\label{ornstein_sol}
-    Y_{t}= m + e^{-\alpha t}\left(y_{0}-m+\varphi\int_{0}^{t}e^{\alpha s}dB_{s}^{H}\right).
+    X_{t}= m + e^{-\alpha t}\left(x_{0}-m+\varphi\int_{0}^{t}e^{\alpha s}dB_{s}^{H}\right).
 \end{equation}
 %model that we will consider in the subsequent section, models the volatility process via the fractional Ornstein-Uhlenbeck process, which is given by the SDE
 %\begin{align}
@@ -120,19 +120,19 @@ Thus, for $N\in\N$ sufficiently large, the above Riemann-sum will approximate th
 \end{equation}
 Thus, we can simulate a fractional Ornstein-Uhlenbeck process on the grid $0=t_{0}<t_{1}<\dots<t_{N}=T$ by the following scheme
 \begin{equation}\label{fou_exact}
-    Y_{t_{j}}^{N}=m + (y_{0}-m)e^{-\alpha t_{j}} + \varphi e^{-\alpha t_{j}}\mathbb{B}_{t_{j}}^{H,N},\quad Y_{0}^{N}=y_{0}, \quad j=1,\dots,N.
+    X_{t_{j}}^{N}=m + (x_{0}-m)e^{-\alpha t_{j}} + \varphi e^{-\alpha t_{j}}\mathbb{B}_{t_{j}}^{H,N},\quad X_{0}^{N}=x_{0}, \quad j=1,\dots,N.
 \end{equation}
 Alternatively, we could use the Euler-Maruyama scheme to simulate the process via
 \begin{equation}\label{fou_euler}
-    Y_{t_{j}}^{N}=Y_{t_{j-1}} -\alpha(Y_{t_{j-1}}-m)\Delta_{N} + \varphi\Delta B_{t_{j}}^{H},\quad Y_{0}^{N}=y_{0},\quad j=1,\dots,N,
+    X_{t_{j}}^{N}=X_{t_{j-1}} -\alpha(X_{t_{j-1}}-m)\Delta_{N} + \varphi\Delta B_{t_{j}}^{H},\quad X_{0}^{N}=x_{0},\quad j=1,\dots,N,
 \end{equation}
 where $\Delta_{N}=T/N$ and $\Delta B_{t_{j}}^{H}=B^{H}_{t_{j}}-B^{H}_{t_{j-1}}$. The error rates for the two simulation methods in \eqref{fou_exact} and \eqref{fou_euler} are approximately the same, and since the Euler-Maruyama scheme is computationally faster, we will use the methodology in \eqref{fou_euler} for simulation.
 
-As an example, if we take the process with $H=0.2$, $\alpha = 1$, $m=1$, $\varphi=1/2$, and $Y_{0}=0$, i.e.
+As an example, if we take the process with $H=0.2$, $\alpha = 1$, $m=1$, $\varphi=1/2$, and $X_{0}=0$, i.e.
 \begin{equation}
-    dY_{t}=-(Y_{t}-1)dt+\frac{1}{2}dB^{0.2}_{t},\quad Y_{0}=0,
+    dX_{t}=-(X_{t}-1)dt+\frac{1}{2}dB^{0.2}_{t},\quad X_{0}=0,
 \end{equation}
-and use \eqref{fou_exact} with $N=100,000$ as our true solution path $Y_{t}$, then we can compare the Euler-approximations. This comparison is seen in Figure \ref{fig:euler-scheme}, where the true solution path is plotted in blue with the Euler-approximations superimposed. It is seen that for $N\geq 1000$, the true solution is approximated well by the Euler scheme.
+and use \eqref{fou_exact} with $N=100,000$ as our true solution path $X_{t}$, then we can compare the Euler-approximations. This comparison is seen in Figure \ref{fig:euler-scheme}, where the true solution path is plotted in blue with the Euler-approximations superimposed. It is seen that for $N\geq 1000$, the true solution is approximated well by the Euler scheme.
 \begin{figure}[H]
     \centering
     \includegraphics[scale=0.52]{fig/img/EulerScheme/EulerScheme10.pdf}
@@ -234,10 +234,19 @@ where $\varphi >0$ is a positive constant, and $B^{H}$ is a fractional Brownian 
 \end{equation}
 where $\sigma$ is another positive constant. However, this model is not stationary, which implies that the volatility in theory could grow infinitely large. Stationarity is imposed by modelling the log-volatility as a fractional Ornstein-Uhlenbeck process. Hence, we arrive at the RFSV model suggested in the previous section
 \begin{align}
-    dY_{t}&= -\alpha(Y_{t}-m)dt + \varphi dB^{H}_{t},\\
-    \sigma_{t} &= e^{Y_{t}},
+    dX_{t}&= -\alpha(X_{t}-m)dt + \varphi dB^{H}_{t},\label{eq:fou}\\
+    \sigma_{t} &= e^{X_{t}},
 \end{align}
 where $\alpha,\varphi>0$, $m\in \R$, and $H\in (0,1/2)$.
+
+We didn't model the log-volatility purely as a fBM as suggested by \eqref{eq:simple_model} to ensure reasonableness of the model at very large times. Interestingly, however, if $\alpha \ll 1/T$, then the log-volatility behaves locally (at time scales smaller than $T$) as a fBM. This is formalized in the following proposition, which is stated without proof.
+\begin{prop}\label{prop:fOU}
+Let $B^{H}$ be a fractional Brownian motion, and let $X^{\alpha}$ be a fractional Ornstein-Uhlenbeck process as defined by $\eqref{eq:fou}$ for a given $\alpha>0$. Then as $\alpha$ tends to $0$, we have
+\begin{equation}
+    \E\Bigr[ \sup_{t\in [0,T]}|X_{t}^{\alpha}-X_{0}^{\alpha}-\varphi B^{H}_{t}|\Bigr]\to 0.
+\end{equation}
+\end{prop}
+%However, if $\alpha \ll 1/T$, then the log-volatility $Y_{t}$ behaves locally (at time scales smaller than $T$) as a fBM. 
 \section{Estimation of Parameters}
 We now turn to the problem of estimating the parameters for a fractional Ornstein-Uhlenbeck process $Y$, if we have a discrete sample $Y_{i\Delta}$, where $i=0,1,\dots,N$ and $\Delta>0$. We propose a two-stage estimation approach as suggested in \cite{estimationfOU}, where the first stage consists of estimating $H$ by using the change-of-frequency estimator based on the second-order differences of $Y$. Based on the estimator of $H$, we then obtain a plug-in estimator of $\varphi$. In the second stage, we esimate $m$ and $\alpha$ by using method-of-moments estimators. 
 
@@ -262,7 +271,7 @@ Since $\alpha>0$, $Y$ is both stationary and ergodic, which means that we can us
 \end{align}
 where $\Gamma: (0,\infty)\to (0,\infty)$ denotes the gamma function.
 
-If we use the estimators defined above on our data set with $\Delta=1$ (for 1 trading day) and $N=5079$, we can simulate a path of the volatility process $\sigma_{t}=\exp(Y_{t})$. Our estimated parameter values are $\hat{H}=0.128$, $\hat{\varphi}=0.842$, $\hat{m} = -4.95$, and $\hat{\alpha} = 0.05$. The volatility of the S\&P 500 is shown in Figure \ref{fig:datavol_modelvol} along with a simulated path of $\sigma_{t}=\exp(Y_{t})$ using the estimated parameters.
+If we use the estimators defined above on our data set with $\Delta=1$ (for 1 trading day) and $N=5079$, we can simulate a path of the volatility process $\sigma_{t}=\exp(Y_{t})$. Our estimated parameter values are $\hat{H}=0.128$, $\hat{\varphi}=0.342$, $\hat{m} = -4.95$, and $\hat{\alpha} = 0.05$. The volatility of the S\&P 500 is shown in Figure \ref{fig:datavol_modelvol} along with a simulated path of $\sigma_{t}=\exp(Y_{t})$ using the estimated parameters.
 \begin{figure}[H]
     \centering
     \includegraphics[scale=0.65]{fig/img/RealizedLib/RealizedVolWithoutDates.pdf}
@@ -272,7 +281,7 @@ If we use the estimators defined above on our data set with $\Delta=1$ (for 1 tr
 \end{figure}
 An initial reaction to Figure \ref{fig:datavol_modelvol} is that the simulated and actual data look qualitatively very alike. The roughness of the two time series appears to be the same, and they have the same order of magnitude. Additionally, both time series have persistent periods of high volatility that alternate with low volatility periods, and thus the model is able to reproduce volatility clustering.
 \subsection{Roughness over Time}
-Thus far, for both estimation procedures we have estimated $H$ across the entire data set. Naturally, this raises the question of whether the Hurst index is constant over time. In Figure \ref{fig:diff_plot}, the differenced daily realized volatilities are plotted in both panels on different scales. It is clear that the volatility changes more at certain time periods in the series.
+Thus far, for both estimation procedures we have estimated $H$ across the entire data set. Naturally, this raises the question of whether the Hurst index is constant over time. In Figure \ref{fig:diff_plot}, the first order difference of the daily realized volatility is plotted in both panels on different scales. It is clear that the volatility changes more at certain time periods in the series.
 \begin{figure}[H]
     \centering
     \includegraphics[scale=0.5]{fig/img/RealizedLib/diff_plot.pdf}
@@ -299,13 +308,54 @@ Thus far, for both estimation procedures we have estimated $H$ across the entire
 %\end{equation}
 %\end{thm}
 %We will only apply Theorem \ref{thm:asymp} and not prove it. Note that although, we are only interested in $H<1/2$, the asymptotics of $\hat{H}$ apply to all $H\in (0,1)$.
-The temporal dimension of the roughness $H$ is best emphasized in Figure \ref{fig:fedfgrafmand}, where we estimate $H$ based on rolling windows each with $504$ observations. These estimates $\hat{H}$ (green) are plotted along with a smoothed version (blue), which is a simple moving average filter using 50 values on both sides. The dashed line is the median value of the estimates, which is equal to $0.1376$. Figure \ref{fig:fedfgrafmand} shows that $H$ indeed varies in time. Although $\hat{H}$ varies significantly in time, their values always lie in the interval $[0.05, 0.28]$. Furthermore, we observe that there are several peaks in smoothness, which occur simultaneously with periods of financial distress and market turmoil. For example, there is a peak around the 2007-2008 financial crisis, and another peak towards the end of the data with the Covid-19 pandemic. 
+The temporal dimension of the roughness $H$ is best emphasized in Figure \ref{fig:fedfgrafmand}, where we estimate $H$ based on rolling windows each with $504$ observations (number of trading days in 2 years). These estimates $\hat{H}$ (green) are plotted along with a smoothed version (blue), which is a simple moving average filter using 50 values on both sides. The dashed line is the median value of the estimates, which is equal to $0.1376$. Figure \ref{fig:fedfgrafmand} shows that $H$ indeed does seem to vary in time. Although $\hat{H}$ varies significantly in time, their values always lie in the interval $[0.05, 0.28]$. Furthermore, we observe that there are several peaks in smoothness, which occur simultaneously with periods of financial distress and market turmoil. For example, there is a peak around the 2007-2008 financial crisis, and another peak towards the end of the data with the Covid-19 pandemic. 
 \begin{figure}[H]
     \centering
     \includegraphics[scale=0.71]{fig/img/RealizedLib/rolling_H_75.pdf}
     \caption{Rolling Window Estimates of $H$ for S\&P 500.}
     \label{fig:fedfgrafmand}
 \end{figure}
+
+\section{Forecasting using the RFSV Model}
+We will now show, how the RFSV model can be used to forecast the variance and volatility of a financial time series. Our forecasting procedure is based on the following formula from \cite{forecast}, which states that
+\begin{equation}
+    \E[B_{t+\Delta}^{H}\mid \mathcal{F}_{t}]=\frac{\cos(H\pi)}{\pi}\Delta^{H+1/2}\int_{-\infty}^{t}\frac{B_{s}^{H}}{(t-s+\Delta)(t-s)^{H+1/2}}ds,
+\end{equation}
+where $(B^{H}_{t})_{t\in\R}$ is a two-sided fBM with $H\in (0,1/2)$, and $\left(\mathcal{F}_{t}\right)_{t\in\R}$ is the filtration it generates. In Proposition \ref{prop:fOU}, we found that we may approximate the fractional Ornstein-Uhlenbeck via a fBM such that
+$\log \sigma_{t}^{2}\approx 2\varphi B_{t}^{H} + C$ for some constants $\varphi$ and $C$. Consequently, we may predict the log-variance by the formula
+\begin{equation}\label{forecast_log}
+    \E[\log \sigma_{t}^{2}\mid \mathcal{F}_{t}]=\frac{\cos(H\pi)}{\pi}\Delta^{H+1/2}\int_{-\infty}^{t}\frac{\log \sigma_{s}^{2}}{(t-s+\Delta)(t-s)^{H+1/2}}ds,
+\end{equation}
+where the constants $2\varphi$ and $C$ cancel, when deriving \eqref{forecast_log}. Furthermore, in \cite{forecast}, it is shown that $B_{t+\Delta}^{H}$ is conditionally Gaussian with conditional variance given by
+\begin{equation}
+    \textrm{Var}[B_{t+\Delta}^{H}\mid \mathcal{F}_{t}]=\Tilde{c}\Delta^{2H},
+\end{equation}
+with 
+\begin{equation}
+    \Tilde{c}=\frac{\Gamma(3/2-H)}{\Gamma(H+1/2)\Gamma(2-2H)}.
+\end{equation}
+Thus, we obtain the following formula for forecasting the variance
+\begin{align}\label{eq:forecasting}
+    \E[\sigma_{t+\Delta}^{2} \mid \mathcal{F}_{t}]&= \exp\left\{\E[\log \sigma_{t}^{2} \mid \mathcal{F}_{t}] + 2\Tilde{c}\varphi^{2}\Delta^{2H}\right\}.
+\end{align}
+We use the previously estimated values of $\hat{H}=0.128$ and $\hat{\varphi}=0.342$ in \eqref{eq:forecasting}. The integral in \eqref{forecast_log} is approximated through Riemann-sums, where we use the the current value of the log-variance $\log \sigma_{t}^{2}$ as well as the 499 previous values of the log-variance to approximate the integral. We forecast the variance (or rather the volatility) 1, 5, and 20 days ahead. The resulting one-day ahead forecasts of the volatility are seen in Figure \ref{fig:RFSVforecast}.
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.7]{fig/img/RealizedLib/forecasting.pdf}
+    \caption{One Day-Ahead $(\Delta = 1)$ Forecasts Using RFSV Model.}
+    \label{fig:RFSVforecast}
+\end{figure}
+The forecasts are 
+\begin{table}[H]
+\centering
+\begin{tabular}{l|llll}\toprule
+
+ & AR(5) & AR(10) & GARCH(1,1) & RFSV \\ \hline
+$\Delta = 1$ & 0.261 & 0.262 &  0.258 & 0.332 \\ \hline
+$\Delta = 5$ & 0.286 & 0.284 & 0.281 & 0.428 \\ \hline
+$\Delta = 20$ & 0.405 & 0.366 & 0.393 & 0.535 \\ \bottomrule
+\end{tabular}
+\end{table}
 %For our rough stochastic volatility model, the underlying asset $S_{t}$ follows the SDE
 %\begin{equation}
 %    dS_{t}=\mu_{t}S_{t}dt + \sigma_{t}S_{t}dB_{t},
