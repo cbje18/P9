@@ -7,12 +7,12 @@ library(latex2exp)
 library(ggfortify)
 library(runner)
 
-#data("realized_library")
-#colnames(realized_library)
+data("realized_library")
+colnames(realized_library)
 
-#data(sp500)
-#plot(sp500)
-#colnames(sp500)
+data(sp500)
+plot(sp500)
+colnames(sp500)
 
 data(rv5)
 plot(rv5)
@@ -22,7 +22,7 @@ autoplot(sqrt(rv5)) + ylab("Realized Volatility") + xlab(NULL)
 
 #Define the q's as in "Volatility is Rough"
 q <- c(0.5, 1, 1.5, 2, 3)
-Delta <- c(1:30)
+Delta <- c(1:100)
 
 data <- matrix(0, nrow=length(Delta), ncol = length(q))
 
@@ -74,8 +74,19 @@ ggplot(data=data) + geom_point(aes(x=log(Delta), y=data[,1],color="q=0.5")) +
 
 #The estimated H values 
 H <- linear_models[2,]/q; H
-H_hat <- mean(H)
+H_hat <- mean(H); H_hat
+intercepts <- linear_models[1,]
 
+nu <- sqrt(exp(intercepts[4]))
+
+slopes <- data.frame(q, linear_models[2,])
+lin_reg_slope <- lm(linear_models[2,]~q)
+coefs <- lin_reg_slope$coefficients
+
+ggplot()  + geom_abline(aes(intercept=coefs[1], slope = coefs[2]), color = "blue") + 
+  geom_abline(aes(intercept=0, slope= H[4])) + 
+  geom_point(data = slopes, aes(x=q, y= linear_models[2,]), color="red") + 
+  xlab(TeX("q")) + ylab(TeX("$\\zeta_q$"))
 
 # Histograms of increments  -----------------------------------------------
 #Histogram for Delta = 1
@@ -94,6 +105,7 @@ hist(log_vol$rv5, breaks = 40, prob = TRUE, main = TeX("\\Delta = 1"), xlab = ""
 m <- mean(log_vol$rv5)
 s <- sd(log_vol$rv5)
 curve(dnorm(x, mean = m, sd = s), add = TRUE, col = "red", lwd = 1.5)
+curve((delta^0.151825)*dnorm(x, mean = m, sd = s), add = TRUE, col = "blue", lwd = 1.5, lty = "dashed")
 
 #Histogram for Delta = 5
 log_vol <- NULL
@@ -152,7 +164,7 @@ rm(list = ls())
 
 data(rv5)
 
-log_process <- log(100*sqrt((252)*rv5$rv5)) %>% as.data.frame()
+log_process <- log(sqrt(rv5$rv5)) %>% as.data.frame()
 plot(log_process$rv5, type = "l")
 
 #Estimating H
@@ -170,6 +182,18 @@ for(j in 1:(N-2)){
 H_estimate <- 0.5*log2(sum(summands_num)/sum(summands_denom))
 H_estimate
 
+#dividing the rv5 dataset
+first_half <- rv5$rv5[1:1246]
+second_half <- rv5$rv5[1247:2505]
+
+diff_rv5 <- diff(rv5, lag = 1)
+autoplot(diff_rv5$rv5)
+autoplot(diff_rv5$rv5) + ylim(-0.0015,0.0015)
+plot(diff_rv5$rv5, type = "l", col = "darkblue", main = NULL)
+plot(diff_rv5$rv5, type = "l", col = "darkblue", ylim = c(-0.0015,0.002), main = NULL)
+
+plot(first_half, type = "l")
+plot(second_half, type = "l")
 #Rolling window estimates of H
 H_estimator <- function(x){
   N <- length(x)
@@ -244,7 +268,7 @@ for(i in 1:4575){
 }
 
 moving_ave <- runner(H_hats,
-              k = 100, 
+              k = 75, 
               f = mean)
 
 H_hats <- c(rep(0,504),H_hats)
@@ -254,9 +278,10 @@ medians <- rep(med, 5079)
 
 rv5 <- cbind(rv5, H_hats, moving_ave, medians)
 
-plot(rv5$H_hats[505:5079], type = "l", col="green", ylab=TeX("H"), main = TeX("\\hat{H} for S&P-500"), lwd=1.5)
+plot(rv5$H_hats[505:5079], type = "l", col="green", ylab=TeX("H"), main = TeX("\\hat{H} for S&P 500"), lwd=1.5)
 lines(rv5$moving_ave, col= "blue", lwd=1.5)
-lines(rv5$medians, col="black", lwd=1.3)
+lines(rv5$medians, col="black", lwd=1.3, lty = "dashed")
+
 
 #Estimating phi
 #phi_estimate <- sqrt(sum(summands_denom)/(N*(4-2^(2*H_estimate))*1^(2*H_estimate)))
@@ -306,4 +331,51 @@ ggplot(data = data_for_plot) + geom_line(aes(x=t_grid, y = hej)) + xlab(NULL) + 
 ggplot(data = sim_data) + geom_line(aes(x=t_grid, y = exp(Y)))+ xlab(NULL) + ylab(NULL) +
   ylim(0,0.061) + ggtitle("Model")
 
+
+# Forecasting  ------------------------------------------------------------
+
+# Find all of the dates
+dateIndex <- substr(as.character(index(rv5)),1,10) # Create index of dates
+cTilde <- function(h){gamma(3/2-h)/(gamma(h+1/2)*gamma(2-2*h))} # Factor because
+#we are computing conditional on \cF_t
+# XTS compatible version of forecast
+rv.forecast.XTS <- function(rvdata,h,date,nLags,delta,nu){
+  i <- (1:nLags)-1
+  cf <- 1/((i+1/2)^(h+1/2)*(i+1/2+delta)) # Lowest number should apply to latest
+  datepos <- which(dateIndex==date)
+  ldata <- log(as.numeric(rvdata[datepos-i])) # Note that this object is ordered
+  pick <- which(!is.na(ldata))
+  norm <- sum(cf[pick])
+  fcst <- cf[pick]%*%ldata[rev(pick)]/norm # Most recent dates get the highest w
+  return(exp(fcst+2*nu^2*cTilde(h)*delta^(2*h)))
+}
+data(rv5)
+rvdata <- rv5
+#nu <- OxfordH$nu.est[1] # Vol of vol estimate for SPX
+n <- length(rvdata)
+delta <- 5
+nLags <- 500
+range <- nLags:(n-delta)
+rv.predict <- sapply(dateIndex[range],function(d){rv.forecast.XTS(rvdata,h=0.12
+                                                                  ,d,nLags=nLags,delta=delta,nu=0.34)})
+rv.actual <- rvdata[range+delta]
+
+
+vol.actual <- sqrt(as.numeric(rv.actual))
+vol.predict <- sqrt(rv.predict)
+plot(vol.actual, col="blue",type="l")
+lines(vol.predict, col="red",type="l")
+
+#Mean squared error
+rmse <- sqrt(mean((vol.actual - vol.predict)^2))
+
+hej <- simfBM_fft(m=1, T=1, H=0.12, N=5079)
+plot(phi_rv*exp(hej), type = "l")
+
+forecast_data <- cbind(vol.actual, vol.predict) %>% as.data.frame()
+t_grid <- seq(1, 4579, 1)
+
+ggplot(data = forecast_data) + geom_line(aes(x=t_grid, y=vol.actual), color = "#999999") + 
+  geom_line(aes(x = t_grid, y = vol.predict), color = "blue4") + 
+  xlab(NULL) + ylab("Volatility")
 

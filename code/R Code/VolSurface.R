@@ -4,14 +4,17 @@ graphics.off()
 library(quantmod)
 library(dplyr)
 library(plotly)
+library(akima)
+library(reshape2)
 
-
+setwd("C:\\Users\\cbjkr\\OneDrive - Aalborg Universitet\\Aalborg Universitet\\Kandidat\\P9-Projekt\\P9\\Data")
+data <- read.csv(file = "option_data_10november.csv")
 #First get options data from Yahoo
 ticker <- "SPY"
-expiration_dates <- c("2023-11-07", "2023-11-08", "2023-11-09",
-                      "2023-11-10", "2023-11-13", "2023-11-14", "2023-11-15",
-                      "2023-11-16", "2023-11-17", "2023-11-24", "2023-12-01",
-                      "2023-12-08", "2023-12-15", "2023-12-22","2023-12-29",
+expiration_dates <- c("2023-12-06",
+                      "2023-12-07", "2023-12-08", "2023-12-11",
+                      "2023-12-12", "2023-12-13", "2023-12-14",
+                      "2023-12-15", "2023-12-22","2023-12-29",
                       "2024-01-19", "2024-02-16", "2024-03-15", "2024-03-28",
                       "2024-06-21", "2024-06-28", "2024-09-20", "2024-09-30",
                       "2024-12-20", "2025-01-17", "2025-03-21")
@@ -19,30 +22,73 @@ expiration_dates <- c("2023-11-07", "2023-11-08", "2023-11-09",
 options_data <- getOptionChain(ticker, Exp = expiration_dates)
 
 options_data_matrix <- NULL
-for(i in 1:length(expiration_dates)){
+for(i in 1:15){
   options_data_matrix <- rbind(options_data_matrix, options_data[[i]]$calls)
 }
 
 #Set current stock price
-S0 <- 435.69
+S0 <- 456.04
 
+
+options_data_matrix$moneyness <- S0/options_data_matrix$Strike
+options_data_matrix$logmoneyness <- log(S0/options_data_matrix$Strike)
+
+
+nov13 <- data[data$Expiration == "2023-11-13",]
+ggplot(data = nov13, aes(x=Strike, y=IV)) + geom_point(size = 2) +
+  labs(x = "Strike",  y = "Implied Volatility") +
+  ggtitle("Call Options on SPY, Expiration Date 13/11-2023")
+
+
+options_data_matrix$moneyness <- S0/options_data_matrix$Strike
 options_data_matrix$log_moneyness <- log(S0/options_data_matrix$Strike)
+
+ivGridCalls <- acast(options_data_matrix, TimeToExp ~ log_moneyness, value.var = "IV")
 
 options_data_matrix$TimeToExp <- as.numeric(as.Date(options_data_matrix$Expiration) - as.Date(Sys.Date()))/365.25
 
+setwd("C:\\Users\\cbjkr\\OneDrive - Aalborg Universitet\\Aalborg Universitet\\Kandidat\\P9-Projekt\\P9\\Data")
+hej <- read.csv("option_data_10november.csv")
+View(hej)
+
+pek <- hej[hej$Expiration == "2023-11-10",]
+plot(x = pek$Strike, y = pek$IV)
+pek$log_moneyness <- log(437.25/pek$Strike)
+plot(x = pek$log_moneyness, y = pek$IV)
 #Create plot
-fig <- plot_ly(x = options_data_matrix$log_moneyness, 
-               y = options_data_matrix$TimeToExp,
-               z = options_data_matrix$IV,
-               type = 'mesh3d')
+axx <- list(
+  gridcolor='rgb(255, 255, 255)',
+  zerolinecolor='rgb(255, 255, 255)',
+  showbackground=TRUE,
+  backgroundcolor='rgb(230, 230,230)'
+)
+
+axx <- list(
+  title = "Log-moneyness"
+)
+
+axy <- list(
+  title = "Time to Exp."
+)
+
+axz <- list(
+  title = "Implied vol."
+)
+
+fig <- plot_ly(x = ~options_data_matrix$log_moneyness, 
+               y = ~options_data_matrix$TimeToExp,
+               z = ~options_data_matrix$IV,
+               type = 'mesh3d') 
 
 fig
 
-
+setwd("C:\\Users\\cbjkr\\OneDrive - Aalborg Universitet\\Aalborg Universitet\\Kandidat\\P9-Projekt\\P9")
+options_data_matrix <- options_data_matrix %>% as.data.frame()
+write.csv(options_data_matrix, "C:\\Users\\cbjkr\\OneDrive - Aalborg Universitet\\Aalborg Universitet\\Kandidat\\P9-Projekt\\options_spy_december.csv")
 #Plot volatility smile for a given expiration date
 options_data_matrix$Expiration <- as.Date(options_data_matrix$Expiration)
 
-expiration_date <- options_data_matrix[options_data_matrix$Expiration == "2023-11-10",]
+expiration_date <- options_data_matrix[options_data_matrix$Expiration == "2024-01-31",]
 
 ggplot(data = expiration_date, aes(x=Strike, y=IV)) + geom_point() +
   labs(x = "Strike",  y = "Implied Volatility") 
@@ -111,7 +157,7 @@ BSM <- function(S, K, sigma, ttm){
 
 impVol <- function(price, S, K, ttm){
   f <- function(sigma){price -BSM(S,K,sigma,ttm)}
-  imp_vol <- uniroot(f, c(-1,1))
+  imp_vol <- uniroot(f, c(0,5))
   
   return(imp_vol)
 }

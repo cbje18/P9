@@ -49,12 +49,13 @@ ImVolFun <- function(sigma, market_price, St, K, r, ttm){
 
 #Wrapper for the optimization function
 getIV <- function(x, St, r){
-  result <- optimize(ImVolFun, interval = c(0,2),
+  result <- optimize(ImVolFun, interval = c(0,1.5),
                      market_price = as.numeric(x["ask"]), 
                      St = St,
                      K = as.numeric(x["strike"]),
                      r = r,
-                     ttm = as.numeric(x["ttm"]))
+                     ttm = as.numeric(x["ttm"]),
+                     tol = 0.00000000001)
   
   return(result$minimum)
 }
